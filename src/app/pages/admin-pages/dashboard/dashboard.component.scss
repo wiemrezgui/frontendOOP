@@ -1,0 +1,24 @@
+/* dashboard.component.scss */
+.dashboard-container {
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.metric-card {
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .metric-card {
+    padding: 1rem;
+    
+    .pi {
+      font-size: 1.5rem;
+    }
+  }
+}

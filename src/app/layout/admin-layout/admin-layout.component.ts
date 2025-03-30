@@ -15,4 +15,5 @@ export class AdminLayoutComponent {
   onSidebarCollapsed(state: boolean) {
     this.isSidebarCollapsed = state;
   }
+  
 }
