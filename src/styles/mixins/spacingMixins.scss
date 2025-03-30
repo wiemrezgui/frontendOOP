@@ -1,0 +1,68 @@
+@use "../variables.scss" as *;
+
+// Helpers
+@function getSizeValue($size) {
+  $return-value: auto;
+  @if $size == "no" {
+    $return-value: $no-spacing;
+  } @else if $size == "small" {
+    $return-value: $spacing-small;
+  } @else if $size == "base" {
+    $return-value: $spacing-base;
+  } @else if $size == "large" {
+    $return-value: $spacing-large;
+  } @else if $size == "medium" {
+    $return-value: $spacing-medium;
+  }
+  @return $return-value;
+}
+
+// Margins
+@mixin margin-spacing($margin-size, $orientation: "all") {
+  @if $orientation == "right" {
+    margin-right: getSizeValue($margin-size) !important;
+  } @else if $orientation == "left" {
+    margin-left: getSizeValue($margin-size) !important;
+  } @else if $orientation == "horizontal" {
+    margin-right: getSizeValue($margin-size) !important;
+    margin-left: getSizeValue($margin-size) !important;
+  } @else if $orientation == "vertical" {
+    margin-top: getSizeValue($margin-size) !important;
+    margin-bottom: getSizeValue($margin-size) !important;
+  } @else if $orientation == "top" {
+    margin-top: getSizeValue($margin-size) !important;
+  } @else if $orientation == "bottom" {
+    margin-bottom: getSizeValue($margin-size) !important;
+  } @else {
+    margin: getSizeValue($margin-size) !important;
+  }
+}
+
+// Paddings
+@mixin padding-spacing($padding-size, $direction: "all") {
+  @if $direction == "right" {
+    padding-right: getSizeValue($padding-size) !important;
+  } @else if $direction == "left" {
+    padding-left: getSizeValue($padding-size) !important;
+  } @else if $direction == "horizontal" {
+    padding-right: getSizeValue($padding-size) !important;
+    padding-left: getSizeValue($padding-size) !important;
+  } @else if $direction == "vertical" {
+    padding-top: getSizeValue($padding-size) !important;
+    padding-bottom: getSizeValue($padding-size) !important;
+  } @else if $direction == "top" {
+    padding-top: getSizeValue($padding-size) !important;
+  } @else if $direction == "bottom" {
+    padding-bottom: getSizeValue($padding-size) !important;
+  } @else {
+    padding: getSizeValue($padding-size) !important;
+  }
+}
+
+// Flex
+@mixin flex-spacing($direction, $gap-size, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  flex-wrap: $wrap;
+  gap: getSizeValue($gap-size);
+}

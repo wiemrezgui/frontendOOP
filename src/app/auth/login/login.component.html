@@ -1,0 +1,34 @@
+<div class="auth-container">
+  <p-image src="assets/images/logo.png" alt="Image" width="200" />
+    <h1><strong>Welcome back..</strong></h1>
+    <p>Please enter all the informations to get full access</p>
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <input pInputText type="text" formControlName="email" placeholder="exemple@gmail.com"/>
+      </div>
+      <div class="form-group password-container">
+        <p-password formControlName="password" autocomplete="off" fluid placeholder="Password">
+          <ng-template #header>
+              <div class="font-semibold text-xm mb-4">Choose solid password</div>
+          </ng-template>
+          <ng-template #footer>
+              <p-divider />
+              <ul class="pl-2 ml-2 my-0 leading-normal">
+                <li>At least one lowercase letter</li>
+                <li>At least one uppercase letter</li>
+                <li>At least one number</li>
+                <li>At least 8 characters</li>
+              </ul>
+          </ng-template>
+      </p-password>
+        <!-- ✅ Password Hint -->
+        <small class="password-hint">💡 Use at least 8 characters, including numbers and letters.</small>
+        <a (click)="goToForgotPassword()" class="forgot-password">Forget password ?</a>
+      </div>
+      <button type="submit" class="black-button">
+        {{ loading ? '🔄 Loading...' : 'Log in' }}
+      </button>
+      <small class="margin-small-top">Don't have account ? <strong (click)="goToSignUp()">Sign up</strong></small>
+    </form>
+</div>
+  

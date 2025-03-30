@@ -1,0 +1,48 @@
+<div class="auth-container">
+    <p-image src="assets/images/logo.png" alt="Image" width="200" />
+      <h1><strong>Welcome to our Training center..</strong></h1>
+      <p>Please enter all the informations to create new account</p>
+      <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+        <div class="form-group">
+          <input pInputText type="text" formControlName="email" placeholder="exemple@gmail.com"/>
+        </div>
+        <div class="form-group password-container">
+          <p-password formControlName="password" autocomplete="off" fluid placeholder="Password">
+            <ng-template #header>
+                <div class="font-semibold text-xm mb-4">Choose solid password</div>
+            </ng-template>
+            <ng-template #footer>
+                <p-divider />
+                <ul class="pl-2 ml-2 my-0 leading-normal">
+                  <li>At least one lowercase letter</li>
+                  <li>At least one uppercase letter</li>
+                  <li>At least one number</li>
+                  <li>At least 8 characters</li>
+                </ul>
+            </ng-template>
+        </p-password>
+          <!-- ✅ Password Hint -->
+          <small class="password-hint">💡 Use at least 8 characters, including numbers and letters.</small>
+        </div>
+        <div class="form-group password-container">
+            <p-password formControlName="password" autocomplete="off" fluid placeholder="Confirm password">
+              <ng-template #header>
+                  <div class="font-semibold text-xm mb-4">Choose solid password</div>
+              </ng-template>
+              <ng-template #footer>
+                  <p-divider />
+                  <ul class="pl-2 ml-2 my-0 leading-normal">
+                    <li>At least one lowercase letter</li>
+                    <li>At least one uppercase letter</li>
+                    <li>At least one number</li>
+                    <li>At least 8 characters</li>
+                  </ul>
+              </ng-template>
+          </p-password>
+          </div>
+        <button type="submit" class="black-button">
+          {{ loading ? '🔄 Loading...' : 'Sign up' }}
+        </button>
+        <small class="margin-small-top">Already have account ? <strong (click)="goToLogIn()">Log in</strong></small>
+      </form>
+  </div>

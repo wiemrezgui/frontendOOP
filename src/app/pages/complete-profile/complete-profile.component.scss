@@ -1,0 +1,165 @@
+*{
+    font-family: 'Reboto';
+}
+.complete-profile {
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 80px auto;
+}
+
+.form-group {
+    flex-direction: row;
+}
+
+label {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
+    float: left;
+}
+
+.form-container {
+    width: 70%;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+}
+
+.right {
+    float: right;
+}
+.p-field{
+    margin-bottom: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.p-checkbox{
+    margin-right: 18px;
+}
+.form-row{
+    margin-top: 15px;
+    gap: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span{
+        margin-left: 20px;
+    }
+}
+.required {
+    color: red;
+}
+
+.next-button {
+    position: fixed;
+    bottom: 25%;
+    right: 25%;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    right: 50px;
+    color: white;
+  }
+  .prev-button {
+    position: absolute;
+    top: 100px;
+    left: 40px;
+    background-color: transparent;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    transition: color 0.3s ease;
+    left: 20px;
+    background-color: transparent;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem; /* Spacing between elements */
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem;
+    background: #ffffff;
+    border-radius: 10px;
+    //box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    flex: 1;
+  }
+  .review-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    //box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .review-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #333;
+    text-align: center;
+  }
+  
+  .review-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .review-row {
+    display: flex;
+    gap: 2rem;
+    
+    &.full-width {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+  
+  .review-col {
+    flex: 1;
+  }
+  
+  .review-label {
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .review-value {
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 3px solid #8996ab;
+    word-break: break-word;
+  }
+  
+  .review-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .review-row:not(.full-width) {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  }
+
+  

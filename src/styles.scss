@@ -1,1 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'styles/variables.scss' as *;
+@use 'styles/common.scss' as *;
+@use 'styles/spacing.scss' as *;
+:root {
+    --primary-color: var(--p-blue-500) !important;
+    --primary-color-text: #ffffff !important;  
+    --card-bg-light: #f5f5f5;
+    --card-bg-dark: #121212;
+    --container-bg-light: #f5f5f5;
+    --container-bg-dark: #0d0d0d;
+  }
+  .p-fileupload .filelabel {
+    display: none;
+  }
+    
