@@ -1,111 +1,160 @@
 /* 🔹 Main Container */
 .auth-container {
-    width: 400px;
-    margin: 70px auto;
+  width: 400px;
+  margin: 60px auto;
+  padding: 20px;
+  text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+
+/* 🔹 Headings */
+h1 {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 🔹 Form Styling */
+.form-group {
+  margin-bottom: 24px;
+  /* More spacing for better readability */
+  text-align: left;
+}
+
+/* 🔹 Uniform Input Fields (Email & Password) */
+input {
+  width: 100%;
+  font-size: 16px;
+  padding: 10px;
+  /* Ensures equal padding */
+  border-radius: 6px;
+  cursor: pointer;
+
+}
+
+textarea {
+  border-color: #cbd5e1;
+  color: #334155;
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+textarea:focus {
+  border-color: #334155;
+}
+
+.file-upload {
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.file-upload-content {
+  display: flex;
+  flex-direction: column;
+  /* Ensure vertical stacking */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+  /* Space between buttons */
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+/* Button Wrapper - helps with PrimeNG styling */
+.button-wrapper {
+  flex: 1;
+}
+
+/* 🔹 Forgot Password */
+.forgot-password {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 15px;
+  text-align: right;
+  color: #3381d4;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+  color: #0056b3;
+}
+
+/* 🔹 Password Field */
+.password-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.password-field {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+/* 🔹 Password Hint */
+.password-hint {
+  font-size: 13px;
+  color: #777;
+  margin-top: 5px;
+  display: block;
+  font-style: italic;
+}
+
+strong {
+  cursor: pointer;
+}
+
+/* 🔹 Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🔹 Responsive Design */
+@media (max-width: 450px) {
+  .auth-container {
+    width: 90%;
     padding: 20px;
-    text-align: center;
-    background: #fff;
-    border-radius: 12px;
-    transition: all 0.3s ease-in-out;
   }
-  
-  
-  /* 🔹 Headings */
-  h1 {
-    font-size: 26px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #222;
+
+  .p-button {
+    padding: 10px;
+    font-size: 14px;
   }
-  
-  p {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* 🔹 Form Styling */
-  .form-group {
-    margin-bottom: 24px; /* More spacing for better readability */
-    text-align: left;
-  }
-  
-  /* 🔹 Uniform Input Fields (Email & Password) */
-  input {
-    width: 100%;
-    font-size: 16px;
-    padding: 10px; /* Ensures equal padding */
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  /* 🔹 Button Styling */
-  .button-container {
-    text-align: center;
-    margin-top: 25px;
-  }
-  
-  .black-button {
-    width: 100%;
-    background-color: black;
-    color: white;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    outline: none;
-  }
-  
-  .black-button:focus {
-    outline: none !important;
-    box-shadow: none !important;
-  }
-  
-  .black-button:hover {
-    background-color: #333;
-    transform: scale(1.05);
-  }
- 
-  /* 🔹 Forgot Password */
-  .forgot-password {
-    display: inline-block;
-    margin-top: 5px;
-    font-size: 15px;
-    text-align: right;
-    color: #3381d4;
-    cursor: pointer;
-    font-weight: bold;
-    transition: color 0.3s;
-  }
-  
-  .forgot-password:hover {
-    text-decoration: underline;
-    color: #0056b3;
-  }
-  
-  /* 🔹 Password Field */
-  .password-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .password-field {
-    display: flex;
-    align-items: center;
-    position: relative;
-    width: 100%;
-  }
-  
-  /* 🔹 Password Hint */
+
   .password-hint {
     font-size: 13px;
     color: #777;
@@ -113,43 +162,36 @@
     display: block;
     font-style: italic;
   }
-  strong{
-    cursor: pointer;
+
+  /* Ensuring input fields remain equal */
+  input {
+    height: 48px;
+    /* Adjust height for mobile */
   }
-  /* 🔹 Animations */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-5px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* 🔹 Responsive Design */
-  @media (max-width: 450px) {
-    .auth-container {
-      width: 90%;
-      padding: 20px;
-    }
-  
-    .black-button {
-      padding: 10px;
-      font-size: 14px;
-    }
-    .password-hint {
-      font-size: 13px;
-      color: #777;
-      margin-top: 5px;
-      display: block;
-      font-style: italic;
-    }
-  
-    /* Ensuring input fields remain equal */
-    input {
-      height: 48px; /* Adjust height for mobile */
-    }
-  }
-  
+}
+
+.no-resize {
+  resize: none;
+}
+
+.register-prompt {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.register-link {
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.register-link:hover {
+  color: #333;
+}
+.avatar-image{
+width: 150px;
+height: 150px;
+}

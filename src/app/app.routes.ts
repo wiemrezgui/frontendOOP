@@ -11,7 +11,6 @@ export const routes: Routes = [
       { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
       { path: 'register', loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent) },
       { path: 'forgot-password', loadComponent: () => import('./auth/forget-password/forget-password.component').then(m => m.ForgetPasswordComponent) },
-      { path: 'complete-profile', loadComponent: () => import('./pages/complete-profile/complete-profile.component').then(m => m.CompleteProfileComponent) },
     ]
   },
   {

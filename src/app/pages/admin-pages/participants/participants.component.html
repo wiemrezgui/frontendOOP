@@ -1,1 +1,187 @@
-<p>participants works!</p>
+<!--<div class="card">
+    <p-table #dt [value]="participants" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
+        [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} participants">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon class="pi pi-search"></p-inputIcon>
+                    <input pInputText type="text" placeholder="Search participants..." fluid
+                        (input)="filterparticipants($event)" style="width:450px" />
+                </p-iconField>
+                <button pButton icon="pi pi-plus" label="Add participant" (click)="openAddparticipantDialog()"
+                    class="p-button-primary"></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Structure</th>
+                <th>Profile</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-participant>
+            <tr>
+                <td>
+                    <p-avatar [image]="participant.profileImage || 'assets/images/logo.png'" shape="circle"
+                        size="large"></p-avatar>
+                </td>
+
+                <td>{{ participant.firstName }} {{ participant.lastName }}</td>
+
+                <td>{{ participant.email }}</td>
+
+                <td>{{ participant.phoneNumber }}</td>
+
+                <td>{{ participant.structure }}</td>
+
+                <td>{{ participant.profile }}</td>
+
+                <td>
+                    <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text "
+                        severity="info" pTooltip="Voir les détails" tooltipPosition="top"
+                        (click)="openDetails(participant)"></button>
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
+                        (click)="openEditparticipantDialog(participant)" pTooltip="Edit" tooltipPosition="top"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                        (click)="confirmDelete(participant)" pTooltip="Delete" tooltipPosition="top"></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No participants found</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-dialog [(visible)]="displayparticipantDialog" [header]="isAddparticipant ? 'Add participant' : 'Edit participant'"
+    [style]="{ width: '50vw' }" [modal]="true" [styleClass]="'participant-dialog'">
+    <div class="form-container">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="firstName">First Name <span class="required">*</span></label>
+                <input id="firstName" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.firstName"/>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name <span class="required">*</span></label>
+                <input id="lastName" pInputText required fluid placeholder="Doe" [(ngModel)]="participantForm.lastName"/>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="email">Email <span class="required">*</span></label>
+                <input id="email" pInputText type="email" required fluid placeholder="you@example.com" [(ngModel)]="participantForm.email"/>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="phone">Phone <span class="required">*</span></label>
+                <p-inputgroup>
+                    <p-inputgroup-addon>+216</p-inputgroup-addon>
+                    <input pInputText
+                        maxlength="8" required placeholder="98147852" [(ngModel)]="participantForm.phoneNumber"/>
+                </p-inputgroup>
+            </div>
+            <div class="form-group full-width">
+                <label for="structure">Structure <span class="required">*</span></label>
+                <input id="structure" pInputText type="text" required fluid placeholder="structure.." [(ngModel)]="participantForm.structure"/>
+            </div>
+            <div class="form-group full-width">
+                <label for="profile">Profile <span class="required">*</span></label>
+                <input id="profile" pInputText type="text" required fluid placeholder="profile.." [(ngModel)]="participantForm.profile"/>
+            </div>
+        </div>
+
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="Cancel" icon="pi pi-times" (click)="closeparticipantDialog()" class="p-button-text"></button>
+        <button pButton label="Save" icon="pi pi-save" (click)="saveparticipant()" class="p-button-primary"></button>
+    </ng-template>
+</p-dialog>
+<p-dialog [(visible)]="displayDetailsDialog" [header]="'Participant Details'" [style]="{ width: '66vw' }" [modal]="true"
+    [styleClass]="'participant-dialog'">
+    <div class="dialog-container p-grid">
+        <div class="left-section p-col-5">
+            <div class="profile-container">
+                <p-avatar [image]="selectedparticipantDetails.profileImage || 'assets/images/user-logo.png'" shape="circle"
+                    size="xlarge" class="profile-image"></p-avatar>
+
+                <div class="name-type-container">
+                    <h2>{{ selectedparticipantDetails.username }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-section p-col-7">
+            <div class="details-container">
+                <div class="p-grid">
+                    <div class="p-col-6">
+                        <p><strong> First Name:</strong> {{ selectedparticipantDetails.firstName || '-' }}</p>
+                        <p><strong> Last Name:</strong> {{ selectedparticipantDetails.lastName || '-' }}</p>
+                    </div>
+
+                    <div class="p-col-6">
+                        <p><strong> Date of Birth:</strong> {{ (selectedparticipantDetails.dateOfBirth | date) || '-' }}</p>
+                        <p><strong> Address:</strong> {{ selectedparticipantDetails.address || '-' }}</p>
+
+                    </div>
+
+                    <div class="p-col-6">
+                        <p><strong> Phone:</strong> {{ selectedparticipantDetails.phoneNumber || '-' }}</p>
+                        <p><strong>Email:</strong> {{ selectedparticipantDetails.email || '-' }}</p>
+                    </div>
+
+                    <div class="p-col-6">
+                        <p><strong> Structure:</strong> {{ selectedparticipantDetails.structure || '-' }}</p>
+                        <p><strong> Profile:</strong> {{ selectedparticipantDetails.profile || '-' }}</p>
+
+                    </div>
+
+                    <div class="p-col-12">
+                        <p><strong> Description:</strong></p>
+                        <p class="description">{{ selectedparticipantDetails.description || 'No description provided' }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sessions-container">
+                <h3>Enrolled Training Sessions</h3>
+                <div class="sessions-flex-container">
+                    <div *ngFor="let session of [1,2,3]">
+                        <p-card class="session-card">
+                            <ng-template pTemplate="header">
+                                <div class="session-header">
+                                    <span>Session {{session}}</span>
+                                </div>
+                            </ng-template>
+                            <div class="session-content">
+                                <p><i class="pi pi-calendar"></i>2025</p>
+                                <p><i class="pi pi-clock"></i> 10:00 AM - 12:00 PM</p>
+                                <p><i class="pi pi-calendar"></i> 6 weeks</p>
+                            </div>
+                        </p-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+<p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
+    <div *ngIf="participantToDelete">
+        <p>Are you sure you want to delete the participant <strong>{{ participantToDelete.firstName }} {{ participantToDelete.lastName
+                }}</strong>?</p>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
+            class="p-button-text"></button>
+        <button pButton label="Yes" icon="pi pi-check" (click)="deleteparticipant()" class="p-button-danger"></button>
+    </ng-template>
+</p-dialog> -->

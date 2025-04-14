@@ -1,0 +1,102 @@
+<div class="grid grid-cols-4 mb-6 simple-metrics">
+    <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h2 class="text-2xl font-bold text-blue-700">{{ totalParticipants }}</h2>
+        <p class="text-gray-600">Participants</p>
+    </div>
+    <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h2 class="text-2xl font-bold text-green-700">{{ totalSessions }}</h2>
+        <p class="text-gray-600">Sessions</p>
+    </div>
+    <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h2 class="text-2xl font-bold text-purple-700">{{ totalTrainers }}</h2>
+        <p class="text-gray-600">Trainers</p>
+    </div>
+    <div class="bg-white shadow-md rounded-xl p-4 text-center">
+        <h2 class="text-2xl font-bold text-yellow-600">{{ totalBudget | currency:'TND ' }}</h2>
+        <p class="text-gray-600">Budget Total</p>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="flex justify-between w-full mb-6">
+    <!-- Gender Pie Chart -->
+    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Distribution by Gender</h3>
+        <ngx-charts-pie-chart [view]="[350, 350]" [results]="genderDistribution" [legend]="true" [labels]="true"
+            [doughnut]="false" [animations]="true">
+        </ngx-charts-pie-chart>
+    </div>
+
+    <!-- Sessions by Domain Bar Chart -->
+    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Sessions by Domain</h3>
+        <ngx-charts-bar-vertical [view]="[400, 350]" [results]="sessionsPerDomain" [legend]="false" [xAxis]="true"
+            [yAxis]="true" [animations]="true" [roundEdges]="true" [barPadding]="8" [showDataLabel]="true">
+        </ngx-charts-bar-vertical>
+    </div>
+
+    <!-- Trainer Type Donut Chart -->
+    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Type of Trainers</h3>
+        <ngx-charts-pie-chart [view]="[350, 350]" [results]="trainerTypeRatio" [legend]="true" [labels]="true"
+            [doughnut]="true" [animations]="true">
+        </ngx-charts-pie-chart>
+    </div>
+</div>
+
+
+<!-- Stats Charts Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+    <!-- Top Trainers Chart -->
+    <div class="bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Top Trainers</h3>
+        <ngx-charts-bar-horizontal [view]="[300, 250]" [results]="topTrainers" [xAxis]="true" [yAxis]="true"
+            [legend]="false" [showDataLabel]="true" [animations]="true" [dataLabelFormatting]="formatSessions">
+        </ngx-charts-bar-horizontal>
+    </div>
+
+    <!-- Top Participants Chart -->
+    <div class="bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Most active Participants</h3>
+        <ngx-charts-bar-horizontal [view]="[300, 250]" [results]="topParticipants" [xAxis]="true" [yAxis]="true"
+            [legend]="false" [showDataLabel]="true" [animations]="true" [dataLabelFormatting]="formatSessions">
+        </ngx-charts-bar-horizontal>
+    </div>
+
+    <!-- Top Domains Chart -->
+    <div class="bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Most famous Domains</h3>
+        <ngx-charts-bar-horizontal [view]="[300, 250]" [results]="topDomains" [xAxis]="true" [yAxis]="true"
+            [legend]="false" [showDataLabel]="true" [animations]="true" [dataLabelFormatting]="formatSessions">
+        </ngx-charts-bar-horizontal>
+    </div>
+
+</div>
+ <!-- Charts Row -->
+ <div class="flex justify-between w-full mb-6">
+    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Duration vs Budget per Training</h3>
+        <ngx-charts-bubble-chart [view]="[520, 300]" [results]="sessionBudgetChart" [xAxis]="true" [yAxis]="true"
+            [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Durée (jours)'" [yAxisLabel]="'Budget (TND)'"
+            [legend]="true" [legendTitle]="'Domains'" [maxRadius]="30">
+        </ngx-charts-bubble-chart>
+    </div>
+    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
+        <h3 class="font-semibold text-lg mb-4">Participant Engagement</h3>
+        <ngx-charts-heat-map
+          [view]="[550, 300]"
+          [results]="engagementData"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="true"
+          [gradient]="true"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          [yAxisLabel]="'Domains'"
+          [xAxisLabel]="'Participants'"
+          [innerPadding]="2"
+          >
+        </ngx-charts-heat-map>
+    </div>
+  </div>

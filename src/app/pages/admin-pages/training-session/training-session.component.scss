@@ -1,0 +1,197 @@
+  /* 🔹 Card (Container) */
+  .card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  // ✅ Labels Styling
+  label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: 400;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .p-inputtext {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }
+
+  .form-group-group-items {
+    display: flex;
+    gap: 10px;
+  }
+
+  .p-button-primary {
+    margin-left: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .p-dialog-footer {
+    margin-top: 10px;
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: nowrap;
+    /* Prevent fields from stacking */
+  }
+
+  .form-group {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .dialog-container {
+    padding: 0.5rem;
+    display: flex;
+  }
+
+  /* Left section styles */
+  .left-section {
+    padding-right: 1.5rem;
+    border-right: 1px solid #d2ebfd;
+    width: 20%;
+
+  }
+
+  .nb-participants {
+    color: #6c757d;
+    margin-bottom: 0.8rem;
+  }
+
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-image {
+    margin-bottom: 0px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .name-type-container {
+    align-items: center;
+
+    h2 {
+      margin-bottom: 3px;
+    }
+  }
+
+  .session-type-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .session-type-card {
+    text-align: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    color: white;
+    font-weight: bold;
+    border: 2px solid transparent;
+    width: 120px;
+  }
+
+  .session-type-card.online {
+    background-color: #dcfce7;
+    /* Green */
+    color: #15803d;
+  }
+
+  .session-type-card.face-to-face {
+    background-color: #ffedd5;
+    /* Orange */
+    color: #c2410c;
+  }
+
+  .session-type-card.hybrid {
+    background-color: #e0f2fe;
+    /* Orange */
+    color: #0369a1;
+  }
+
+  .session-type-card:hover {
+    opacity: 0.9;
+  }
+
+  .session-type-card.selected.online {
+    border: 2px solid #15803d;
+    /* Dark green */
+  }
+
+  .session-type-card.selected.face-to-face {
+    border: 2px solid #892f09;
+    /* Dark orange */
+  }
+
+  .session-type-card.selected.hybrid {
+    border: 2px solid #0369a1;
+    /* Dark orange */
+  }
+
+  .infos-line {
+    display: flex;
+    gap: 10px;
+  }
+
+  /* Right section styles */
+  .right-section {
+    padding-left: 1.5rem;
+    width: 80%;
+  }
+
+  .p-col-6 {
+    display: flex;
+
+    p {
+      width: 50%;
+    }
+  }
+
+  .details-container p {
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* Sessions section */
+  .sessions-container {
+    margin-top: 1rem;
+    cursor: pointer;
+
+    h3 {
+      text-align: center;
+    }
+  }
+
+  /* Sessions flex container */
+  .sessions-flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .required {
+    color: red;
+  }

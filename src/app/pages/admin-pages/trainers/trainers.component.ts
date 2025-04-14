@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { Trainer } from '../../../shared/models/trainer.model';
-import { SelectItem } from 'primeng/api';
-import { TableModule } from 'primeng/table';
+import { Component, ViewChild } from '@angular/core';
+import { ConfirmationService, SelectItem } from 'primeng/api';
+import { Table, TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -16,9 +15,12 @@ import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
+import { FormsModule } from '@angular/forms';
+import { TrainerService } from '../../../shared/services/trainer.service';
+import { ToastServiceService } from '../../../shared/services/toast-service.service';
+import { Trainer } from '../../../shared/models/trainer.model';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-trainers',
   standalone:true,
@@ -29,204 +31,159 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './trainers.component.scss'
 })
 export class TrainersComponent {
-// Table data
-trainers: Trainer[] = [];
-filteredTrainers: Trainer[] = [];
+  @ViewChild('dt') dt!: Table;
+  trainers: Trainer[] = [];
+  trainerForm: Partial<Trainer> = {
+    trainerType: 'INTERNAL',
+    employerName: '',
+    username: '',
+    email: ''
+  };
+  trainerToDelete: Trainer | null = null;
+  selectedTrainerDetails: Trainer | null = null;
 
-// Pagination
-rows = 10;
-first = 0;
-totalRecords = 0;
+  // UI Controls
+  displayTrainerDialog = false;
+  displayDeleteDialog = false;
+  displayDetailsDialog = false;
+  isAddTrainer = true;
+  loading = false;
 
-// Dialogs
-displayTrainerDialog = false;
-displayDeleteDialog = false;
-displayDetailsDialog = false;
+  // Pagination
+  rows = 10;
+  first = 0;
+  totalRecords = 0;
 
-// Forms
-trainerForm: Partial<Trainer> = {};
-  trainerToDelete: Trainer = new Trainer;
-  selectedTrainer: Trainer = new Trainer;
-  selectedTrainerDetails: Trainer = new Trainer;
-  isAddTrainer:boolean=false
-// Dropdown options
-specializations: SelectItem[] = [
-  { label: 'Informatique', value: 'INFORMATIQUE' },
-  { label: 'Finance', value: 'FINANCE' },
-  { label: 'Mécanique', value: 'MECANIQUE' },
-  { label: 'Gestion', value: 'GESTION' }
-];
-
-trainerTypes = [
-  { label: 'Internal', value: 'INTERNAL' },
-  { label: 'External', value: 'EXTERNAL' }
-];
-ngOnInit() {
-  this.loadTrainers();
-}
-
-loadTrainers() {
-  // Replace with actual API call
-  this.trainers = [
-    {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      specialization: 'INFORMATIQUE',
-      type: 'INTERNAL',
-      profileImage: 'assets/images/logo.png',
-      gender: 'Female',
-      dateOfBirth: '',
-      address: 'ariana',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente deserunt quaerat nam libero culpa, sit ipsa voluptatum pariatur voluptatem, placeat consequuntur possimus reprehenderit',
-      github: 'www.github.com',
-      facebook: 'www.github.com',
-      linkedin: 'www.github.com',
-      username: 'johnDoe14'
-    },
-    {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      specialization: 'INFORMATIQUE',
-      type: 'EXTERNAL',
-      profileImage: 'assets/images/user-logo.png',
-      gender: 'Female',
-      dateOfBirth: '',
-      address: 'ariana',
-      description: 'lo',
-      github: '',
-      facebook: '',
-      linkedin: '',
-      username: 'johnDoe14'
-    },
-    {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      specialization: 'INFORMATIQUE',
-      type: 'INTERNAL',
-      profileImage: 'assets/images/user-logo.png',
-      gender: 'Female',
-      dateOfBirth: '',
-      address: 'ariana',
-      description: 'lo',
-      github: '',
-      facebook: '',
-      linkedin: '',
-      username: 'johnDoe14'
-
-    },
-    {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      specialization: 'INFORMATIQUE',
-      type: 'INTERNAL',
-      profileImage: 'assets/images/user-logo.png',
-      gender: 'Female',
-      dateOfBirth: '',
-      address: 'ariana',
-      description: 'lo',
-      github: '',
-      facebook: '',
-      linkedin: '',
-      username: 'johnDoe14'
-
-    }
+  // Dropdown options
+  trainerTypes = [
+    { label: 'INTERNAL', value: 'INTERNAL' },
+    { label: 'EXTERNAL', value: 'EXTERNAL' }
   ];
-  this.filteredTrainers = [...this.trainers];
-  this.totalRecords = this.filteredTrainers.length;
-}
 
-filterTrainers(event: Event) {
-  const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
-  this.filteredTrainers = this.trainers.filter(trainer => 
-    trainer.firstName.toLowerCase().includes(searchValue) ||
-    trainer.lastName.toLowerCase().includes(searchValue) ||
-    trainer.email.toLowerCase().includes(searchValue) ||
-    trainer.phoneNumber.includes(searchValue)
-  );
-  this.totalRecords = this.filteredTrainers.length;
-  this.first = 0;
-}
+  genders = [
+    { label: 'Male', value: 'MALE' },
+    { label: 'Female', value: 'FEMALE' },
+    { label: 'Other', value: 'OTHER' }
+  ];
 
-onPageChange(event: any) {
-  this.first = event.first;
-  this.rows = event.rows;
-}
+  roles = [
+    { label: 'Participant', value: 'PARTICIPANT' },
+    { label: 'Trainer', value: 'TRAINER' },
+    { label: 'Admin', value: 'ADMIN' }
+  ];
 
-openAddTrainerDialog() {
-  this.isAddTrainer=true
-  this.trainerForm = {};
-  console.log('selected '+this.selectedTrainer );
-  this.displayTrainerDialog = true;
-}
+  constructor(
+    private trainerService: TrainerService,
+    private toastService: ToastServiceService,
+    private confirmationService: ConfirmationService
+  ) {}
 
-openEditTrainerDialog(trainer: Trainer) {
-  this.isAddTrainer=false
-  console.log('selected '+this.selectedTrainer );
-  this.selectedTrainer = trainer;
-  this.trainerForm = { ...trainer };
-  this.displayTrainerDialog = true;
-}
-
-saveTrainer() {
-  if (this.selectedTrainer) {
-    // Update existing trainer
-    const index = this.trainers.findIndex(t => t.id === this.selectedTrainer?.id);
-    if (index !== -1) {
-      this.trainers[index] = { ...this.trainers[index], ...this.trainerForm };
-    }
-  } else {
-    // Add new trainer
-    const newTrainer= new Trainer ()
-    this.trainers.push(newTrainer);
+  ngOnInit(): void {
+    this.loadTrainers();
   }
-  
-  this.filteredTrainers = [...this.trainers];
-  this.displayTrainerDialog = false;
-  this.isAddTrainer=false
-}
 
-confirmDelete(trainer: Trainer) {
-  this.trainerToDelete = trainer;
-  this.displayDeleteDialog = true;
-}
-
-deleteTrainer() {
-  if (this.trainerToDelete) {
-    this.trainers = this.trainers.filter(t => t.id !== this.trainerToDelete?.id);
-    this.filteredTrainers = [...this.trainers];
-    this.totalRecords = this.filteredTrainers.length;
-    this.displayDeleteDialog = false;
+  loadTrainers(page: number = 0): void {
+    this.loading = true;
+    this.trainerService.getAllTrainers(page).subscribe({
+      next: (trainers) => {
+        this.trainers = trainers.map(trainer => new Trainer(trainer));
+        this.totalRecords = trainers.length; // Adjust based on your API pagination
+        this.loading = false;
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+        this.loading = false;
+      }
+    });
   }
-}
 
-closeTrainerDialog() {
-  this.displayTrainerDialog = false;
-}
+  onPageChange(event: any): void {
+    this.first = event.first;
+    this.rows = event.rows;
+    const page = event.first / event.rows;
+    this.loadTrainers(page);
+  }
 
-onImageSelect(event: any) {
-  const file = event.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.trainerForm.profileImage = e.target?.result as string;
+  filterTrainers(event: Event): void {
+    const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
+    this.dt.filterGlobal(searchValue, 'contains');
+  }
+
+  openAddTrainerDialog(): void {
+    this.isAddTrainer = true;
+    this.trainerForm = {
+      trainerType: 'INTERNAL',
+      employerName: '',
+      username: '',
+      email: '',
+      role: 'TRAINER'
     };
-    reader.readAsDataURL(file);
+    this.displayTrainerDialog = true;
   }
-}
-openDetails(trainer:any){
-  this.displayDetailsDialog=true
-  this.selectedTrainerDetails=trainer
-}
+
+  openEditTrainerDialog(trainer: Trainer): void {
+    this.isAddTrainer = false;
+    this.trainerForm = { ...trainer };
+    this.displayTrainerDialog = true;
+  }
+
+  openDetails(trainer: Trainer): void {
+    this.selectedTrainerDetails = trainer;
+    this.displayDetailsDialog = true;
+  }
+
+  saveTrainer(): void {
+    if (this.isAddTrainer) {
+      this.trainerService.createTrainer(this.trainerForm as Trainer).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Trainer created successfully');
+          this.loadTrainers();
+          this.displayTrainerDialog = false;
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message);
+        }
+      });
+    } else {
+      if (!this.trainerForm.trainerId) return;
+      
+      this.trainerService.updateTrainer(this.trainerForm.trainerId, this.trainerForm as Trainer).subscribe({
+        next: () => {
+          this.toastService.showSuccess('Trainer updated successfully');
+          this.loadTrainers();
+          this.displayTrainerDialog = false;
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message);
+        }
+      });
+    }
+  }
+
+  confirmDelete(trainer: Trainer): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete ${trainer.username}?`,
+      header: 'Confirm Delete',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.deleteTrainer(trainer.trainerId!);
+      }
+    });
+  }
+
+  deleteTrainer(id: number): void {
+    this.trainerService.deleteTrainer(id).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Trainer deleted successfully');
+        this.loadTrainers();
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
+  }
+
+  closeTrainerDialog(): void {
+    this.displayTrainerDialog = false;
+  }
 }

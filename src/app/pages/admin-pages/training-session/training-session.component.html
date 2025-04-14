@@ -1,1 +1,195 @@
-<p>training-session works!</p>
+<!--<div class="card">
+    <p-table #dt [value]="sessions" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
+        [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sessions">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center">
+                <p-iconField iconPosition="left">
+                    <p-inputIcon class="pi pi-search"></p-inputIcon>
+                    <input pInputText type="text" placeholder="Search sessions..." fluid
+                        (input)="filtersessions($event)" style="width:450px" />
+                </p-iconField>
+                <button pButton icon="pi pi-plus" label="Add session" (click)="openAddsessionDialog()"
+                    class="p-button-primary"></button>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Duration</th>
+                <th>Price</th>
+                <th>Domain</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-session>
+            <tr>
+                <td>{{ session.id }}</td>
+                <td>{{ session.title }}</td>
+                <td>
+                    <p-tag [value]="session.type === 'Face-to-face' ? 'Face-to-face' : 
+                (session.type === 'Online' ? 'Online' : 'Hybrid')"
+                [severity]="session.type === 'Face-to-face' ? 'warn' : 
+                  (session.type === 'Online' ? 'success' : 'info')"></p-tag>
+                </td>
+                <td>{{ session.duration }}</td>
+                <td>{{ session.budget }}</td>
+                <td>{{ session.domain }}</td>
+                <td>
+                    <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text "
+                        severity="info" pTooltip="Voir les détails" tooltipPosition="top"
+                        (click)="openDetails(session)"></button>
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
+                        (click)="openEditsessionDialog(session)" pTooltip="Edit" tooltipPosition="top"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                        (click)="confirmDelete(session)" pTooltip="Delete" tooltipPosition="top"></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No sessions found</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+<p-dialog [(visible)]="displaysessionDialog" [header]="isAddsession ? 'Add session' : 'Edit session'"
+    [style]="{ width: '50vw' }" [modal]="true" [styleClass]="'session-dialog'">
+    <div class="form-container">
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="title">Title <span class="required">*</span></label>
+                <input id="title" pInputText required fluid placeholder="title 1 " [(ngModel)]="sessionForm.title"/>
+            </div>
+            <div class="form-group full-width">
+                <label for="budget">Duration <span class="required">*</span></label>
+                <div class="form-group-group-items">
+                <input id="budget" pInputText type="text" required fluid placeholder="two "/>
+                Days
+            </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="budget">Budget <span class="required">*</span></label>
+                <input id="budget" pInputText type="text" required fluid placeholder="150" [(ngModel)]="sessionForm.budget"/>
+            </div>
+            <div class="form-group full-width">
+                <label for="domain">Domain <span class="required">*</span></label>
+                <input id="domain" pInputText type="text" required fluid placeholder="domain.." [(ngModel)]="sessionForm.domain"/>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group full-width">
+                <label for="startTime">Start time <span class="required">*</span></label>
+                <input id="startTime" pInputText type="text" required fluid placeholder="start Time" [(ngModel)]="sessionForm.startTime"/>
+            </div>
+            <div class="form-group">
+                <label for="endTime">End time <span class="required">*</span></label>
+                <input id="endTime" pInputText required fluid placeholder="end Time" [(ngModel)]="sessionForm.endTime" type="text"/>
+            </div>
+            <div class="form-group">
+                <label for="year">Year <span class="required">*</span></label>
+                <input id="year" pInputText required fluid placeholder="2025" [(ngModel)]="sessionForm.year" type="text"/>
+            </div>
+        </div>
+         <div class="form-row">
+            <div class="form-group full-width">
+                <div class="session-type-container">
+                    <div 
+                        class="session-type-card online" 
+                        [class.selected]="sessionForm.type === 'Online'"
+                        (click)="sessionForm.type = 'Online'">
+                        <p>Online</p>
+                    </div>
+                    <div 
+                        class="session-type-card face-to-face" 
+                        [class.selected]="sessionForm.type === 'Face-to-face'"
+                        (click)="sessionForm.type = 'Face-to-face'">
+                        <p>Face-to-face</p>
+                    </div>
+                    <div 
+                        class="session-type-card hybrid" 
+                        [class.selected]="sessionForm.type === 'Hybrid'"
+                        (click)="sessionForm.type = 'Hybrid'">
+                        <p>Hybrid</p>
+                    </div>
+                </div>          
+             </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="Cancel" icon="pi pi-times" (click)="closesessionDialog()" class="p-button-text"></button>
+        <button pButton label="Save" icon="pi pi-save" (click)="savesession()" class="p-button-primary"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="displayDetailsDialog" [header]="'Session Details'" [style]="{ width: '66vw' }" [modal]="true"
+    [styleClass]="'session-dialog'">
+    <div class="dialog-container p-grid">
+        <div class="left-section p-col-3">
+            <div class="profile-container">
+                <div class="name-type-container">
+                    <h2>{{ selectedSessionDetails.title }}</h2>
+                        <p-tag [value]="selectedSessionDetails.type === 'Face-to-face' ? 'Face-to-face' : 
+                    (selectedSessionDetails.type === 'Online' ? 'Online' : 'Hybrid')"
+                    [severity]="selectedSessionDetails.type === 'Face-to-face' ? 'warn' : 
+                    (selectedSessionDetails.type === 'Online' ? 'success' : 'info')" class="type-tag"></p-tag>
+                </div>
+                <p class="nb-participants">
+                    <i class="pi pi-tag"></i> {{ nbParticipants || '0' }} participants
+                </p>
+            </div>
+        </div>
+
+        <div class="right-section p-col-9">
+            <div class="details-container">
+                <div class="p-grid">
+                    <div class="p-col-6">
+                        <p><strong> Domain:</strong> {{ selectedSessionDetails.domain || '-' }}</p>
+                        <p><strong> Duration:</strong> {{ selectedSessionDetails.duration || '-' }} Days</p>
+                    </div>
+
+                    <div class="p-col-6">
+                        <p><strong> Start time:</strong> {{ (selectedSessionDetails.startTime | date) || '-' }}</p>
+                        <p><strong> End time:</strong> {{ selectedSessionDetails.endTime || '-' }}</p>
+
+                    </div>
+
+                    <div class="p-col-6">
+                        <p><strong> Budget:</strong> {{ selectedSessionDetails.budget || '-' }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="sessions-container">
+                <h3>Trainer informations</h3>
+                <div class="sessions-flex-container">
+                    <p-avatar [image]="'assets/images/logo.png'" shape="circle"
+                    size="xlarge" class="profile-image"></p-avatar>
+                    <div class="trainer-infos">
+                        <p><strong>Name :</strong> WIEM REZGUI</p>
+                        <p><strong>Contact Number :</strong> 57147852</p>
+                        <p><strong>Email :</strong> wiemrezgui012&#64;gmail.com</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-dialog>
+<p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
+    <div *ngIf="sessionToDelete">
+        <p>Are you sure you want to delete the session <strong>{{ sessionToDelete.title }} </strong> having ID <strong>{{sessionToDelete.id}}</strong>?</p>
+    </div>
+    <ng-template pTemplate="footer">
+        <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
+            class="p-button-text"></button>
+        <button pButton label="Yes" icon="pi pi-check" (click)="deletesession()" class="p-button-danger"></button>
+    </ng-template>
+</p-dialog>-->

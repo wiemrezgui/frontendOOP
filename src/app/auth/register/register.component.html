@@ -1,48 +1,113 @@
 <div class="auth-container">
-    <p-image src="assets/images/logo.png" alt="Image" width="200" />
-      <h1><strong>Welcome to our Training center..</strong></h1>
-      <p>Please enter all the informations to create new account</p>
-      <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
-        <div class="form-group">
-          <input pInputText type="text" formControlName="email" placeholder="exemple@gmail.com"/>
-        </div>
-        <div class="form-group password-container">
-          <p-password formControlName="password" autocomplete="off" fluid placeholder="Password">
-            <ng-template #header>
-                <div class="font-semibold text-xm mb-4">Choose solid password</div>
-            </ng-template>
-            <ng-template #footer>
-                <p-divider />
-                <ul class="pl-2 ml-2 my-0 leading-normal">
-                  <li>At least one lowercase letter</li>
-                  <li>At least one uppercase letter</li>
-                  <li>At least one number</li>
-                  <li>At least 8 characters</li>
-                </ul>
-            </ng-template>
-        </p-password>
-          <!-- ✅ Password Hint -->
-          <small class="password-hint">💡 Use at least 8 characters, including numbers and letters.</small>
-        </div>
-        <div class="form-group password-container">
-            <p-password formControlName="password" autocomplete="off" fluid placeholder="Confirm password">
-              <ng-template #header>
-                  <div class="font-semibold text-xm mb-4">Choose solid password</div>
-              </ng-template>
-              <ng-template #footer>
-                  <p-divider />
-                  <ul class="pl-2 ml-2 my-0 leading-normal">
-                    <li>At least one lowercase letter</li>
-                    <li>At least one uppercase letter</li>
-                    <li>At least one number</li>
-                    <li>At least 8 characters</li>
-                  </ul>
-              </ng-template>
-          </p-password>
-          </div>
-        <button type="submit" class="black-button">
-          {{ loading ? '🔄 Loading...' : 'Sign up' }}
-        </button>
-        <small class="margin-small-top">Already have account ? <strong (click)="goToLogIn()">Log in</strong></small>
-      </form>
-  </div>
+  <p-image src="assets/images/logo.png" alt="Image" width="200"></p-image>
+  <h1><strong>Welcome to our Training center</strong></h1>
+  <p>Please enter all the informations to create new account</p>
+
+  <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
+    <p-stepper [value]="1" class="basis-[50rem]">
+      <p-step-list>
+        <p-step [value]="1">Header I</p-step>
+        <p-step [value]="2">Header II</p-step>
+      </p-step-list>
+      <p-step-panels>
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <!-- Email -->
+            <div class="form-group">
+              <input pInputText type="email" formControlName="email" placeholder="example@gmail.com" />
+            </div>
+            <!-- Password -->
+            <div class="form-group password-container">
+              <p-password formControlName="password" [feedback]="false" placeholder="Password" fluid>
+              </p-password>
+              <small class="password-hint">💡 Utilisez au moins 6 caractères, incluant chiffres et lettres.</small>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group password-container">
+              <p-password formControlName="confirmPassword" [feedback]="false" placeholder="Confirm Password" fluid></p-password>
+            </div>
+            <!-- Next Button -->
+            <div class="button">
+              <p-button label="Next" icon="pi pi-arrow-right" iconPos="right" styleClass="black-button"
+                (onClick)="activateCallback(2)">
+              </p-button>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="file-upload">
+              <div class="file-upload-content">
+                <div>
+                  <p-avatar [image]="profileImage" size="xlarge" shape="circle" class="avatar-image"/>
+                </div>
+                <div class="card flex flex-col gap-4 items-center justify-center">
+                  <p-toast />
+                  <p-fileUpload
+                    mode="basic" 
+                    chooseLabel="Choisir" 
+                    chooseIcon="pi pi-upload" 
+                    name="demo[]"
+                    url="https://www.primefaces.org/cdn/api/upload.php" 
+                    accept="image/*" 
+                    maxFileSize="1000000"
+                    (onSelect)="onFileSelect($event)">
+                  </p-fileUpload>
+                </div>
+              </div>
+            </div>
+            <!-- Username -->
+            <div class="form-group">
+              <input pInputText type="text" formControlName="username" placeholder="Username" />
+            </div>
+            <!-- Role Dropdown -->
+            <div class="form-group">
+              <p-dropdown [options]="roles" optionLabel="name" formControlName="role" placeholder="Select Role"
+                fluid></p-dropdown>
+            </div>
+            <!-- Phone Number -->
+            <div class="form-group">
+              <input pInputText type="tel" formControlName="phoneNumber" placeholder="Phone Number" fluid />
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="form-group">
+              <p-datepicker formControlName="dateOfBirth" placeholder="Date of Birth" [showIcon]="true"
+                fluid></p-datepicker>
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+              <p-dropdown [options]="gender"
+                 formControlName="gender" placeholder="Select Gender" fluid></p-dropdown>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <textarea formControlName="description" placeholder="Description" rows="3" cols="30"
+                fluid class="no-resize"></textarea>
+            </div>
+            <div class="button-container">
+              <div class="button-wrapper">
+                <p-button label="Previous" icon="pi pi-arrow-left" iconPos="left" styleClass="prev-button"
+                  (onClick)="activateCallback(1)">
+                </p-button>
+              </div>
+              <div class="button-wrapper">
+                <p-button label="Sign up" styleClass="black-button" (onClick)="signUp()">
+                </p-button>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
+    </p-stepper>
+
+    <div class="register-prompt">
+      Already have an account? <strong class="register-link" (click)="goToLogIn()">Log in</strong>
+    </div>
+  </form>
+</div>
+<p-toast />

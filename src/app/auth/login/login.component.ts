@@ -6,9 +6,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { ImageModule } from 'primeng/image';
+import { AuthService } from '../../shared/services/auth.service';
+import { ToastServiceService } from '../../shared/services/toast-service.service';
+import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { ToastModule } from 'primeng/toast';
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,InputTextModule,PasswordModule,DividerModule,ImageModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,InputTextModule,PasswordModule,DividerModule,ImageModule
+    ,HttpClientModule,ToastModule
+  ],
   standalone:true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
@@ -24,6 +30,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private authService: AuthService,
+    private toastService: ToastServiceService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -45,15 +53,38 @@ export class LoginComponent {
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
-
-  toggleRememberMe(event: Event): void {
-    this.rememberMe = (event.target as HTMLInputElement).checked;
-  }
-
   onLogin(): void {
-    this.router.navigate(['/complete-profile']);
-    console.log("hello");
-    
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    this.loginError = null;
+
+    const loginData = {
+      email: this.loginForm.value.email,
+      password: this.loginForm.value.password
+    };
+
+    this.authService.login(loginData).subscribe({
+      next: (response) => {
+        this.loading = false;
+        this.toastService.showSuccess('Login successful!');
+        console.log(response);
+        // Store token and user data (implement your storage service)
+        localStorage.setItem('auth_token', response.token);
+        localStorage.setItem('user_email', response.email);
+        // Delay navigation to ensure toast is visible
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 1500); // 1.5 second delay
+      },
+      error: (error: HttpErrorResponse) => {
+        this.loading = false;
+        console.error('Login error:', error);
+      }
+    });
   }
 
   goToForgotPassword(): void {
