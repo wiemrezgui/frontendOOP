@@ -7,9 +7,10 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
+import { TokenService } from '../services/token.service';
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  
+  constructor(private tokenService:TokenService){}
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     // Check if the request URL matches any excluded public endpoints
     if (this.isPublicRequest(request.url)) {
@@ -17,7 +18,7 @@ export class ApiInterceptor implements HttpInterceptor {
     }
 
     // Get token from storage (adjust based on your storage method)
-    const token = localStorage.getItem('auth_token');
+    const token = this.tokenService.getToken();
 
     // Clone request and add token if available
     if (token) {

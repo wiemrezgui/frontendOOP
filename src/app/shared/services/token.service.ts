@@ -7,6 +7,7 @@ export class TokenService {
   private readonly TOKEN_KEY = 'auth_token';
 
   getToken(): string | null {
+    alert(localStorage.getItem(this.TOKEN_KEY))
     return localStorage.getItem(this.TOKEN_KEY);
   }
 

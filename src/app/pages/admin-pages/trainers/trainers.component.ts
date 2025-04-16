@@ -21,26 +21,32 @@ import { Trainer } from '../../../shared/models/trainer.model';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { HttpClientModule } from '@angular/common/http';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-trainers',
   standalone:true,
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
     DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,
-    CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule
+    CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule,DatePickerModule
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
   providers :[ TrainerService,ConfirmationService]
 })
 export class TrainersComponent {
+  gender=['FEMALE','MALE'];
   @ViewChild('dt') dt!: Table;
   trainers: Trainer[] = [];
   trainerForm: Partial<Trainer> = {
     trainerType: 'INTERNAL',
     employerName: '',
     username: '',
-    email: ''
+    email: '',
+    gender :'FEMALE',
+    description :'',
+    dateOfBirth :'',
+    profilePicture :''
   };
   trainerToDelete: Trainer | null = null;
   selectedTrainerDetails: Trainer | null = null;
@@ -89,7 +95,8 @@ export class TrainersComponent {
     this.loading = true;
     this.trainerService.getAllTrainers(page).subscribe({
       next: (trainers) => {
-        this.trainers = trainers.map(trainer => new Trainer(trainer));
+        this.trainers = trainers;
+        console.log(this.trainers);
         this.totalRecords = trainers.length; // Adjust based on your API pagination
         this.loading = false;
       },
@@ -137,12 +144,26 @@ export class TrainersComponent {
 
   saveTrainer(): void {
     if (this.isAddTrainer) {
-      alert("here add")
-      this.trainerService.createTrainer(this.trainerForm as Trainer).subscribe({
+      
+      const requestBody = {
+        username: this.trainerForm.username,
+        email: this.trainerForm.email,
+        phoneNumber: this.trainerForm.phoneNumber,
+        dateOfBirth: this.formatDate(this.trainerForm.dateOfBirth),
+        gender: this.trainerForm.gender,
+        profilePicture: this.trainerForm.profilePicture || '',
+        description: this.trainerForm.description,
+        trainerType: this.trainerForm.trainerType,
+        employerName: this.trainerForm.employerName
+      };
+      console.log(requestBody);
+      
+      this.trainerService.createTrainer(requestBody).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer created successfully');
           this.loadTrainers();
           this.displayTrainerDialog = false;
+          this.resetForm();
         },
         error: (err) => {
           this.toastService.showError(err.error.message);
@@ -163,7 +184,36 @@ export class TrainersComponent {
       });
     }
   }
-
+   formatDate(date?: string | Date | null): string | undefined {
+    if (!date) return undefined;
+    
+    // If it's already in YYYY-MM-DD format, return as-is
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return date;
+    }
+    // Handle Date object
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (dateObj instanceof Date && !isNaN(dateObj.getTime())) {
+      const year = dateObj.getFullYear();
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+  
+    return undefined;
+  }
+  private resetForm(): void {
+    this.trainerForm = {
+      trainerType: 'INTERNAL',
+      employerName: '',
+      username: '',
+      email: '',
+      gender :'FEMALE',
+      description :'',
+      dateOfBirth :'',
+      profilePicture :''
+    };
+  }
   confirmDelete(trainer: Trainer): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ${trainer.username}?`,

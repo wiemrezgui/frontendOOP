@@ -14,7 +14,7 @@
     font-size: 15px;
     white-space: nowrap;
   }
-  .p-inputtext {
+  .p-inputtext ,textarea{
     width: 100%;
     padding: 8px;
     border-radius: 5px;
@@ -79,24 +79,6 @@
   margin-bottom: 0.8rem;
 }
 
-.social-links {
-  display: flex;
-  gap: 1rem;
-  margin-top: 10px;
-}
-
-.social-links a {
-  color: #6c757d;
-  font-size: 1.5rem;
-  transition: color 0.3s;
-}
-.social-links .social-media-img{
-  width: 30px;
-  height: 30px;
-}
-.social-links .social-media-img:hover {
-  transform: scale(1.3); /* Increase size by 30% on hover */
-}
 .infos-line{
   display: flex;
   gap: 10px;
