@@ -7,7 +7,8 @@ import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastServiceService } from './shared/services/toast-service.service';
 import { AuthService } from './shared/services/auth.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,11 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [RouterOutlet,CommonModule,HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [MessageService, ToastServiceService, AuthService],
+  providers: [MessageService, ToastServiceService, AuthService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: ApiInterceptor,
+    multi: true
+  }],
 
 })
 export class AppComponent {
