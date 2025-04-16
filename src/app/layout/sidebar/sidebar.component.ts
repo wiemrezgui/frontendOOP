@@ -25,9 +25,7 @@ export class SidebarComponent {
     { title: 'Dashboard', image: 'assets/images/dashboard.png', route: '/admin/dashboard' },
     { title: 'Trainers', image: 'assets/images/trainers.png', route: '/admin/trainers' },
     { title: 'Participants', image: 'assets/images/participants.png', route: '/admin/participants' },
-    { title: 'Sessions', image: 'assets/images/training-sessions.png', route: '/admin/training-sessions' },
-    { title: 'Calendar', image: 'assets/images/calendar.png', route: '/admin/calendar' }
-  ];
+    { title: 'Sessions', image: 'assets/images/training-sessions.png', route: '/admin/training-sessions' }  ];
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;

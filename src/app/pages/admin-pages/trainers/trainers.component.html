@@ -51,7 +51,7 @@
                     <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
                         (click)="openEditTrainerDialog(trainer)" pTooltip="Edit" tooltipPosition="top"></button>
                     <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
-                        (click)="confirmDelete(trainer)" pTooltip="Delete" tooltipPosition="top"></button>
+                        (click)="openDeleteDialog(trainer)" pTooltip="Delete" tooltipPosition="top"></button>
                 </td>
             </tr>
         </ng-template>
@@ -213,12 +213,12 @@
 </p-dialog>
 <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
     <div *ngIf="trainerToDelete">
-        <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.username }}
-                </strong>?</p>
-    </div>
-   <!-- <ng-template pTemplate="footer">
+        <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.user.username }}</strong>
+            having the ID  <strong>{{ trainerToDelete.trainerId }}</strong>
+                ?</p>
+    </div> <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
             class="p-button-text"></button>
-        <button pButton label="Yes" icon="pi pi-check" (click)="deleteTrainer()" class="p-button-danger"></button>
-    </ng-template>-->
+        <button pButton label="Yes" icon="pi pi-check"  class="p-button-danger" (click)="confirmDeleteTrainer()"></button>
+    </ng-template>
 </p-dialog>

@@ -48,9 +48,8 @@ export class TrainersComponent {
     dateOfBirth :'',
     profilePicture :''
   };
-  trainerToDelete: Trainer | null = null;
-  selectedTrainerDetails: Trainer | null = null;
-
+  trainerToDelete: any;
+  selectedTrainerDetails: any;
   // UI Controls
   displayTrainerDialog = false;
   displayDeleteDialog = false;
@@ -134,19 +133,19 @@ export class TrainersComponent {
   openEditTrainerDialog(trainer: any): void {
     this.resetForm()
     this.isAddTrainer = false;
-    this.getTrainerById(trainer.trainerId)
+    this.getTrainerById(trainer.trainerId,'edit')
     this.displayTrainerDialog = true;
     
   }
 
   openDetails(trainer: Trainer): void {
     this.selectedTrainerDetails = trainer;
+    this.getTrainerById(trainer.trainerId,'details')
     this.displayDetailsDialog = true;
   }
 
   saveTrainer(): void {
     if (this.isAddTrainer) {
-      
       const requestBody = {
         username: this.trainerForm.username,
         email: this.trainerForm.email,
@@ -172,9 +171,9 @@ export class TrainersComponent {
         }
       });
     } else {
+      alert("here update")
       if (!this.trainerForm.trainerId) return;
-      
-      this.trainerService.updateTrainer(this.trainerForm.trainerId, this.trainerForm as Trainer).subscribe({
+      this.trainerService.updateTrainer(this.trainerForm.trainerId, this.trainerForm ).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer updated successfully');
           this.loadTrainers();
@@ -216,15 +215,17 @@ export class TrainersComponent {
       profilePicture :''
     };
   }
-  confirmDelete(trainer: Trainer): void {
-    this.displayDeleteDialog
+  openDeleteDialog(trainer: Trainer): void {
+    this.displayDeleteDialog=true
+    this.trainerToDelete=trainer
   }
 
-  deleteTrainer(id: number): void {
-    this.trainerService.deleteTrainer(id).subscribe({
+  confirmDeleteTrainer(): void {
+    this.trainerService.deleteTrainer(this.trainerToDelete.trainerId).subscribe({
       next: () => {
         this.toastService.showSuccess('Trainer deleted successfully');
         this.loadTrainers();
+        this.displayDeleteDialog=false
       },
       error: (err) => {
         this.toastService.showError(err.error.message);
@@ -235,15 +236,38 @@ export class TrainersComponent {
   closeTrainerDialog(): void {
     this.displayTrainerDialog = false;
   }
-  getTrainerById(id:any){
-    alert(id)
-    this.trainerService.getTrainerById(id).subscribe({
+  getTrainerById(id:any,type:string){
+    if(type=== 'details')
+    {this.trainerService.getTrainerById(id).subscribe({
       next: (trainer) => {
-        console.log(" received trainer  "+trainer);
+        this.selectedTrainerDetails=trainer
       },
       error: (err) => {
         this.toastService.showError(err.error.message);
       }
     });
+  }else{
+    this.trainerService.getTrainerById(id).subscribe({
+      next: (trainer) => {
+        console.log(trainer);
+        this.initializeTrainerData(trainer)
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
+  }
+  }
+  initializeTrainerData(trainer:any){
+    this.trainerForm.email=trainer.user.email
+    this.trainerForm.dateOfBirth=trainer.user.dateOfBirth
+    this.trainerForm.description=trainer.user.description
+    this.trainerForm.profilePicture=trainer.user.profilePicture
+    this.trainerForm.phoneNumber=trainer.user.phoneNumber
+    this.trainerForm.username=trainer.user.username
+    this.trainerForm.trainerType=trainer.trainerType
+    this.trainerForm.gender=trainer.user.gender
+    this.trainerForm.employerName=trainer.employerName
+
   }
 }
