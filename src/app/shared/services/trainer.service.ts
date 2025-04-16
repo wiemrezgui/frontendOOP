@@ -27,6 +27,8 @@ export class TrainerService {
   }
 
   createTrainer(trainer: Partial<Trainer>): Observable<Trainer> {
+    console.log('data '+ this.mapToApiRequest(trainer));
+    
     return this.http.post<Trainer>(this.apiUrl, this.mapToApiRequest(trainer)).pipe(
       map(trainer => new Trainer(trainer))
     );

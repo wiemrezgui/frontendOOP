@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ConfirmationService, SelectItem } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -13,7 +13,6 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { TrainerService } from '../../../shared/services/trainer.service';
@@ -21,14 +20,18 @@ import { ToastServiceService } from '../../../shared/services/toast-service.serv
 import { Trainer } from '../../../shared/models/trainer.model';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { HttpClientModule } from '@angular/common/http';
+
 @Component({
   selector: 'app-trainers',
   standalone:true,
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
-    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,CardModule,InputGroupModule,InputGroupAddonModule
+    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,
+    CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule
   ],
   templateUrl: './trainers.component.html',
-  styleUrl: './trainers.component.scss'
+  styleUrl: './trainers.component.scss',
+  providers :[ TrainerService,ConfirmationService]
 })
 export class TrainersComponent {
   @ViewChild('dt') dt!: Table;
@@ -134,6 +137,7 @@ export class TrainersComponent {
 
   saveTrainer(): void {
     if (this.isAddTrainer) {
+      alert("here add")
       this.trainerService.createTrainer(this.trainerForm as Trainer).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer created successfully');

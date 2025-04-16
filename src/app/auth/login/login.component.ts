@@ -77,8 +77,8 @@ export class LoginComponent {
         localStorage.setItem('user_email', response.email);
         // Delay navigation to ensure toast is visible
         setTimeout(() => {
-          this.router.navigate(['/']);
-        }, 1500); // 1.5 second delay
+          this.router.navigate(['/admin']);
+        }, 1200); // 1.2 second delay
       },
       error: (error: HttpErrorResponse) => {
         this.loading = false;
