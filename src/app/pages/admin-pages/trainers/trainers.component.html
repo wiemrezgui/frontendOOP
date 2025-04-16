@@ -59,7 +59,7 @@
         <!-- Empty Message -->
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="7">No trainers found</td>
+                <td colspan="7" style="text-align: center;">No trainers found</td>
             </tr>
         </ng-template>
     </p-table>
@@ -211,15 +211,14 @@
         </div>
     </div>
 </p-dialog>
-<!-- Delete Confirmation Dialog 
 <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
     <div *ngIf="trainerToDelete">
-        <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.firstName }} {{ trainerToDelete.lastName
-                }}</strong>?</p>
+        <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.username }}
+                </strong>?</p>
     </div>
-    <ng-template pTemplate="footer">
+   <!-- <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
             class="p-button-text"></button>
         <button pButton label="Yes" icon="pi pi-check" (click)="deleteTrainer()" class="p-button-danger"></button>
-    </ng-template>
-</p-dialog>-->
+    </ng-template>-->
+</p-dialog>

@@ -51,7 +51,7 @@
     <!-- Top Trainers Chart -->
     <div class="bg-white shadow rounded-xl p-4">
         <h3 class="font-semibold text-lg mb-4">Top Trainers</h3>
-        <ngx-charts-bar-horizontal [view]="[300, 250]" [results]="topTrainers" [xAxis]="true" [yAxis]="true"
+        <ngx-charts-bar-horizontal [view]="[250, 270]" [results]="topTrainers" [xAxis]="true" [yAxis]="true"
             [legend]="false" [showDataLabel]="true" [animations]="true" [dataLabelFormatting]="formatSessions">
         </ngx-charts-bar-horizontal>
     </div>
@@ -59,33 +59,16 @@
     <!-- Top Participants Chart -->
     <div class="bg-white shadow rounded-xl p-4">
         <h3 class="font-semibold text-lg mb-4">Most active Participants</h3>
-        <ngx-charts-bar-horizontal [view]="[300, 250]" [results]="topParticipants" [xAxis]="true" [yAxis]="true"
+        <ngx-charts-bar-horizontal [view]="[250, 270]" [results]="topParticipants" [xAxis]="true" [yAxis]="true"
             [legend]="false" [showDataLabel]="true" [animations]="true" [dataLabelFormatting]="formatSessions">
         </ngx-charts-bar-horizontal>
     </div>
 
     <!-- Top Domains Chart -->
     <div class="bg-white shadow rounded-xl p-4">
-        <h3 class="font-semibold text-lg mb-4">Most famous Domains</h3>
-        <ngx-charts-bar-horizontal [view]="[300, 250]" [results]="topDomains" [xAxis]="true" [yAxis]="true"
-            [legend]="false" [showDataLabel]="true" [animations]="true" [dataLabelFormatting]="formatSessions">
-        </ngx-charts-bar-horizontal>
-    </div>
-
-</div>
- <!-- Charts Row -->
- <div class="flex justify-between w-full mb-6">
-    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
-        <h3 class="font-semibold text-lg mb-4">Duration vs Budget per Training</h3>
-        <ngx-charts-bubble-chart [view]="[520, 300]" [results]="sessionBudgetChart" [xAxis]="true" [yAxis]="true"
-            [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Durée (jours)'" [yAxisLabel]="'Budget (TND)'"
-            [legend]="true" [legendTitle]="'Domains'" [maxRadius]="30">
-        </ngx-charts-bubble-chart>
-    </div>
-    <div class="flex-1 min-w-[250px] bg-white shadow rounded-xl p-4">
         <h3 class="font-semibold text-lg mb-4">Participant Engagement</h3>
         <ngx-charts-heat-map
-          [view]="[550, 300]"
+          [view]="[510, 350]"
           [results]="engagementData"
           [xAxis]="true"
           [yAxis]="true"
@@ -99,4 +82,5 @@
           >
         </ngx-charts-heat-map>
     </div>
-  </div>
+
+</div>

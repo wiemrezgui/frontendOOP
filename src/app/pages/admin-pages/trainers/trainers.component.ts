@@ -131,10 +131,12 @@ export class TrainersComponent {
     this.displayTrainerDialog = true;
   }
 
-  openEditTrainerDialog(trainer: Trainer): void {
+  openEditTrainerDialog(trainer: any): void {
+    this.resetForm()
     this.isAddTrainer = false;
-    this.trainerForm = { ...trainer };
+    this.getTrainerById(trainer.trainerId)
     this.displayTrainerDialog = true;
+    
   }
 
   openDetails(trainer: Trainer): void {
@@ -215,14 +217,7 @@ export class TrainersComponent {
     };
   }
   confirmDelete(trainer: Trainer): void {
-    this.confirmationService.confirm({
-      message: `Are you sure you want to delete ${trainer.username}?`,
-      header: 'Confirm Delete',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.deleteTrainer(trainer.trainerId!);
-      }
-    });
+    this.displayDeleteDialog
   }
 
   deleteTrainer(id: number): void {
@@ -239,5 +234,16 @@ export class TrainersComponent {
 
   closeTrainerDialog(): void {
     this.displayTrainerDialog = false;
+  }
+  getTrainerById(id:any){
+    alert(id)
+    this.trainerService.getTrainerById(id).subscribe({
+      next: (trainer) => {
+        console.log(" received trainer  "+trainer);
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
   }
 }

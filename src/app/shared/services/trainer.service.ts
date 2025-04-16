@@ -24,10 +24,8 @@ export class TrainerService {
     });
   }
 
-  getTrainerById(id: number): Observable<Trainer> {
-    return this.http.get<Trainer>(`${this.apiUrl}/${id}`).pipe(
-      map(trainer => new Trainer(trainer))
-    );
+  getTrainerById(id: number){
+    return this.http.get<any>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
   }
 
   createTrainer(trainer: any): Observable<any> {

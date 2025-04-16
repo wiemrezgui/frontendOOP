@@ -21,7 +21,6 @@ export const routes: Routes = [
       { path: 'participants', loadComponent: () => import('./pages/admin-pages/participants/participants.component').then(m => m.ParticipantsComponent) },
       { path: 'trainers', loadComponent: () => import('./pages/admin-pages/trainers/trainers.component').then(m => m.TrainersComponent) },
       { path: 'training-sessions', loadComponent: () => import('./pages/admin-pages/training-session/training-session.component').then(m => m.TrainingSessionComponent) },
-      { path: 'calendar', loadComponent: () => import('./pages/admin-pages/calendar/calendar.component').then(m => m.CalendarComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

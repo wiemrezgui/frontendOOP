@@ -8,19 +8,21 @@ import {
 import { Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { TokenService } from '../services/token.service';
+
 @Injectable()
 export class ApiInterceptor implements HttpInterceptor {
-  constructor(private tokenService:TokenService){}
+  constructor(private tokenService: TokenService) {}
+
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    // Check if the request URL matches any excluded public endpoints
+    // Skip modification for public endpoints
     if (this.isPublicRequest(request.url)) {
-      return next.handle(request); // Skip adding token for public endpoints
+      return next.handle(request);
     }
 
-    // Get token from storage (adjust based on your storage method)
+    // Get token from service
     const token = this.tokenService.getToken();
-
-    // Clone request and add token if available
+    
+    // Clone and modify request only if token exists
     if (token) {
       request = request.clone({
         setHeaders: {
@@ -32,12 +34,10 @@ export class ApiInterceptor implements HttpInterceptor {
     return next.handle(request);
   }
 
-  /**
-   * Checks if the request URL matches any public endpoints from environment
-   */
   private isPublicRequest(url: string): boolean {
+    // Check if URL matches any public endpoints
     return environment.publicEndpoints.some(endpoint => 
-      url.includes(`${environment.baseUrl}${endpoint}`)
+      url.includes(endpoint) // Compare with full URL or just endpoint path
     );
   }
 }
