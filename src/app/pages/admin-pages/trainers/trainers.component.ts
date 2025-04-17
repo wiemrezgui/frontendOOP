@@ -22,19 +22,21 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatePickerModule } from 'primeng/datepicker';
+import { SearchPipe } from '../../../shared/pipes/search.pipe';
 
 @Component({
   selector: 'app-trainers',
   standalone:true,
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
     DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,
-    CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule,DatePickerModule
+    CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule,DatePickerModule,SearchPipe
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
   providers :[ TrainerService,ConfirmationService]
 })
 export class TrainersComponent {
+  searchTerm:string=''
   gender=['FEMALE','MALE'];
   @ViewChild('dt') dt!: Table;
   trainers: Trainer[] = [];
@@ -111,11 +113,6 @@ export class TrainersComponent {
     this.rows = event.rows;
     const page = event.first / event.rows;
     this.loadTrainers(page);
-  }
-
-  filterTrainers(event: Event): void {
-    const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
-    this.dt.filterGlobal(searchValue, 'contains');
   }
 
   openAddTrainerDialog(): void {

@@ -1,5 +1,5 @@
 <div class="card">
-    <p-table #dt [value]="trainers" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
+    <p-table #dt [value]="trainers | search: searchTerm: ['user.username']"  dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
         [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} trainers">
         <!-- Header with search and add button -->
@@ -8,7 +8,7 @@
                 <p-iconField iconPosition="left">
                     <p-inputIcon class="pi pi-search"></p-inputIcon>
                     <input pInputText type="text" placeholder="Search trainers..." fluid
-                        (input)="filterTrainers($event)" style="width:450px" />
+                    [(ngModel)]="searchTerm" style="width:450px" />
                 </p-iconField>
                 <button pButton icon="pi pi-plus" label="Add Trainer" (click)="openAddTrainerDialog()"
                     class="p-button-primary"></button>
@@ -59,7 +59,7 @@
         <!-- Empty Message -->
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="7" style="text-align: center;">No trainers found</td>
+                <td colspan="6" style="text-align: center;">No trainers found</td>
             </tr>
         </ng-template>
     </p-table>
