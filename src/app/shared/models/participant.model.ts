@@ -1,12 +1,20 @@
 export class Participant {
   participantId!: number;
-  fullName!: string;    // Combined name field
-  email!: string;       // From User
+  structure: string='';
+  profile: string='';
   phoneNumber?: string; // From User
-  structure!: string;
-  profile!: string;
+  username: string = '';
+  email: string = '';
+  role: 'PARTICIPANT' | 'TRAINER' | 'ADMIN' | null = null;
+  dateOfBirth: string | null = null; // ISO format (yyyy-MM-dd)
+  gender: 'MALE' | 'FEMALE' | 'OTHER' | null = null;
+  profilePicture: string | null = null;
+  description: string | null = null;
   
-  constructor(init?: Partial<Participant>) {
-    Object.assign(this, init);
+  constructor(data?: Partial<Participant>) {
+    if (data) {
+      Object.assign(this, data);
+    }
   }
+
 }

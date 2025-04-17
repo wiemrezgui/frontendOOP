@@ -8,7 +8,6 @@ export class Trainer {
   userId: number | null = null;
   username: string = '';
   email: string = '';
-  password: string | null = null; // Only for create/update operations
   role: 'PARTICIPANT' | 'TRAINER' | 'ADMIN' | null = null;
   phoneNumber: string | null = null;
   dateOfBirth: string | null = null; // ISO format (yyyy-MM-dd)
@@ -50,7 +49,6 @@ export class Trainer {
         userId: this.userId,
         username: this.username,
         email: this.email,
-        password: this.password,
         role: this.role,
         phoneNumber: this.phoneNumber,
         dateOfBirth: this.dateOfBirth,
