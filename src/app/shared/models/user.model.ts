@@ -8,26 +8,14 @@ export enum Gender {
   FEMALE = 'FEMALE'
 }
 
-export interface UserRegisterRequest {
-  username: string;
-  email: string;
-  password: string;
-  role: Role;
-  phoneNumber?: string;
-  dateOfBirth?: Date | string;
+export class User{
+  username: string='';
+  email: string='';
+  password: string='';
+  role?: Role;
+  phoneNumber: string='';
+  dateOfBirth: string='';
   gender?: Gender;
   profilePicture?: string;
-  description?: string;
-}
-
-export interface UserResponse {
-  userId: number;
-  username: string;
-  email: string;
-  role: Role;
-  phoneNumber?: string;
-  dateOfBirth?: Date;
-  gender?: Gender;
-  profilePicture?: string;
-  description?: string;
+  description: string='';
 }
