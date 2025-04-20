@@ -11,7 +11,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
@@ -28,7 +27,7 @@ import { SearchPipe } from '../../../shared/pipes/search.pipe';
   selector: 'app-trainers',
   standalone:true,
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
-    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,
+    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,CommonModule,
     CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule,DatePickerModule,SearchPipe
   ],
   templateUrl: './trainers.component.html',

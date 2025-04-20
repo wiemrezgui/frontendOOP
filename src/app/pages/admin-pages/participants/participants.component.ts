@@ -27,7 +27,7 @@ import { Participant } from '../../../shared/models/participant.model';
   styleUrl: './participants.component.scss'
 })
 export class ParticipantsComponent {
-/*// Table data
+// Table data
 participants: Participant[] = [];
 filteredparticipants: Participant[] = [];
 
@@ -55,64 +55,23 @@ loadparticipants() {
   // Replace with actual API call
   this.participants = [
     {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
+      participantId: 1,
       email: 'john.doe@example.com',
       phoneNumber: '123456789',
-      profileImage: 'assets/images/logo.png',
-      gender: 'Female',
+      profilePicture: 'assets/images/logo.png',
+      gender: 'FEMALE',
       dateOfBirth: '',
-      address: 'ariana',
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente deserunt quaerat nam libero culpa, sit ipsa voluptatum pariatur voluptatem, placeat consequuntur possimus reprehenderit',
       username: 'johnDoe14',
       profile: 'profile 1',
-      structure: 'structure 1'
-    }, {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      profileImage: 'assets/images/logo.png',
-      gender: 'Female',
-      dateOfBirth: '',
-      address: 'ariana',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente deserunt quaerat nam libero culpa, sit ipsa voluptatum pariatur voluptatem, placeat consequuntur possimus reprehenderit',
-      username: 'johnDoe14',
-      profile: 'profile 1',
-      structure: 'structure 1'
-    }, {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      profileImage: 'assets/images/logo.png',
-      gender: 'Female',
-      dateOfBirth: '',
-      address: 'ariana',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente deserunt quaerat nam libero culpa, sit ipsa voluptatum pariatur voluptatem, placeat consequuntur possimus reprehenderit',
-      username: 'johnDoe14',
-      profile: 'profile 1',
-      structure: 'structure 1'
+      structure: 'structure 1',
+      role: 'PARTICIPANT'
     }
   ];
   this.filteredparticipants = [...this.participants];
   this.totalRecords = this.filteredparticipants.length;
 }
 
-filterparticipants(event: Event) {
-  const searchValue = (event.target as HTMLInputElement).value.toLowerCase();
-  this.filteredparticipants = this.participants.filter(participant => 
-    participant.firstName.toLowerCase().includes(searchValue) ||
-    participant.lastName.toLowerCase().includes(searchValue) ||
-    participant.email.toLowerCase().includes(searchValue) ||
-    participant.phoneNumber.includes(searchValue)
-  );
-  this.totalRecords = this.filteredparticipants.length;
-  this.first = 0;
-}
 
 onPageChange(event: any) {
   this.first = event.first;
@@ -135,7 +94,7 @@ openEditparticipantDialog(participant: Participant) {
 }
 
 saveparticipant() {
-  if (this.selectedparticipant) {
+ /* if (this.selectedparticipant) {
     // Update existing participant
     const index = this.participants.findIndex(t => t.id === this.selectedparticipant?.id);
     if (index !== -1) {
@@ -147,7 +106,7 @@ saveparticipant() {
     this.participants.push(newparticipant);
   }
   
-  this.filteredparticipants = [...this.participants];
+  this.filteredparticipants = [...this.participants];*/
   this.displayparticipantDialog = false;
   this.isAddparticipant=false
 }
@@ -158,12 +117,7 @@ confirmDelete(participant: Participant) {
 }
 
 deleteparticipant() {
-  if (this.participantToDelete) {
-    this.participants = this.participants.filter(t => t.id !== this.participantToDelete?.id);
-    this.filteredparticipants = [...this.participants];
-    this.totalRecords = this.filteredparticipants.length;
     this.displayDeleteDialog = false;
-  }
 }
 
 closeparticipantDialog() {
@@ -175,7 +129,7 @@ onImageSelect(event: any) {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      this.participantForm.profileImage = e.target?.result as string;
+      this.participantForm.profilePicture = e.target?.result as string;
     };
     reader.readAsDataURL(file);
   }
@@ -183,5 +137,5 @@ onImageSelect(event: any) {
 openDetails(participant:any){
   this.displayDetailsDialog=true
   this.selectedparticipantDetails=participant
-}*/
+}
 }

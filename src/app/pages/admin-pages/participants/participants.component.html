@@ -1,4 +1,4 @@
-<!--<div class="card">
+<div class="card">
     <p-table #dt [value]="participants" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
         [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} participants">
@@ -6,19 +6,21 @@
             <div class="flex align-items-center">
                 <p-iconField iconPosition="left">
                     <p-inputIcon class="pi pi-search"></p-inputIcon>
-                    <input pInputText type="text" placeholder="Search participants..." fluid
-                        (input)="filterparticipants($event)" style="width:450px" />
+                    <input pInputText type="text" placeholder="Search participants..." fluid style="width:450px" />
                 </p-iconField>
                 <button pButton icon="pi pi-plus" label="Add participant" (click)="openAddparticipantDialog()"
                     class="p-button-primary"></button>
+                    <div class="caption-buttons">
+                    <button pButton label="Profile" class="p-button-danger"></button>
+                    <button pButton label="Structure" class="p-button-danger"></button>
+                </div>
             </div>
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th>#</th>
-                <th>Full Name</th>
+                <th>Username</th>
                 <th>Email</th>
-                <th>Phone</th>
                 <th>Structure</th>
                 <th>Profile</th>
                 <th>Actions</th>
@@ -28,15 +30,13 @@
         <ng-template pTemplate="body" let-participant>
             <tr>
                 <td>
-                    <p-avatar [image]="participant.profileImage || 'assets/images/logo.png'" shape="circle"
+                    <p-avatar [image]="participant.profilePicture || 'assets/images/logo.png'" shape="circle"
                         size="large"></p-avatar>
                 </td>
 
-                <td>{{ participant.firstName }} {{ participant.lastName }}</td>
+                <td>{{ participant.username }}</td>
 
                 <td>{{ participant.email }}</td>
-
-                <td>{{ participant.phoneNumber }}</td>
 
                 <td>{{ participant.structure }}</td>
 
@@ -66,12 +66,8 @@
     <div class="form-container">
         <div class="form-row">
             <div class="form-group">
-                <label for="firstName">First Name <span class="required">*</span></label>
-                <input id="firstName" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.firstName"/>
-            </div>
-            <div class="form-group">
-                <label for="lastName">Last Name <span class="required">*</span></label>
-                <input id="lastName" pInputText required fluid placeholder="Doe" [(ngModel)]="participantForm.lastName"/>
+                <label for="firstName">Username<span class="required">*</span></label>
+                <input id="firstName" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.username"/>
             </div>
         </div>
 
@@ -112,7 +108,7 @@
     <div class="dialog-container p-grid">
         <div class="left-section p-col-5">
             <div class="profile-container">
-                <p-avatar [image]="selectedparticipantDetails.profileImage || 'assets/images/user-logo.png'" shape="circle"
+                <p-avatar [image]="selectedparticipantDetails.profilePicture || 'assets/images/user-logo.png'" shape="circle"
                     size="xlarge" class="profile-image"></p-avatar>
 
                 <div class="name-type-container">
@@ -122,7 +118,7 @@
         </div>
 
         <div class="right-section p-col-7">
-            <div class="details-container">
+          <!--  <div class="details-container">
                 <div class="p-grid">
                     <div class="p-col-6">
                         <p><strong> First Name:</strong> {{ selectedparticipantDetails.firstName || '-' }}</p>
@@ -151,7 +147,7 @@
                         <p class="description">{{ selectedparticipantDetails.description || 'No description provided' }}</p>
                     </div>
                 </div>
-            </div>
+            </div>-->
             <div class="sessions-container">
                 <h3>Enrolled Training Sessions</h3>
                 <div class="sessions-flex-container">
@@ -176,12 +172,12 @@
 </p-dialog>
 <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
     <div *ngIf="participantToDelete">
-        <p>Are you sure you want to delete the participant <strong>{{ participantToDelete.firstName }} {{ participantToDelete.lastName
-                }}</strong>?</p>
+        <p>Are you sure you want to delete the participant <strong>{{ participantToDelete.username }} 
+              </strong> having ID <strong> {{ participantToDelete.participantId }} </strong>?</p>
     </div>
     <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
             class="p-button-text"></button>
         <button pButton label="Yes" icon="pi pi-check" (click)="deleteparticipant()" class="p-button-danger"></button>
     </ng-template>
-</p-dialog> -->
+</p-dialog>
