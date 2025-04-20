@@ -34,8 +34,8 @@ export class EmployerService {
     });
   }
 
-  updateEmployer(id: number, employer: Partial<Employer>): Observable<Employer> {
-    return this.http.put<Employer>(`${this.apiUrl}/${id}`, employer).pipe(
+  updateEmployer(employer:Employer): Observable<Employer> {
+    return this.http.put<Employer>(`${this.apiUrl}/${employer.id}`, employer).pipe(
       map(employer => new Employer(employer))
     );
   }
