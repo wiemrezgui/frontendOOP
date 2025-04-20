@@ -1,5 +1,5 @@
 <div class="card">
-    <p-table #dt [value]="participants | search: searchTerm: ['participant.username']" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="false"
+    <p-table #dt [value]="participants | search: searchTerm: ['username']" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="false"
         [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} participants">
         <ng-template pTemplate="caption">
