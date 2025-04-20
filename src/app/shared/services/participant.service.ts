@@ -19,13 +19,13 @@ export class ParticipantService {
     });
   }
   getAllParticipants(page: number): Observable<Participant[]> {
-    return this.http.get<any>(this.apiUrl, {
+    return this.http.get<Participant[]>(this.apiUrl, {
       params: { page: page.toString() }, headers: this.getAuthHeaders()
     });
   }
 
   getParticipantById(id: number){
-    return this.http.get<any>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
+    return this.http.get<Participant>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
   }
 
   createParticipant(participant: any): Observable<any> {

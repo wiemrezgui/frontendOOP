@@ -20,126 +20,124 @@ import { FormsModule } from '@angular/forms';
 import { Participant } from '../../../shared/models/participant.model';
 import { SearchPipe } from '../../../shared/pipes/search.pipe';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ParticipantService } from '../../../shared/services/participant.service';
+import { ToastServiceService } from '../../../shared/services/toast-service.service';
 @Component({
   selector: 'app-participants',
-  imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
-    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,
-    CardModule,InputGroupModule,InputGroupAddonModule,SearchPipe,DatePickerModule
+  standalone: true,
+  imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
+    DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, PaginatorModule, CommonModule, HttpClientModule,
+    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule
   ],
   templateUrl: './participants.component.html',
-  styleUrl: './participants.component.scss'
+  styleUrl: './participants.component.scss',
+  providers: [ParticipantService]
 })
 export class ParticipantsComponent {
-searchTerm:string=''
-participants: Participant[] = [];
-filteredparticipants: Participant[] = [];
-gender=['FEMALE','MALE'];
+  searchTerm: string = ''
+  participants: Participant[] = [];
+  filteredparticipants: Participant[] = [];
+  gender = ['FEMALE', 'MALE'];
 
-// Pagination
-rows = 10;
-first = 0;
-totalRecords = 0;
+  // Pagination
+  rows = 10;
+  first = 0;
+  totalRecords = 0;
 
-// Dialogs
-displayparticipantDialog = false;
-displayDeleteDialog = false;
-displayDetailsDialog = false;
+  // Dialogs
+  displayparticipantDialog = false;
+  displayDeleteDialog = false;
+  displayDetailsDialog = false;
 
-// Forms
-participantForm: Partial<Participant> = {};
+  // Forms
+  participantForm: Partial<Participant> = {};
   participantToDelete: Participant = new Participant;
   selectedparticipant: Participant = new Participant;
   selectedparticipantDetails: Participant = new Participant;
-  isAddparticipant:boolean=false
-ngOnInit() {
-  this.loadparticipants();
-}
-
-loadparticipants() {
-  // Replace with actual API call
-  this.participants = [
-    {
-      participantId: 1,
-      email: 'john.doe@example.com',
-      phoneNumber: '123456789',
-      profilePicture: 'assets/images/logo.png',
-      gender: 'FEMALE',
-      dateOfBirth: '',
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente deserunt quaerat nam libero culpa, sit ipsa voluptatum pariatur voluptatem, placeat consequuntur possimus reprehenderit',
-      username: 'jjjjj',
-      profile: 'profile 1',
-      structure: 'structure 1',
-      role: 'PARTICIPANT'
-    }
-  ];
-  this.filteredparticipants = [...this.participants];
-  this.totalRecords = this.filteredparticipants.length;
-}
-
-
-onPageChange(event: any) {
-  this.first = event.first;
-  this.rows = event.rows;
-}
-
-openAddparticipantDialog() {
-  this.isAddparticipant=true
-  this.participantForm = {};
-  console.log('selected '+this.selectedparticipant );
-  this.displayparticipantDialog = true;
-}
-
-openEditparticipantDialog(participant: Participant) {
-  this.isAddparticipant=false
-  console.log('selected '+this.selectedparticipant );
-  this.selectedparticipant = participant;
-  this.participantForm = { ...participant };
-  this.displayparticipantDialog = true;
-}
-
-saveparticipant() {
- /* if (this.selectedparticipant) {
-    // Update existing participant
-    const index = this.participants.findIndex(t => t.id === this.selectedparticipant?.id);
-    if (index !== -1) {
-      this.participants[index] = { ...this.participants[index], ...this.participantForm };
-    }
-  } else {
-    // Add new participant
-    const newparticipant= new Participant ()
-    this.participants.push(newparticipant);
+  isAddparticipant: boolean = false
+  constructor(
+    private participantService: ParticipantService,
+    private toastService: ToastServiceService) { }
+  ngOnInit() {
+    this.loadparticipants();
   }
-  
-  this.filteredparticipants = [...this.participants];*/
-  this.displayparticipantDialog = false;
-  this.isAddparticipant=false
-}
 
-confirmDelete(participant: Participant) {
-  this.participantToDelete = participant;
-  this.displayDeleteDialog = true;
-}
+  loadparticipants(page: number = 0) {
+    this.participantService.getAllParticipants(page).subscribe({
+      next: (participants) => {
+        this.participants = participants
+        this.totalRecords = participants.length;
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
+  }
 
-deleteparticipant() {
+
+  onPageChange(event: any) {
+    this.first = event.first;
+    this.rows = event.rows;
+  }
+
+  openAddparticipantDialog() {
+    this.isAddparticipant = true
+    this.participantForm = {};
+    console.log('selected ' + this.selectedparticipant);
+    this.displayparticipantDialog = true;
+  }
+
+  openEditparticipantDialog(participant: Participant) {
+    this.isAddparticipant = false
+    console.log('selected ' + this.selectedparticipant);
+    this.selectedparticipant = participant;
+    this.participantForm = { ...participant };
+    this.displayparticipantDialog = true;
+  }
+
+  saveparticipant() {
+    /* if (this.selectedparticipant) {
+       // Update existing participant
+       const index = this.participants.findIndex(t => t.id === this.selectedparticipant?.id);
+       if (index !== -1) {
+         this.participants[index] = { ...this.participants[index], ...this.participantForm };
+       }
+     } else {
+       // Add new participant
+       const newparticipant= new Participant ()
+       this.participants.push(newparticipant);
+     }
+     
+     this.filteredparticipants = [...this.participants];*/
+    this.displayparticipantDialog = false;
+    this.isAddparticipant = false
+  }
+
+  confirmDelete(participant: Participant) {
+    this.participantToDelete = participant;
+    this.displayDeleteDialog = true;
+  }
+
+  deleteparticipant() {
     this.displayDeleteDialog = false;
-}
-
-closeparticipantDialog() {
-  this.displayparticipantDialog = false;
-}
-
-onImageSelect(event: any) {
-  const file = event.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.participantForm.profilePicture = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
   }
-}
-openDetails(participant:any){
-  this.displayDetailsDialog=true
-  this.selectedparticipantDetails=participant
-}
+
+  closeparticipantDialog() {
+    this.displayparticipantDialog = false;
+  }
+
+  onImageSelect(event: any) {
+    const file = event.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.participantForm.profilePicture = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  openDetails(participant: any) {
+    this.displayDetailsDialog = true
+    this.selectedparticipantDetails = participant
+  }
 }

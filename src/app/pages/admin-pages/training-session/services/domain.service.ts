@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environment/environment';
-import { Domain } from '../models/domain.model';
+import { environment } from '../../../../environment/environment';
+import { Domain } from '../../../../shared/models/domain.model';
 
 @Injectable({
   providedIn: 'root'

@@ -25,18 +25,18 @@ import { SearchPipe } from '../../../shared/pipes/search.pipe';
 
 @Component({
   selector: 'app-trainers',
-  standalone:true,
-  imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
-    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,CommonModule,
-    CardModule,InputGroupModule,InputGroupAddonModule,HttpClientModule,DatePickerModule,SearchPipe
+  standalone: true,
+  imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
+    DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule,
+    CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
-  providers :[ TrainerService,ConfirmationService]
+  providers: [TrainerService, ConfirmationService]
 })
 export class TrainersComponent {
-  searchTerm:string=''
-  gender=['FEMALE','MALE'];
+  searchTerm: string = ''
+  gender = ['FEMALE', 'MALE'];
   @ViewChild('dt') dt!: Table;
   trainers: Trainer[] = [];
   trainerForm: Partial<Trainer> = {
@@ -44,10 +44,10 @@ export class TrainersComponent {
     employerName: '',
     username: '',
     email: '',
-    gender :'FEMALE',
-    description :'',
-    dateOfBirth :'',
-    profilePicture :''
+    gender: 'FEMALE',
+    description: '',
+    dateOfBirth: '',
+    profilePicture: ''
   };
   trainerToDelete: any;
   selectedTrainerDetails: any;
@@ -83,9 +83,7 @@ export class TrainersComponent {
 
   constructor(
     private trainerService: TrainerService,
-    private toastService: ToastServiceService,
-    private confirmationService: ConfirmationService
-  ) {}
+    private toastService: ToastServiceService) { }
 
   ngOnInit(): void {
     this.loadTrainers();
@@ -129,14 +127,14 @@ export class TrainersComponent {
   openEditTrainerDialog(trainer: any): void {
     this.resetForm()
     this.isAddTrainer = false;
-    this.getTrainerById(trainer.trainerId,'edit')
+    this.getTrainerById(trainer.trainerId, 'edit')
     this.displayTrainerDialog = true;
-    
+
   }
 
   openDetails(trainer: Trainer): void {
     this.selectedTrainerDetails = trainer;
-    this.getTrainerById(trainer.trainerId,'details')
+    this.getTrainerById(trainer.trainerId, 'details')
     this.displayDetailsDialog = true;
   }
 
@@ -154,7 +152,7 @@ export class TrainersComponent {
         employerName: this.trainerForm.employerName
       };
       console.log(requestBody);
-      
+
       this.trainerService.createTrainer(requestBody).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer created successfully');
@@ -169,7 +167,7 @@ export class TrainersComponent {
     } else {
       alert("here update")
       if (!this.trainerForm.trainerId) return;
-      this.trainerService.updateTrainer(this.trainerForm.trainerId, this.trainerForm ).subscribe({
+      this.trainerService.updateTrainer(this.trainerForm.trainerId, this.trainerForm).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer updated successfully');
           this.loadTrainers();
@@ -181,9 +179,9 @@ export class TrainersComponent {
       });
     }
   }
-   formatDate(date?: string | Date | null): string | undefined {
+  formatDate(date?: string | Date | null): string | undefined {
     if (!date) return undefined;
-    
+
     // If it's already in YYYY-MM-DD format, return as-is
     if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
       return date;
@@ -196,7 +194,7 @@ export class TrainersComponent {
       const day = dateObj.getDate().toString().padStart(2, '0');
       return `${year}-${month}-${day}`;
     }
-  
+
     return undefined;
   }
   private resetForm(): void {
@@ -205,15 +203,15 @@ export class TrainersComponent {
       employerName: '',
       username: '',
       email: '',
-      gender :'FEMALE',
-      description :'',
-      dateOfBirth :'',
-      profilePicture :''
+      gender: 'FEMALE',
+      description: '',
+      dateOfBirth: '',
+      profilePicture: ''
     };
   }
   openDeleteDialog(trainer: Trainer): void {
-    this.displayDeleteDialog=true
-    this.trainerToDelete=trainer
+    this.displayDeleteDialog = true
+    this.trainerToDelete = trainer
   }
 
   confirmDeleteTrainer(): void {
@@ -221,7 +219,7 @@ export class TrainersComponent {
       next: () => {
         this.toastService.showSuccess('Trainer deleted successfully');
         this.loadTrainers();
-        this.displayDeleteDialog=false
+        this.displayDeleteDialog = false
       },
       error: (err) => {
         this.toastService.showError(err.error.message);
@@ -232,38 +230,38 @@ export class TrainersComponent {
   closeTrainerDialog(): void {
     this.displayTrainerDialog = false;
   }
-  getTrainerById(id:any,type:string){
-    if(type=== 'details')
-    {this.trainerService.getTrainerById(id).subscribe({
-      next: (trainer) => {
-        this.selectedTrainerDetails=trainer
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message);
-      }
-    });
-  }else{
-    this.trainerService.getTrainerById(id).subscribe({
-      next: (trainer) => {
-        console.log(trainer);
-        this.initializeTrainerData(trainer)
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message);
-      }
-    });
+  getTrainerById(id: any, type: string) {
+    if (type === 'details') {
+      this.trainerService.getTrainerById(id).subscribe({
+        next: (trainer) => {
+          this.selectedTrainerDetails = trainer
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message);
+        }
+      });
+    } else {
+      this.trainerService.getTrainerById(id).subscribe({
+        next: (trainer) => {
+          console.log(trainer);
+          this.initializeTrainerData(trainer)
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message);
+        }
+      });
+    }
   }
-  }
-  initializeTrainerData(trainer:any){
-    this.trainerForm.email=trainer.user.email
-    this.trainerForm.dateOfBirth=trainer.user.dateOfBirth
-    this.trainerForm.description=trainer.user.description
-    this.trainerForm.profilePicture=trainer.user.profilePicture
-    this.trainerForm.phoneNumber=trainer.user.phoneNumber
-    this.trainerForm.username=trainer.user.username
-    this.trainerForm.trainerType=trainer.trainerType
-    this.trainerForm.gender=trainer.user.gender
-    this.trainerForm.employerName=trainer.employerName
+  initializeTrainerData(trainer: any) {
+    this.trainerForm.email = trainer.user.email
+    this.trainerForm.dateOfBirth = trainer.user.dateOfBirth
+    this.trainerForm.description = trainer.user.description
+    this.trainerForm.profilePicture = trainer.user.profilePicture
+    this.trainerForm.phoneNumber = trainer.user.phoneNumber
+    this.trainerForm.username = trainer.user.username
+    this.trainerForm.trainerType = trainer.trainerType
+    this.trainerForm.gender = trainer.user.gender
+    this.trainerForm.employerName = trainer.employerName
 
   }
 }
