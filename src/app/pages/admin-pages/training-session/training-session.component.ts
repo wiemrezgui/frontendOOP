@@ -126,7 +126,7 @@ openManageDomainsDialog() {
     const ref = this.dialogService.open(DomainsComponent, {
       header: 'Manage Domains',
       width: '70%',
-      height: '70%',
+      height: '75%',
       modal: true,
       contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
       baseZIndex: 10000, // Adjust if needed
