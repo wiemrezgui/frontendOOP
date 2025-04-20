@@ -22,6 +22,10 @@ import { SearchPipe } from '../../../shared/pipes/search.pipe';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ParticipantService } from '../../../shared/services/participant.service';
 import { ToastServiceService } from '../../../shared/services/toast-service.service';
+import { ConfirmationService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { StructuresComponent } from './dialogs/structures/structures.component';
+import { ProfilesComponent } from './dialogs/profiles/profiles.component';
 @Component({
   selector: 'app-participants',
   standalone: true,
@@ -31,7 +35,7 @@ import { ToastServiceService } from '../../../shared/services/toast-service.serv
   ],
   templateUrl: './participants.component.html',
   styleUrl: './participants.component.scss',
-  providers: [ParticipantService]
+  providers: [ParticipantService,ConfirmationService,DialogService]  
 })
 export class ParticipantsComponent {
   searchTerm: string = ''
@@ -57,7 +61,7 @@ export class ParticipantsComponent {
   isAddparticipant: boolean = false
   constructor(
     private participantService: ParticipantService,
-    private toastService: ToastServiceService) { }
+    private toastService: ToastServiceService, private dialogService: DialogService) { }
   ngOnInit() {
     this.loadparticipants();
   }
@@ -96,19 +100,6 @@ export class ParticipantsComponent {
   }
 
   saveparticipant() {
-    /* if (this.selectedparticipant) {
-       // Update existing participant
-       const index = this.participants.findIndex(t => t.id === this.selectedparticipant?.id);
-       if (index !== -1) {
-         this.participants[index] = { ...this.participants[index], ...this.participantForm };
-       }
-     } else {
-       // Add new participant
-       const newparticipant= new Participant ()
-       this.participants.push(newparticipant);
-     }
-     
-     this.filteredparticipants = [...this.participants];*/
     this.displayparticipantDialog = false;
     this.isAddparticipant = false
   }
@@ -140,4 +131,24 @@ export class ParticipantsComponent {
     this.displayDetailsDialog = true
     this.selectedparticipantDetails = participant
   }
+  openManageStructuresDialog() {
+      const ref = this.dialogService.open(StructuresComponent, {
+        header: 'Manage Structures',
+        width: '70%',
+        height: '70%',
+        modal: true,
+        contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
+        baseZIndex: 10000, // Adjust if needed
+      });
+    }
+    openManageProfilesDialog() {
+      const ref = this.dialogService.open(ProfilesComponent, {
+        header: 'Manage Profiles',
+        width: '70%',
+        height: '70%',
+        modal: true,
+        contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
+        baseZIndex: 10000, // Adjust if needed
+      });
+    }
 }

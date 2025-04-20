@@ -17,6 +17,12 @@ import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { Training, TrainingType } from '../../../shared/models/training.model';
 import { SearchPipe } from '../../../shared/pipes/search.pipe';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService } from 'primeng/api';
+import { DomainsComponent } from './dialogs/domains/domains.component';
+import { ToastServiceService } from '../../../shared/services/toast-service.service';
+import { TrainingsService } from '../../../shared/services/trainings.service';
+
 @Component({
   selector: 'app-training-session',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
@@ -24,7 +30,8 @@ import { SearchPipe } from '../../../shared/pipes/search.pipe';
     CardModule ,SearchPipe
   ],
   templateUrl: './training-session.component.html',
-  styleUrl: './training-session.component.scss'
+  styleUrl: './training-session.component.scss',
+  providers: [ConfirmationService,DialogService,TrainingsService]
 })
 export class TrainingSessionComponent {
 types=['ONLINE','HYBRID','ONSITE']
@@ -50,6 +57,8 @@ displayDetailsDialog = false;
   selectedtraining: Training = new Training;
   selectedTrainingDetails: Training = new Training;
   isAddTraining:boolean=false
+   constructor( private trainingService:TrainingsService,
+      private toastService: ToastServiceService , private dialogService: DialogService) { }
 ngOnInit() {
   this.loadtrainings();
 }
@@ -122,5 +131,15 @@ onImageSelect(event: any) {
 openDetails(training:any){
   this.displayDetailsDialog=true
   this.selectedTrainingDetails=training
-}
+}  
+openManageDomainsDialog() {
+    const ref = this.dialogService.open(DomainsComponent, {
+      header: 'Manage Domains',
+      width: '70%',
+      height: '70%',
+      modal: true,
+      contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
+      baseZIndex: 10000, // Adjust if needed
+    });
+  }
 }

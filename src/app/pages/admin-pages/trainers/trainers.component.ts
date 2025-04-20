@@ -22,6 +22,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { HttpClientModule } from '@angular/common/http';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SearchPipe } from '../../../shared/pipes/search.pipe';
+import { DialogService } from 'primeng/dynamicdialog';
+import { EmployersComponent } from './dialogs/employers/employers.component';
 
 @Component({
   selector: 'app-trainers',
@@ -32,7 +34,7 @@ import { SearchPipe } from '../../../shared/pipes/search.pipe';
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
-  providers: [TrainerService, ConfirmationService]
+  providers: [TrainerService, ConfirmationService,DialogService]
 })
 export class TrainersComponent {
   searchTerm: string = ''
@@ -83,7 +85,7 @@ export class TrainersComponent {
 
   constructor(
     private trainerService: TrainerService,
-    private toastService: ToastServiceService) { }
+    private toastService: ToastServiceService , private dialogService: DialogService) { }
 
   ngOnInit(): void {
     this.loadTrainers();
@@ -263,5 +265,15 @@ export class TrainersComponent {
     this.trainerForm.gender = trainer.user.gender
     this.trainerForm.employerName = trainer.employerName
 
+  }
+  openManageEmployersDialog() {
+    const ref = this.dialogService.open(EmployersComponent, {
+      header: 'Manage Employers',
+      width: '70%',
+      height: '70%',
+      modal: true,
+      contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
+      baseZIndex: 10000, // Adjust if needed
+    });
   }
 }

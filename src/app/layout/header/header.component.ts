@@ -23,6 +23,9 @@ import { AuthService } from '../../auth/services/auth.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { NavigationService } from '../../shared/services/navigation.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ConfirmationService } from 'primeng/api';
+import { ManagersComponent } from '../../pages/admin-pages/managers/managers.component';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -39,6 +42,7 @@ import { NavigationService } from '../../shared/services/navigation.service';
   ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+    providers: [ConfirmationService,DialogService]
 })
 
 export class HeaderComponent implements OnInit {
@@ -54,12 +58,10 @@ export class HeaderComponent implements OnInit {
   constructor(
     private el: ElementRef,
     private renderer: Renderer2,
-    private authService: AuthService,
     private router: Router,
-    private titleService: Title,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private dialogService: DialogService
   ) { }
-
   ngOnInit() {
     // Set title from current route
     this.router.events
@@ -132,4 +134,14 @@ export class HeaderComponent implements OnInit {
       document.exitFullscreen();
     }
   }
+  openManageManagersDialog() {
+      const ref = this.dialogService.open(ManagersComponent, {
+        header: 'Manage Managers',
+        width: '70%',
+        height: '70%',
+        modal: true,
+        contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
+        baseZIndex: 10000, // Adjust if needed
+      });
+    }
 }
