@@ -14,13 +14,16 @@
     font-size: 15px;
     white-space: nowrap;
   }
-  .p-inputtext {
+  .p-inputtext ,textarea{
     width: 100%;
     padding: 8px;
     border-radius: 5px;
     border: 1px solid #ddd;
     cursor: pointer;
   }  
+  .no-resize {
+    resize: none;
+  }
   .caption-buttons{
     margin-left: 35%;
     p-button{

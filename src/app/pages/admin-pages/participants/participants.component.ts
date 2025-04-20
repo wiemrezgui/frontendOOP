@@ -19,11 +19,12 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FormsModule } from '@angular/forms';
 import { Participant } from '../../../shared/models/participant.model';
 import { SearchPipe } from '../../../shared/pipes/search.pipe';
+import { DatePickerModule } from 'primeng/datepicker';
 @Component({
   selector: 'app-participants',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
     DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,
-    CardModule,InputGroupModule,InputGroupAddonModule,SearchPipe
+    CardModule,InputGroupModule,InputGroupAddonModule,SearchPipe,DatePickerModule
   ],
   templateUrl: './participants.component.html',
   styleUrl: './participants.component.scss'
@@ -32,6 +33,7 @@ export class ParticipantsComponent {
 searchTerm:string=''
 participants: Participant[] = [];
 filteredparticipants: Participant[] = [];
+gender=['FEMALE','MALE'];
 
 // Pagination
 rows = 10;

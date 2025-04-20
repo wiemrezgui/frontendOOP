@@ -66,18 +66,25 @@
     <div class="form-container">
         <div class="form-row">
             <div class="form-group">
-                <label for="firstName">Username<span class="required">*</span></label>
-                <input id="firstName" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.username"/>
+                <label for="username">Username <span class="required">*</span></label>
+                <input id="username" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.username"/>
+            </div>
+            <div class="form-group">
+                <label for="structure">Structure<span class="required">*</span></label>
+                <input id="structure" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.structure" />
             </div>
         </div>
-
         <div class="form-row">
             <div class="form-group full-width">
                 <label for="email">Email <span class="required">*</span></label>
                 <input id="email" pInputText type="email" required fluid placeholder="you@example.com" [(ngModel)]="participantForm.email"/>
             </div>
+                 <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <p-datepicker [(ngModel)]="participantForm.dateOfBirth" name="dateOfBirth" 
+                      dateFormat="yy-mm-dd" placeholder="YYYY-MM-DD" fluid/>
+                </div>     
         </div>
-
         <div class="form-row">
             <div class="form-group">
                 <label for="phone">Phone <span class="required">*</span></label>
@@ -88,15 +95,20 @@
                 </p-inputgroup>
             </div>
             <div class="form-group full-width">
-                <label for="structure">Structure <span class="required">*</span></label>
-                <input id="structure" pInputText type="text" required fluid placeholder="structure.." [(ngModel)]="participantForm.structure"/>
+                <label for="profile">Profile<span class="required">*</span></label>
+                <input id="profile" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.profile" />
             </div>
             <div class="form-group full-width">
-                <label for="profile">Profile <span class="required">*</span></label>
-                <input id="profile" pInputText type="text" required fluid placeholder="profile.." [(ngModel)]="participantForm.profile"/>
-            </div>
+                <label for="email">Gender <span class="required">*</span></label>
+                <p-dropdown [options]="gender"
+                [(ngModel)]="participantForm.gender" placeholder="Select Gender" fluid></p-dropdown>  
+                 </div>
+         </div>   
+        <div class="form-group">
+                <label for="description">Description</label>
+                <textarea pInputTextarea [(ngModel)]="participantForm.description" 
+                          name="description" rows="6" placeholder="Description" class="no-resize"></textarea>
         </div>
-
     </div>
     <ng-template pTemplate="footer">
         <button pButton label="Cancel" icon="pi pi-times" (click)="closeparticipantDialog()" class="p-button-text"></button>
