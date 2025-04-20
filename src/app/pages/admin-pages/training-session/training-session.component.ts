@@ -27,7 +27,8 @@ import { SearchPipe } from '../../../shared/pipes/search.pipe';
   styleUrl: './training-session.component.scss'
 })
 export class TrainingSessionComponent {
-  searchTerm:string=''
+types=['ONLINE','HYBRID','ONSITE']
+searchTerm:string=''
 // Table data
 trainings: Training[] = [];
 filteredtrainings: Training[] = [];
