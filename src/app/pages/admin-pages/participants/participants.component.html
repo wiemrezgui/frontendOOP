@@ -1,12 +1,12 @@
 <div class="card">
-    <p-table #dt [value]="participants" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
+    <p-table #dt [value]="participants | search: searchTerm: ['participant.username']" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="false"
         [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} participants">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center">
                 <p-iconField iconPosition="left">
                     <p-inputIcon class="pi pi-search"></p-inputIcon>
-                    <input pInputText type="text" placeholder="Search participants..." fluid style="width:450px" />
+                    <input pInputText type="text" placeholder="Search participants..." fluid style="width:450px" [(ngModel)]="searchTerm"/>
                 </p-iconField>
                 <button pButton icon="pi pi-plus" label="Add participant" (click)="openAddparticipantDialog()"
                     class="p-button-primary"></button>
@@ -56,7 +56,7 @@
 
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="7">No participants found</td>
+                <td colspan="7" style="text-align: center;">No participants found</td>
             </tr>
         </ng-template>
     </p-table>

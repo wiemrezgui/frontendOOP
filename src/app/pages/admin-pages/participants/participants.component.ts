@@ -18,16 +18,18 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { FormsModule } from '@angular/forms';
 import { Participant } from '../../../shared/models/participant.model';
+import { SearchPipe } from '../../../shared/pipes/search.pipe';
 @Component({
   selector: 'app-participants',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
-    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,CardModule,InputGroupModule,InputGroupAddonModule
+    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,
+    CardModule,InputGroupModule,InputGroupAddonModule,SearchPipe
   ],
   templateUrl: './participants.component.html',
   styleUrl: './participants.component.scss'
 })
 export class ParticipantsComponent {
-// Table data
+searchTerm:string=''
 participants: Participant[] = [];
 filteredparticipants: Participant[] = [];
 
@@ -62,7 +64,7 @@ loadparticipants() {
       gender: 'FEMALE',
       dateOfBirth: '',
       description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente deserunt quaerat nam libero culpa, sit ipsa voluptatum pariatur voluptatem, placeat consequuntur possimus reprehenderit',
-      username: 'johnDoe14',
+      username: 'jjjjj',
       profile: 'profile 1',
       structure: 'structure 1',
       role: 'PARTICIPANT'

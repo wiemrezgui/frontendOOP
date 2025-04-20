@@ -16,15 +16,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { Training, TrainingType } from '../../../shared/models/training.model';
+import { SearchPipe } from '../../../shared/pipes/search.pipe';
 @Component({
   selector: 'app-training-session',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
-    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,CardModule
+    DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,
+    CardModule ,SearchPipe
   ],
   templateUrl: './training-session.component.html',
   styleUrl: './training-session.component.scss'
 })
 export class TrainingSessionComponent {
+  searchTerm:string=''
 // Table data
 trainings: Training[] = [];
 filteredtrainings: Training[] = [];
