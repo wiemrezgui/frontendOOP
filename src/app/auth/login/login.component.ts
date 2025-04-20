@@ -6,7 +6,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { DividerModule } from 'primeng/divider';
 import { ImageModule } from 'primeng/image';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { ToastServiceService } from '../../shared/services/toast-service.service';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { ToastModule } from 'primeng/toast';

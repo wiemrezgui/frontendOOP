@@ -21,7 +21,9 @@
     border: 1px solid #ddd;
     cursor: pointer;
   }  
-  
+  .no-resize {
+    resize: none;
+  }
   .p-button-primary{
     margin-left: 10px;
     padding-left:15px;

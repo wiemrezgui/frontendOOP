@@ -19,7 +19,7 @@ import { filter } from 'rxjs/operators';
 import { TooltipModule } from 'primeng/tooltip';
 import { Observable } from 'rxjs';
 import { NavItem } from '../../shared/models/nav-item.model';
-import { AuthService } from '../../shared/services/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { NavigationService } from '../../shared/services/navigation.service';

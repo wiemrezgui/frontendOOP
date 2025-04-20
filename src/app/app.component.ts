@@ -6,7 +6,7 @@ import { SidebarService } from './shared/services/sidebar.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastServiceService } from './shared/services/toast-service.service';
-import { AuthService } from './shared/services/auth.service';
+import { AuthService } from './auth/services/auth.service';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 
