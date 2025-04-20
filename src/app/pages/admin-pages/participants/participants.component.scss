@@ -22,8 +22,10 @@
     cursor: pointer;
   }  
   .caption-buttons{
-    margin-left: 30%;
-    gap: 10px;
+    margin-left: 35%;
+    p-button{
+      margin-right: 12px !important;
+    }
   }
   .p-button-primary{
     margin-left: 10px;

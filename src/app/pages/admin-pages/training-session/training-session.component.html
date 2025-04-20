@@ -11,7 +11,7 @@
                 </p-iconField>
                 <button pButton icon="pi pi-plus" label="Add training" (click)="openAddTrainingDialog()"
                     class="p-button-primary"></button>
-                <button pButton label="Domains" class="p-button-danger right-position"></button>
+                <p-button label="Domains" severity="info" class="right-position"/>
             </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -42,7 +42,7 @@
                         severity="info" pTooltip="Voir les détails" tooltipPosition="top"
                         (click)="openDetails(session)"></button>
                     <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
-                        (click)="openEditsessionDialog(session)" pTooltip="Edit" tooltipPosition="top"></button>
+                        (click)="openEditTrainingDialog(session)" pTooltip="Edit" tooltipPosition="top"></button>
                     <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
                         (click)="confirmDelete(session)" pTooltip="Delete" tooltipPosition="top"></button>
                 </td>
@@ -56,14 +56,14 @@
         </ng-template>
     </p-table>
 </div>
-<p-dialog [(visible)]="displaysessionDialog" [header]="isAddsession ? 'Add session' : 'Edit session'"
+<p-dialog [(visible)]="displayTrainingDialog" [header]="isAddTraining ? 'Add Training' : 'Edit Training'"
     [style]="{ width: '50vw' }" [modal]="true" [styleClass]="'session-dialog'">
     <div class="form-container">
 
         <div class="form-row">
             <div class="form-group">
                 <label for="title">Title <span class="required">*</span></label>
-                <input id="title" pInputText required fluid placeholder="title 1 " [(ngModel)]="sessionForm.title"/>
+                <input id="title" pInputText required fluid placeholder="title 1 " [(ngModel)]="trainingForm.title"/>
             </div>
             <div class="form-group full-width">
                 <label for="budget">Duration <span class="required">*</span></label>
@@ -77,26 +77,26 @@
         <div class="form-row">
             <div class="form-group full-width">
                 <label for="budget">Budget <span class="required">*</span></label>
-                <input id="budget" pInputText type="text" required fluid placeholder="150" [(ngModel)]="sessionForm.budget"/>
+                <input id="budget" pInputText type="text" required fluid placeholder="150" [(ngModel)]="trainingForm.price"/>
             </div>
             <div class="form-group full-width">
                 <label for="domain">Domain <span class="required">*</span></label>
-                <input id="domain" pInputText type="text" required fluid placeholder="domain.." [(ngModel)]="sessionForm.domain"/>
+                <input id="domain" pInputText type="text" required fluid placeholder="domain.." [(ngModel)]="trainingForm.domainName"/>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group full-width">
                 <label for="startTime">Start time <span class="required">*</span></label>
-                <input id="startTime" pInputText type="text" required fluid placeholder="start Time" [(ngModel)]="sessionForm.startTime"/>
+                <input id="startTime" pInputText type="text" required fluid placeholder="start Time" [(ngModel)]="trainingForm.startTime"/>
             </div>
             <div class="form-group">
                 <label for="endTime">End time <span class="required">*</span></label>
-                <input id="endTime" pInputText required fluid placeholder="end Time" [(ngModel)]="sessionForm.endTime" type="text"/>
+                <input id="endTime" pInputText required fluid placeholder="end Time" [(ngModel)]="trainingForm.endTime" type="text"/>
             </div>
             <div class="form-group">
                 <label for="year">Year <span class="required">*</span></label>
-                <input id="year" pInputText required fluid placeholder="2025" [(ngModel)]="sessionForm.year" type="text"/>
+                <input id="year" pInputText required fluid placeholder="2025"  type="text"/>
             </div>
         </div>
          <div class="form-row">
@@ -104,20 +104,20 @@
                 <div class="session-type-container">
                     <div 
                         class="session-type-card ONSITE" 
-                        [class.selected]="sessionForm.type === 'ONSITE'"
-                        (click)="sessionForm.type = 'ONSITE'">
+                        [class.selected]="trainingForm.type === 'ONSITE'"
+                       >
                         <p>ONSITE</p>
                     </div>
                     <div 
                         class="session-type-card ONSITE" 
-                        [class.selected]="sessionForm.type === 'ONSITE'"
-                        (click)="sessionForm.type = 'ONSITE'">
+                        [class.selected]="trainingForm.type === 'ONSITE'"
+                       >
                         <p>ONSITE</p>
                     </div>
                     <div 
                         class="session-type-card HYBRID" 
-                        [class.selected]="sessionForm.type === 'HYBRID'"
-                        (click)="sessionForm.type = 'HYBRID'">
+                        [class.selected]="trainingForm.type === 'HYBRID'"
+                        >
                         <p>HYBRID</p>
                     </div>
                 </div>          
@@ -125,8 +125,8 @@
         </div>
     </div>
     <ng-template pTemplate="footer">
-        <button pButton label="Cancel" icon="pi pi-times" (click)="closesessionDialog()" class="p-button-text"></button>
-        <button pButton label="Save" icon="pi pi-save" (click)="savesession()" class="p-button-primary"></button>
+        <button pButton label="Cancel" icon="pi pi-times" (click)="closeTrainingDialog()" class="p-button-text"></button>
+        <button pButton label="Save" icon="pi pi-save" (click)="saveTraining()" class="p-button-primary"></button>
     </ng-template>
 </p-dialog>
 
@@ -137,10 +137,10 @@
             <div class="profile-container">
                 <div class="name-type-container">
                     <h2>{{ selectedTrainingDetails.title }}</h2>
-                        <p-tag [value]="selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 
+                      <!--  <p-tag [value]="selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 
                     (selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')"
                     [severity]="selectedTrainingDetails.type === 'ONSITE' ? 'warn' : 
-                    (selectedTrainingDetails.type === 'ONSITE' ? 'success' : 'info')" class="type-tag"></p-tag>
+                    (selectedTrainingDetails.type === 'ONSITE' ? 'success' : 'info')" class="type-tag"></p-tag>-->
                 </div>
                 <p class="nb-participants">
                     <i class="pi pi-tag"></i> Domain : {{selectedTrainingDetails.domainName}}
@@ -152,8 +152,7 @@
             <div class="details-container">
                 <div class="p-grid">
                     <div class="p-col-6">
-                        <p><strong> Domain:</strong> {{ selectedTrainingDetails.domain || '-' }}</p>
-                        <p><strong> Duration:</strong> {{ selectedTrainingDetails.duration || '-' }} Days</p>
+                        <p><strong> Domain:</strong> {{ selectedTrainingDetails.domainName || '-' }}</p>
                     </div>
 
                     <div class="p-col-6">
@@ -163,7 +162,7 @@
                     </div>
 
                     <div class="p-col-6">
-                        <p><strong> Budget:</strong> {{ selectedTrainingDetails.budget || '-' }}</p>
+                        <p><strong> Budget:</strong> {{ selectedTrainingDetails.price || '-' }}</p>
                     </div>
                 </div>
             </div>
@@ -185,7 +184,7 @@
 </p-dialog>
 <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
     <div *ngIf="trainingToDelete">
-        <p>Are you sure you want to delete the training <strong>{{ trainingToDelete.title }} </strong> having ID <strong>{{trainingToDelete.id}}</strong>?</p>
+        <p>Are you sure you want to delete the training <strong>{{ trainingToDelete.title }} </strong> having ID <strong>{{trainingToDelete.trainingId}}</strong>?</p>
     </div>
     <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"

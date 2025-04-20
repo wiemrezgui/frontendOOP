@@ -17,18 +17,17 @@ import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
 import { Training, TrainingType } from '../../../shared/models/training.model';
 @Component({
-  selector: 'app-training-training',
+  selector: 'app-training-session',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
     DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,CardModule
   ],
-  templateUrl: './training-training.component.html',
-  styleUrl: './training-training.component.scss'
+  templateUrl: './training-session.component.html',
+  styleUrl: './training-session.component.scss'
 })
-export class TrainingtrainingComponent {
+export class TrainingSessionComponent {
 // Table data
 trainings: Training[] = [];
 filteredtrainings: Training[] = [];
-nbParticipants:number=15;
 durationTypes = ['Weeks','Hours'];
 
 // Pagination
@@ -46,7 +45,7 @@ displayDetailsDialog = false;
   trainingToDelete: Training = new Training;
   selectedtraining: Training = new Training;
   selectedTrainingDetails: Training = new Training;
-  isAddtraining:boolean=false
+  isAddTraining:boolean=false
 ngOnInit() {
   this.loadtrainings();
 }
@@ -79,23 +78,23 @@ onPageChange(event: any) {
 }
 
 openAddTrainingDialog() {
-  this.isAddtraining=true
+  this.isAddTraining=true
   this.trainingForm = {};
   console.log('selected '+this.selectedtraining );
   this.displayTrainingDialog = true;
 }
 
-openEdittrainingDialog(training: Training) {
-  this.isAddtraining=false
+openEditTrainingDialog(training: Training) {
+  this.isAddTraining=false
   console.log('selected '+this.selectedtraining );
   this.selectedtraining = training;
   this.trainingForm = { ...training };
   this.displayTrainingDialog = true;
 }
 
-savetraining() {
+saveTraining() {
    this.displayTrainingDialog = false;
-  this.isAddtraining=false
+  this.isAddTraining=false
 }
 
 confirmDelete(training: Training) {
@@ -109,7 +108,7 @@ deleteTraining() {
   }
 }
 
-closetrainingDialog() {
+closeTrainingDialog() {
   this.displayTrainingDialog = false;
 }
 
