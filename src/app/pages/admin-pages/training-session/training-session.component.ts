@@ -63,26 +63,16 @@ ngOnInit() {
   this.loadtrainings();
 }
 
-loadtrainings() {
-  // Replace with actual API call
-  this.trainings = [
-    {
-      trainingId: '',
-      title: '',
-      startDate: '',
-      endDate: '',
-      price: 0,
-      startTime: '',
-      endTime: '',
-      type: TrainingType.ONLINE
-    }
-  ];
-  this.filteredtrainings = [...this.trainings];
-  this.totalRecords = this.filteredtrainings.length;
-}
-
-filtertrainings(event: Event) {
-
+loadtrainings(page: number = 0) {
+    this.trainingService.getAlltrainings(page).subscribe({
+      next: (trainings) => {
+        this.trainings = trainings;
+        this.totalRecords = trainings.length; // Adjust based on your API pagination
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
 }
 
 onPageChange(event: any) {

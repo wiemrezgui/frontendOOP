@@ -19,7 +19,7 @@ export class TrainingsService {
     });
   }
   getAlltrainings(page: number): Observable<Training[]> {
-    return this.http.get<any>(this.apiUrl, {
+    return this.http.get<Training[]>(this.apiUrl, {
       params: { page: page.toString() }, headers: this.getAuthHeaders()
     });
   }

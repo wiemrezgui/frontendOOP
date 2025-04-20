@@ -270,7 +270,7 @@ export class TrainersComponent {
     const ref = this.dialogService.open(EmployersComponent, {
       header: 'Manage Employers',
       width: '70%',
-      height: '70%',
+      height: '74%',
       modal: true,
       contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
       baseZIndex: 10000, // Adjust if needed
