@@ -15,18 +15,19 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
+import { Training, TrainingType } from '../../../shared/models/training.model';
 @Component({
-  selector: 'app-training-session',
+  selector: 'app-training-training',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
     DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,CardModule
   ],
-  templateUrl: './training-session.component.html',
-  styleUrl: './training-session.component.scss'
+  templateUrl: './training-training.component.html',
+  styleUrl: './training-training.component.scss'
 })
-export class TrainingSessionComponent {
-/*// Table data
-sessions: Session[] = [];
-filteredsessions: Session[] = [];
+export class TrainingtrainingComponent {
+// Table data
+trainings: Training[] = [];
+filteredtrainings: Training[] = [];
 nbParticipants:number=15;
 durationTypes = ['Weeks','Hours'];
 
@@ -36,62 +37,39 @@ first = 0;
 totalRecords = 0;
 
 // Dialogs
-displaysessionDialog = false;
+displayTrainingDialog = false;
 displayDeleteDialog = false;
 displayDetailsDialog = false;
 
 // Forms
-  sessionForm: Partial<Session> = {};
-  sessionToDelete: Session = new Session;
-  selectedsession: Session = new Session;
-  selectedSessionDetails: Session = new Session;
-  isAddsession:boolean=false
+  trainingForm: Partial<Training> = {};
+  trainingToDelete: Training = new Training;
+  selectedtraining: Training = new Training;
+  selectedTrainingDetails: Training = new Training;
+  isAddtraining:boolean=false
 ngOnInit() {
-  this.loadsessions();
+  this.loadtrainings();
 }
 
-loadsessions() {
+loadtrainings() {
   // Replace with actual API call
-  this.sessions = [
+  this.trainings = [
     {
-      id: 1,
-      title: 'title 1 ',
-      duration: 6,
-      budget: 12.5,
-      domain: 'domain 1 ',
-      startTime: '12:00',
-      endTime: '14:00',
-      type: 'Online',
-      year: 2025
-    },
-    {
-      id: 1,
-      title: 'title 1 ',
-      duration: 8,
-      budget: 12.5,
-      domain: 'domain 1 ',
-      startTime: '12:00',
-      endTime: '14:00',
-      type: 'Face-to-face',
-      year: 2025
-    },
-    {
-      id: 1,
-      title: 'title 1 ',
-      duration: 10,
-      budget: 12.5,
-      domain: 'domain 1 ',
-      startTime: '12:00',
-      endTime: '14:00',
-      type: 'Hybrid',
-      year: 2025
+      trainingId: '',
+      title: '',
+      startDate: '',
+      endDate: '',
+      price: 0,
+      startTime: '',
+      endTime: '',
+      type: TrainingType.ONLINE
     }
   ];
-  this.filteredsessions = [...this.sessions];
-  this.totalRecords = this.filteredsessions.length;
+  this.filteredtrainings = [...this.trainings];
+  this.totalRecords = this.filteredtrainings.length;
 }
 
-filtersessions(event: Event) {
+filtertrainings(event: Event) {
 
 }
 
@@ -100,62 +78,46 @@ onPageChange(event: any) {
   this.rows = event.rows;
 }
 
-openAddsessionDialog() {
-  this.isAddsession=true
-  this.sessionForm = {};
-  console.log('selected '+this.selectedsession );
-  this.displaysessionDialog = true;
+openAddTrainingDialog() {
+  this.isAddtraining=true
+  this.trainingForm = {};
+  console.log('selected '+this.selectedtraining );
+  this.displayTrainingDialog = true;
 }
 
-openEditsessionDialog(session: Session) {
-  this.isAddsession=false
-  console.log('selected '+this.selectedsession );
-  this.selectedsession = session;
-  this.sessionForm = { ...session };
-  this.displaysessionDialog = true;
+openEdittrainingDialog(training: Training) {
+  this.isAddtraining=false
+  console.log('selected '+this.selectedtraining );
+  this.selectedtraining = training;
+  this.trainingForm = { ...training };
+  this.displayTrainingDialog = true;
 }
 
-savesession() {
-  if (this.selectedsession) {
-    // Update existing session
-    const index = this.sessions.findIndex(t => t.id === this.selectedsession?.id);
-    if (index !== -1) {
-      this.sessions[index] = { ...this.sessions[index], ...this.sessionForm };
-    }
-  } else {
-    // Add new session
-    const newsession= new Session ()
-    this.sessions.push(newsession);
-  }
-  
-  this.filteredsessions = [...this.sessions];
-  this.displaysessionDialog = false;
-  this.isAddsession=false
+savetraining() {
+   this.displayTrainingDialog = false;
+  this.isAddtraining=false
 }
 
-confirmDelete(session: Session) {
-  this.sessionToDelete = session;
+confirmDelete(training: Training) {
+  this.trainingToDelete = training;
   this.displayDeleteDialog = true;
 }
 
-deletesession() {
-  if (this.sessionToDelete) {
-    this.sessions = this.sessions.filter(t => t.id !== this.sessionToDelete?.id);
-    this.filteredsessions = [...this.sessions];
-    this.totalRecords = this.filteredsessions.length;
+deleteTraining() {
+  if (this.trainingToDelete) {
     this.displayDeleteDialog = false;
   }
 }
 
-closesessionDialog() {
-  this.displaysessionDialog = false;
+closetrainingDialog() {
+  this.displayTrainingDialog = false;
 }
 
 onImageSelect(event: any) {
 
 }
-openDetails(session:any){
+openDetails(training:any){
   this.displayDetailsDialog=true
-  this.selectedSessionDetails=session
-}*/
+  this.selectedTrainingDetails=training
+}
 }

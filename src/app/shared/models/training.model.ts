@@ -1,14 +1,14 @@
 export enum TrainingType {
     ONLINE = 'ONLINE',
-    IN_PERSON = 'IN_PERSON',
+    ONSITE = 'ONSITE',
     HYBRID = 'HYBRID'
   }
   
   export class Training {
     trainingId!: string;  // UUID from backend
     title!: string;
-    startDate!: Date;
-    endDate!: Date;
+    startDate!: string;
+    endDate!: string;
     description?: string;
     domainName?: string;
     price!: number;
@@ -19,14 +19,6 @@ export enum TrainingType {
     constructor(init?: Partial<Training>) {
       if (init) {
         Object.assign(this, init);
-        
-        // Convert string dates to Date objects
-        if (init.startDate && typeof init.startDate === 'string') {
-          this.startDate = new Date(init.startDate);
-        }
-        if (init.endDate && typeof init.endDate === 'string') {
-          this.endDate = new Date(init.endDate);
-        }
       }
     }
   }

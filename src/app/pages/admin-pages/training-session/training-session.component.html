@@ -1,17 +1,17 @@
-<!--<div class="card">
-    <p-table #dt [value]="sessions" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
+<div class="card">
+    <p-table #dt [value]="trainings" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true"
         [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} sessions">
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} trainings">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center">
                 <p-iconField iconPosition="left">
                     <p-inputIcon class="pi pi-search"></p-inputIcon>
-                    <input pInputText type="text" placeholder="Search sessions..." fluid
-                        (input)="filtersessions($event)" style="width:450px" />
+                    <input pInputText type="text" placeholder="Search trainings..." fluid
+                        style="width:450px" />
                 </p-iconField>
-                <button pButton icon="pi pi-plus" label="Add session" (click)="openAddsessionDialog()"
+                <button pButton icon="pi pi-plus" label="Add training" (click)="openAddTrainingDialog()"
                     class="p-button-primary"></button>
-                <button pButton label="Employers" class="p-button-danger right-position"></button>
+                <button pButton label="Domains" class="p-button-danger right-position"></button>
             </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -19,8 +19,7 @@
                 <th>ID</th>
                 <th>Title</th>
                 <th>Type</th>
-                <th>Duration</th>
-                <th>Price</th>
+                <th>Budget</th>
                 <th>Domain</th>
                 <th>Actions</th>
             </tr>
@@ -30,10 +29,10 @@
                 <td>{{ session.id }}</td>
                 <td>{{ session.title }}</td>
                 <td>
-                    <p-tag [value]="session.type === 'Face-to-face' ? 'Face-to-face' : 
-                (session.type === 'Online' ? 'Online' : 'Hybrid')"
-                [severity]="session.type === 'Face-to-face' ? 'warn' : 
-                  (session.type === 'Online' ? 'success' : 'info')"></p-tag>
+                    <p-tag [value]="session.type === 'ONSITE' ? 'ONSITE' : 
+                (session.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')"
+                [severity]="session.type === 'ONSITE' ? 'warn' : 
+                  (session.type === 'ONSITE' ? 'success' : 'info')"></p-tag>
                 </td>
                 <td>{{ session.duration }}</td>
                 <td>{{ session.budget }}</td>
@@ -104,22 +103,22 @@
             <div class="form-group full-width">
                 <div class="session-type-container">
                     <div 
-                        class="session-type-card online" 
-                        [class.selected]="sessionForm.type === 'Online'"
-                        (click)="sessionForm.type = 'Online'">
-                        <p>Online</p>
+                        class="session-type-card ONSITE" 
+                        [class.selected]="sessionForm.type === 'ONSITE'"
+                        (click)="sessionForm.type = 'ONSITE'">
+                        <p>ONSITE</p>
                     </div>
                     <div 
-                        class="session-type-card face-to-face" 
-                        [class.selected]="sessionForm.type === 'Face-to-face'"
-                        (click)="sessionForm.type = 'Face-to-face'">
-                        <p>Face-to-face</p>
+                        class="session-type-card ONSITE" 
+                        [class.selected]="sessionForm.type === 'ONSITE'"
+                        (click)="sessionForm.type = 'ONSITE'">
+                        <p>ONSITE</p>
                     </div>
                     <div 
-                        class="session-type-card hybrid" 
-                        [class.selected]="sessionForm.type === 'Hybrid'"
-                        (click)="sessionForm.type = 'Hybrid'">
-                        <p>Hybrid</p>
+                        class="session-type-card HYBRID" 
+                        [class.selected]="sessionForm.type === 'HYBRID'"
+                        (click)="sessionForm.type = 'HYBRID'">
+                        <p>HYBRID</p>
                     </div>
                 </div>          
              </div>
@@ -137,14 +136,14 @@
         <div class="left-section p-col-3">
             <div class="profile-container">
                 <div class="name-type-container">
-                    <h2>{{ selectedSessionDetails.title }}</h2>
-                        <p-tag [value]="selectedSessionDetails.type === 'Face-to-face' ? 'Face-to-face' : 
-                    (selectedSessionDetails.type === 'Online' ? 'Online' : 'Hybrid')"
-                    [severity]="selectedSessionDetails.type === 'Face-to-face' ? 'warn' : 
-                    (selectedSessionDetails.type === 'Online' ? 'success' : 'info')" class="type-tag"></p-tag>
+                    <h2>{{ selectedTrainingDetails.title }}</h2>
+                        <p-tag [value]="selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 
+                    (selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')"
+                    [severity]="selectedTrainingDetails.type === 'ONSITE' ? 'warn' : 
+                    (selectedTrainingDetails.type === 'ONSITE' ? 'success' : 'info')" class="type-tag"></p-tag>
                 </div>
                 <p class="nb-participants">
-                    <i class="pi pi-tag"></i> {{ nbParticipants || '0' }} participants
+                    <i class="pi pi-tag"></i> Domain : {{selectedTrainingDetails.domainName}}
                 </p>
             </div>
         </div>
@@ -153,18 +152,18 @@
             <div class="details-container">
                 <div class="p-grid">
                     <div class="p-col-6">
-                        <p><strong> Domain:</strong> {{ selectedSessionDetails.domain || '-' }}</p>
-                        <p><strong> Duration:</strong> {{ selectedSessionDetails.duration || '-' }} Days</p>
+                        <p><strong> Domain:</strong> {{ selectedTrainingDetails.domain || '-' }}</p>
+                        <p><strong> Duration:</strong> {{ selectedTrainingDetails.duration || '-' }} Days</p>
                     </div>
 
                     <div class="p-col-6">
-                        <p><strong> Start time:</strong> {{ (selectedSessionDetails.startTime | date) || '-' }}</p>
-                        <p><strong> End time:</strong> {{ selectedSessionDetails.endTime || '-' }}</p>
+                        <p><strong> Start time:</strong> {{ (selectedTrainingDetails.startTime | date) || '-' }}</p>
+                        <p><strong> End time:</strong> {{ selectedTrainingDetails.endTime || '-' }}</p>
 
                     </div>
 
                     <div class="p-col-6">
-                        <p><strong> Budget:</strong> {{ selectedSessionDetails.budget || '-' }}</p>
+                        <p><strong> Budget:</strong> {{ selectedTrainingDetails.budget || '-' }}</p>
                     </div>
                 </div>
             </div>
@@ -185,12 +184,12 @@
     </div>
 </p-dialog>
 <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
-    <div *ngIf="sessionToDelete">
-        <p>Are you sure you want to delete the session <strong>{{ sessionToDelete.title }} </strong> having ID <strong>{{sessionToDelete.id}}</strong>?</p>
+    <div *ngIf="trainingToDelete">
+        <p>Are you sure you want to delete the training <strong>{{ trainingToDelete.title }} </strong> having ID <strong>{{trainingToDelete.id}}</strong>?</p>
     </div>
     <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
             class="p-button-text"></button>
-        <button pButton label="Yes" icon="pi pi-check" (click)="deletesession()" class="p-button-danger"></button>
+        <button pButton label="Yes" icon="pi pi-check" (click)="deleteTraining()" class="p-button-danger"></button>
     </ng-template>
-</p-dialog>-->
+</p-dialog>
