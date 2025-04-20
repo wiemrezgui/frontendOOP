@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { EmployerService } from '../../services/employer.service';
 import { ToastServiceService } from '../../../../../shared/services/toast-service.service';
 import { HttpClientModule } from '@angular/common/http';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-employers',
@@ -31,7 +32,8 @@ export class EmployersComponent {
 
   constructor(
     private employerService: EmployerService, 
-    private toastService: ToastServiceService
+    private toastService: ToastServiceService,
+    public ref: DynamicDialogRef 
   ) {}
 
   ngOnInit() {
@@ -139,5 +141,8 @@ export class EmployersComponent {
         }
       });
     }
+  }
+  closeDialog() {
+    this.ref.close(); // This will close the dialog
   }
 }
