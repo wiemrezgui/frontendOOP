@@ -1,3 +1,6 @@
+<div class="exit">
+    <p class="exit" (click)="closeDialog()"> X </p>
+</div>
 <p-tabs value="0">
     <p-tablist>
         <p-tab value="0">All profiles</p-tab>
@@ -6,31 +9,67 @@
     </p-tablist>
     <p-tabpanels>
         <p-tabpanel value="0">
-            <p class="m-0">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                anim id est laborum.
-            </p>
+            <div class="container">
+                <p-table [value]="profiles" [tableStyle]="{ 'width': '35rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th>Profile ID</th>
+                            <th>Profile Type</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-profile>
+                        <tr>
+                            <td>{{ profile.profileId }}</td>
+                            <td>{{ profile.profileType }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
         </p-tabpanel>
         <p-tabpanel value="1">
-            <p class="m-0">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
-                aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
-                dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-                modi.
-            </p>
+            <div class="container">
+                <h3>Add profile</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profile">Profile type <span class="required">*</span></label>
+                            <input id="profile" pInputText required placeholder="Admin" [(ngModel)]="newProfile"/>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Save profile" icon="pi pi-save" class="p-button-primary" (click)="saveProfile()"></button>
+            </div>
+            <p-divider />
+            <div class="container">
+                <h3>Edit profile</h3>
+                <div class="form-container">
+                    <div class="form-group">
+                        <label for="profile">The profile you want to edit <span class="required">*</span></label>
+                        <p-dropdown [options]="IDProfiles" placeholder="Select ID" fluid (onChange)="onProfileSelected($event)"></p-dropdown>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profile">Profile type <span class="required">*</span></label>
+                            <input id="profile" pInputText required placeholder="Admin" [(ngModel)]="editProfileType"/>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Edit profile" icon="pi pi-save" class="p-button-primary" (click)="updateProfile()"></button>
+            </div>
         </p-tabpanel>
         <p-tabpanel value="2">
-            <p class="m-0">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
-                atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique
-                sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-                facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
-                impedit quo minus.
-            </p>
+            <div class="container">
+                <h3>Delete profile</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profile">The profile you want to delete <span class="required">*</span></label>
+                            <p-dropdown [options]="IDProfiles" placeholder="Select ID" fluid (onChange)="onProfileSelected($event)"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Delete profile" icon="pi pi-check" class="p-button-danger" (click)="deleteProfile()"></button>
+            </div>
         </p-tabpanel>
     </p-tabpanels>
 </p-tabs>
