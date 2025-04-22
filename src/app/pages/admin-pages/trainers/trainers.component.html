@@ -1,5 +1,5 @@
 <div class="card">
-    <p-table #dt [value]="trainers | search: searchTerm: ['username']" dataKey="id"
+    <p-table #dt [value]="trainers | search: searchTerm: ['user.username']" dataKey="id"
         [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
         [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} trainers">
