@@ -32,12 +32,12 @@ import { ToastModule } from 'primeng/toast';
   selector: 'app-trainers',
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
-    DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule,ToastModule,
+    DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule, ToastModule,
     CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
-  providers: [TrainerService, ConfirmationService,DialogService,EmployerService]
+  providers: [TrainerService, ConfirmationService, DialogService, EmployerService]
 })
 export class TrainersComponent {
   searchTerm: string = ''
@@ -53,7 +53,7 @@ export class TrainersComponent {
     description: '',
     dateOfBirth: '',
     profilePicture: '',
-    phoneNumber:''
+    phoneNumber: ''
   };
   trainerToDelete: any;
   selectedTrainerDetails: any;
@@ -64,7 +64,7 @@ export class TrainersComponent {
   isAddTrainer = true;
   loading = false;
   selectedEmployer: any;
-  employerIdToDelete:any
+  employerIdToDelete: any
   // Pagination
   rows = 10;
   first = 0;
@@ -87,11 +87,11 @@ export class TrainersComponent {
     { label: 'Trainer', value: 'TRAINER' },
     { label: 'Admin', value: 'ADMIN' }
   ];
-  employers:Employer[] =[];
+  employers: Employer[] = [];
   constructor(
     private trainerService: TrainerService,
-    private toastService: ToastServiceService , private dialogService: DialogService
-  ,private employerService:EmployerService) { }
+    private toastService: ToastServiceService, private dialogService: DialogService
+    , private employerService: EmployerService) { }
 
   ngOnInit(): void {
     this.loadTrainers();
@@ -130,7 +130,7 @@ export class TrainersComponent {
       email: '',
       role: 'TRAINER'
     };
-    this.selectedEmployer=null
+    this.selectedEmployer = null
     this.displayTrainerDialog = true;
   }
 
@@ -144,13 +144,13 @@ export class TrainersComponent {
 
   openDetails(trainer: Trainer): void {
     this.selectedTrainerDetails = trainer;
+    console.log("trainer to edit", this.selectedTrainerDetails);
     this.getTrainerById(trainer.trainerId, 'details')
     this.displayDetailsDialog = true;
   }
 
   saveTrainer(): void {
     if (this.isAddTrainer) {
-      
       const requestBody = {
         username: this.trainerForm.username,
         email: this.trainerForm.email,
@@ -162,8 +162,6 @@ export class TrainersComponent {
         trainerType: this.trainerForm.trainerType,
         employerName: this.selectedEmployer.employerName
       };
-      console.log(requestBody);
-
       this.trainerService.createTrainer(requestBody).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer created successfully');
@@ -222,7 +220,7 @@ export class TrainersComponent {
   }
   openDeleteDialog(trainer: Trainer): void {
     this.displayDeleteDialog = true
-    this.trainerToDelete = trainer
+    this.trainerToDelete = trainer    
   }
 
   confirmDeleteTrainer(): void {
@@ -275,14 +273,14 @@ export class TrainersComponent {
     this.trainerForm.gender = trainer.user.gender
     this.trainerForm.employerName = trainer.employerName
     if (trainer.employerName) {
-    this.selectedEmployer = this.employers.find(emp => 
-      emp.employerName === trainer.employerName
-    );
-    if (!this.selectedEmployer) {
-      this.selectedEmployer = { employerName: trainer.employerName };
+      this.selectedEmployer = this.employers.find(emp =>
+        emp.employerName === trainer.employerName
+      );
+      if (!this.selectedEmployer) {
+        this.selectedEmployer = { employerName: trainer.employerName };
+      }
+      this.employerIdToDelete = trainer.trainerId
     }
-    this.employerIdToDelete=trainer.trainerId
-  }    
 
   }
   openManageEmployersDialog() {
@@ -295,10 +293,10 @@ export class TrainersComponent {
       baseZIndex: 10000, // Adjust if needed
     });
   }
-  getAllEmployers(){
+  getAllEmployers() {
     this.employerService.getAllEmployers().subscribe({
       next: (employers) => {
-        this.employers=employers
+        this.employers = employers
       },
       error: (err) => {
         this.toastService.showError(err.error.message);

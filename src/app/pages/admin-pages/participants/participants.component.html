@@ -8,7 +8,7 @@
                     <p-inputIcon class="pi pi-search"></p-inputIcon>
                     <input pInputText type="text" placeholder="Search participants..." fluid style="width:450px" [(ngModel)]="searchTerm"/>
                 </p-iconField>
-                <button pButton icon="pi pi-plus" label="Add participant" (click)="openAddparticipantDialog()"
+                <button pButton icon="pi pi-plus" label="Add participant" (click)="openAddParticipantDialog()"
                     class="p-button-primary"></button>
                     <div class="caption-buttons">
                     <p-button label="Manage profiles" severity="secondary" (onClick)="openManageProfilesDialog()"/>
@@ -30,7 +30,7 @@
         <ng-template pTemplate="body" let-participant>
             <tr>
                 <td>
-                    <p-avatar [image]="participant.profilePicture || 'assets/images/logo.png'" shape="circle"
+                   <p-avatar [image]="participant.profilePicture || 'assets/images/logo.png'" shape="circle"
                         size="large"></p-avatar>
                 </td>
 
@@ -47,9 +47,9 @@
                         severity="info" pTooltip="Voir les détails" tooltipPosition="top"
                         (click)="openDetails(participant)"></button>
                     <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
-                        (click)="openEditparticipantDialog(participant)" pTooltip="Edit" tooltipPosition="top"></button>
+                        (click)="openEditParticipantDialog(participant)" pTooltip="Edit" tooltipPosition="top"></button>
                     <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
-                        (click)="confirmDelete(participant)" pTooltip="Delete" tooltipPosition="top"></button>
+                        (click)="openDeleteDialog(participant)" pTooltip="Delete" tooltipPosition="top"></button>
                 </td>
             </tr>
         </ng-template>
@@ -61,7 +61,7 @@
         </ng-template>
     </p-table>
 </div>
-<p-dialog [(visible)]="displayparticipantDialog" [header]="isAddparticipant ? 'Add participant' : 'Edit participant'"
+<p-dialog [(visible)]="displayParticipantDialog" [header]="isAddParticipant ? 'Add participant' : 'Edit participant'"
     [style]="{ width: '50vw', height: '77vh' }"  [modal]="true" [styleClass]="'participant-dialog'">
     <div class="form-container">
         <div class="form-row">
@@ -71,8 +71,9 @@
             </div>
             <div class="form-group">
                 <label for="structure">Structure<span class="required">*</span></label>
-                <input id="structure" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.structure" />
-            </div>
+                <p-dropdown [options]="structures" optionLabel="structureName" 
+                            [(ngModel)]="selectedStructure" placeholder="Select Structure" fluid></p-dropdown>
+              </div>
         </div>
         <div class="form-row">
             <div class="form-group full-width">
@@ -87,19 +88,20 @@
         </div>
         <div class="form-row">
             <div class="form-group">
-                <label for="phone">Phone <span class="required">*</span></label>
+                <label for="phone">Phone</label>
                 <p-inputgroup>
                     <p-inputgroup-addon>+216</p-inputgroup-addon>
                     <input pInputText
                         maxlength="8" required placeholder="98147852" [(ngModel)]="participantForm.phoneNumber"/>
                 </p-inputgroup>
-            </div>
-            <div class="form-group full-width">
+            </div>   
+            <div class="form-group">
                 <label for="profile">Profile<span class="required">*</span></label>
-                <input id="profile" pInputText required fluid placeholder="John" [(ngModel)]="participantForm.profile" />
-            </div>
+                <p-dropdown [options]="profiles" optionLabel="profileType" 
+                            [(ngModel)]="selectedProfile" placeholder="Select Profile" fluid></p-dropdown>
+              </div>
             <div class="form-group full-width">
-                <label for="email">Gender <span class="required">*</span></label>
+                <label for="email">Gender </label>
                 <p-dropdown [options]="gender"
                 [(ngModel)]="participantForm.gender" placeholder="Select Gender" fluid></p-dropdown>  
                  </div>
@@ -111,8 +113,8 @@
         </div>
     </div>
     <ng-template pTemplate="footer">
-        <button pButton label="Cancel" icon="pi pi-times" (click)="closeparticipantDialog()" class="p-button-text"></button>
-        <button pButton label="Save" icon="pi pi-save" (click)="saveparticipant()" class="p-button-primary"></button>
+        <button pButton label="Cancel" icon="pi pi-times" (click)="closeParticipantDialog()" class="p-button-text"></button>
+        <button pButton label="Save" icon="pi pi-save" (click)="saveParticipant()" class="p-button-primary"></button>
     </ng-template>
 </p-dialog>
 <p-dialog [(visible)]="displayDetailsDialog" [header]="'Participant Details'" [style]="{ width: '66vw' }" [modal]="true"
@@ -120,46 +122,35 @@
     <div class="dialog-container p-grid">
         <div class="left-section p-col-5">
             <div class="profile-container">
-                <p-avatar [image]="selectedparticipantDetails.profilePicture || 'assets/images/user-logo.png'" shape="circle"
+                <p-avatar [image]="selectedParticipantDetails.profilePicture || 'assets/images/user-logo.png'" shape="circle"
                     size="xlarge" class="profile-image"></p-avatar>
 
                 <div class="name-type-container">
-                    <h2>{{ selectedparticipantDetails.username }}</h2>
+                    <h2>{{ selectedParticipantDetails.username }}</h2>
                 </div>
             </div>
         </div>
 
         <div class="right-section p-col-7">
-          <!--  <div class="details-container">
+            <div class="details-container">
                 <div class="p-grid">
                     <div class="p-col-6">
-                        <p><strong> First Name:</strong> {{ selectedparticipantDetails.firstName || '-' }}</p>
-                        <p><strong> Last Name:</strong> {{ selectedparticipantDetails.lastName || '-' }}</p>
+                        <p><strong>Gender:</strong> {{ selectedParticipantDetails?.gender || '-' }}</p>
+                        <p><strong>Email:</strong> {{ selectedParticipantDetails?.email || '-' }}</p>
                     </div>
 
                     <div class="p-col-6">
-                        <p><strong> Date of Birth:</strong> {{ (selectedparticipantDetails.dateOfBirth | date) || '-' }}</p>
-                        <p><strong> Address:</strong> {{ selectedparticipantDetails.address || '-' }}</p>
-
+                        <p><strong> Date of Birth:</strong> {{ (selectedParticipantDetails?.dateOfBirth | date) || '-' }}
+                        </p>
+                        <p><strong>Phone:</strong> {{ selectedParticipantDetails?.phoneNumber || '-' }}</p>
                     </div>
-
-                    <div class="p-col-6">
-                        <p><strong> Phone:</strong> {{ selectedparticipantDetails.phoneNumber || '-' }}</p>
-                        <p><strong>Email:</strong> {{ selectedparticipantDetails.email || '-' }}</p>
-                    </div>
-
-                    <div class="p-col-6">
-                        <p><strong> Structure:</strong> {{ selectedparticipantDetails.structure || '-' }}</p>
-                        <p><strong> Profile:</strong> {{ selectedparticipantDetails.profile || '-' }}</p>
-
-                    </div>
-
+                    <!-- Description full width -->
                     <div class="p-col-12">
-                        <p><strong> Description:</strong></p>
-                        <p class="description">{{ selectedparticipantDetails.description || 'No description provided' }}</p>
+                        <strong> Description:</strong>
+                      <p class="description">{{ selectedParticipantDetails?.description || 'No description provided' }}</p>
                     </div>
                 </div>
-            </div>-->
+            </div>
             <div class="sessions-container">
                 <h3>Enrolled Training Sessions</h3>
                 <div class="sessions-flex-container">
@@ -190,6 +181,7 @@
     <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
             class="p-button-text"></button>
-        <button pButton label="Yes" icon="pi pi-check" (click)="deleteparticipant()" class="p-button-danger"></button>
+        <button pButton label="Yes" icon="pi pi-check" (click)="confirmDeleteParticipant()" class="p-button-danger"></button>
     </ng-template>
 </p-dialog>
+<p-toast ></p-toast>

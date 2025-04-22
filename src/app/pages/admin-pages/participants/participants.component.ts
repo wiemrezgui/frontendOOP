@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { TableModule } from 'primeng/table';
+import { Component, ViewChild } from '@angular/core';
+import { Table, TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -26,51 +26,204 @@ import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { StructuresComponent } from './dialogs/structures/structures.component';
 import { ProfilesComponent } from './dialogs/profiles/profiles.component';
+import { ToastModule } from 'primeng/toast';
+import { StructureService } from './services/structure.service';
+import { ProfileService } from './services/profile.service';
+import { Profile } from '../../../shared/models/profile.model';
+import { Structure } from '../../../shared/models/structure.model';
+
 @Component({
   selector: 'app-participants',
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
     DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, PaginatorModule, CommonModule, HttpClientModule,
-    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule
+    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule,ToastModule
   ],
   templateUrl: './participants.component.html',
   styleUrl: './participants.component.scss',
-  providers: [ParticipantService,ConfirmationService,DialogService]  
+  providers: [ParticipantService,ConfirmationService,DialogService,StructureService,ProfileService]  
 })
 export class ParticipantsComponent {
-  searchTerm: string = ''
+  searchTerm: string = '';
   participants: Participant[] = [];
-  filteredparticipants: Participant[] = [];
-  gender = ['FEMALE', 'MALE'];
+  gender = [
+    { label: 'Male', value: 'MALE' },
+    { label: 'Female', value: 'FEMALE' },
+    { label: 'Other', value: 'OTHER' }
+  ];
 
   // Pagination
   rows = 10;
   first = 0;
   totalRecords = 0;
 
-  // Dialogs
-  displayparticipantDialog = false;
+  // UI Controls
+  displayParticipantDialog = false;
   displayDeleteDialog = false;
   displayDetailsDialog = false;
+  isAddParticipant = true;
+  loading = false;
+  
+  // Form Data
+  participantForm: Participant = new Participant();
+  
+  // Selection Data
+  participantToDelete: Participant | null = null;
+  selectedParticipantDetails: Participant = new Participant();
+  selectedStructure: any = null;
+  selectedProfile: any = null;
+  participantIdToDelete: number | null = null;
 
-  // Forms
-  participantForm: Partial<Participant> = {};
-  participantToDelete: Participant = new Participant;
-  selectedparticipant: Participant = new Participant;
-  selectedparticipantDetails: Participant = new Participant;
-  isAddparticipant: boolean = false
+  // Dropdown Options
+  structures: Structure[] = [];
+  profiles: Profile[] = [];
+
+  @ViewChild('dt') dt!: Table;
+
   constructor(
     private participantService: ParticipantService,
-    private toastService: ToastServiceService, private dialogService: DialogService) { }
-  ngOnInit() {
-    this.loadparticipants();
+    private toastService: ToastServiceService, 
+    private dialogService: DialogService,
+    private structureService: StructureService,
+    private profileService: ProfileService
+  ) { }
+
+  ngOnInit(): void {
+    this.loadParticipants();
+    this.getAllStructures();
+    this.getAllProfiles();
   }
 
-  loadparticipants(page: number = 0) {
+  loadParticipants(page: number = 0): void {
+    this.loading = true;
     this.participantService.getAllParticipants(page).subscribe({
       next: (participants) => {
-        this.participants = participants
+        this.participants = participants.map(p => new Participant(p));
         this.totalRecords = participants.length;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+        this.loading = false;
+      }
+    });
+  }
+
+  onPageChange(event: any): void {
+    this.first = event.first;
+    this.rows = event.rows;
+    const page = event.first / event.rows;
+    this.loadParticipants(page);
+  }
+
+  openAddParticipantDialog(): void {
+    this.isAddParticipant = true;
+    this.participantForm = new Participant();
+    this.selectedStructure = null;
+    this.selectedProfile = null;
+    this.displayParticipantDialog = true;
+  }
+
+  openEditParticipantDialog(participant: Participant): void {
+    this.resetForm();
+    this.isAddParticipant = false;
+    this.getParticipantById(participant.participantId!, 'edit');
+    this.displayParticipantDialog = true;
+  }
+
+  openDetails(participant: Participant): void {
+    this.selectedParticipantDetails = new Participant(participant);
+    this.getParticipantById(participant.participantId!, 'details');
+    this.displayDetailsDialog = true;
+  }
+
+  saveParticipant(): void {
+    if (!this.validateParticipantForm()) return;
+
+    const participantData = {
+      ...this.participantForm,
+      structure: this.selectedStructure?.structureName || this.participantForm.structure,
+      profile: this.selectedProfile?.profileName || this.participantForm.profile,
+      dateOfBirth: this.formatDate(this.participantForm.dateOfBirth)
+    };
+
+    if (this.isAddParticipant) {
+      this.participantService.createParticipant(participantData).subscribe({
+        next: () => {
+          this.handleSuccess('Participant created successfully');
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message);
+        }
+      });
+    } else {
+      if (!this.participantIdToDelete) return;
+      
+      this.participantService.updateParticipant(this.participantIdToDelete, participantData).subscribe({
+        next: () => {
+          this.handleSuccess('Participant updated successfully');
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message);
+        }
+      });
+    }
+  }
+
+  private validateParticipantForm(): boolean {
+    if (!this.participantForm.username) {
+      this.toastService.showError('Username is required');
+      return false;
+    }
+    if (!this.participantForm.email) {
+      this.toastService.showError('Email is required');
+      return false;
+    }
+    return true;
+  }
+
+  private handleSuccess(message: string): void {
+    this.toastService.showSuccess(message);
+    this.loadParticipants();
+    this.displayParticipantDialog = false;
+    this.resetForm();
+  }
+
+  formatDate(date?: string | Date | null): string | undefined {
+    if (!date) return undefined;
+    if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return date;
+    }
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    if (dateObj instanceof Date && !isNaN(dateObj.getTime())) {
+      const year = dateObj.getFullYear();
+      const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+      const day = dateObj.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    return undefined;
+  }
+
+  private resetForm(): void {
+    this.participantForm = new Participant();
+    this.selectedStructure = null;
+    this.selectedProfile = null;
+  }
+
+  openDeleteDialog(participant: Participant): void {
+    this.participantToDelete = participant;
+    this.displayDeleteDialog = true;
+  }
+
+  confirmDeleteParticipant(): void {
+    if (!this.participantToDelete?.participantId) return;
+    
+    this.participantService.deleteParticipant(this.participantToDelete.participantId).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Participant deleted successfully');
+        this.loadParticipants();
+        this.displayDeleteDialog = false;
+        this.participantToDelete = null;
       },
       error: (err) => {
         this.toastService.showError(err.error.message);
@@ -78,46 +231,109 @@ export class ParticipantsComponent {
     });
   }
 
-
-  onPageChange(event: any) {
-    this.first = event.first;
-    this.rows = event.rows;
+  closeParticipantDialog(): void {
+    this.displayParticipantDialog = false;
   }
 
-  openAddparticipantDialog() {
-    this.isAddparticipant = true
-    this.participantForm = {};
-    console.log('selected ' + this.selectedparticipant);
-    this.displayparticipantDialog = true;
+  getParticipantById(id: number, type: string): void {
+    this.participantService.getParticipantById(id).subscribe({
+      next: (participant) => {
+        if (type === 'details') {
+          this.selectedParticipantDetails = new Participant(participant);
+        } else {
+          this.initializeParticipantData(participant);
+        }
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
   }
 
-  openEditparticipantDialog(participant: Participant) {
-    this.isAddparticipant = false
-    console.log('selected ' + this.selectedparticipant);
-    this.selectedparticipant = participant;
-    this.participantForm = { ...participant };
-    this.displayparticipantDialog = true;
+  initializeParticipantData(participant: any): void {
+    this.participantForm = new Participant({
+      participantId: participant.participantId,
+      username: participant.username || participant.user?.username,
+      email: participant.email || participant.user?.email,
+      phoneNumber: participant.phoneNumber || participant.user?.phoneNumber,
+      dateOfBirth: participant.dateOfBirth || participant.user?.dateOfBirth,
+      gender: participant.gender || participant.user?.gender,
+      profilePicture: participant.profilePicture || participant.user?.profilePicture,
+      description: participant.description || participant.user?.description,
+      structure: participant.structure,
+      profile: participant.profile
+    });
+
+    // Find matching structure
+    if (participant.structure) {
+      this.selectedStructure = this.structures.find(s => 
+        s.structureName === participant.structure
+      );
+    }
+
+    // Find matching profile
+    if (participant.profile) {
+      this.selectedProfile = this.profiles.find(p => 
+        p.profileType === participant.profile
+      );
+    }
+
+    this.participantIdToDelete = participant.participantId;
   }
 
-  saveparticipant() {
-    this.displayparticipantDialog = false;
-    this.isAddparticipant = false
+  getAllStructures(): void {
+    this.structureService.getAllStructures().subscribe({
+      next: (structures) => {
+        this.structures = structures;
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
   }
 
-  confirmDelete(participant: Participant) {
-    this.participantToDelete = participant;
-    this.displayDeleteDialog = true;
+  getAllProfiles(): void {
+    this.profileService.getAllProfiles().subscribe({
+      next: (profiles) => {
+        this.profiles = profiles;
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
+    });
   }
 
-  deleteparticipant() {
-    this.displayDeleteDialog = false;
+  openManageStructuresDialog(): void {
+    const ref = this.dialogService.open(StructuresComponent, {
+      header: 'Manage Structures',
+      width: '70%',
+      height: '70%',
+      modal: true,
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+    });
+
+    ref.onClose.subscribe(() => {
+      this.getAllStructures();
+    });
   }
 
-  closeparticipantDialog() {
-    this.displayparticipantDialog = false;
+  openManageProfilesDialog(): void {
+    const ref = this.dialogService.open(ProfilesComponent, {
+      header: 'Manage Profiles',
+      width: '70%',
+      height: '70%',
+      modal: true,
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
+    });
+
+    ref.onClose.subscribe(() => {
+      this.getAllProfiles();
+    });
   }
 
-  onImageSelect(event: any) {
+  onImageSelect(event: any): void {
     const file = event.files[0];
     if (file) {
       const reader = new FileReader();
@@ -127,28 +343,4 @@ export class ParticipantsComponent {
       reader.readAsDataURL(file);
     }
   }
-  openDetails(participant: any) {
-    this.displayDetailsDialog = true
-    this.selectedparticipantDetails = participant
-  }
-  openManageStructuresDialog() {
-      const ref = this.dialogService.open(StructuresComponent, {
-        header: 'Manage Structures',
-        width: '70%',
-        height: '70%',
-        modal: true,
-        contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
-        baseZIndex: 10000, // Adjust if needed
-      });
-    }
-    openManageProfilesDialog() {
-      const ref = this.dialogService.open(ProfilesComponent, {
-        header: 'Manage Profiles',
-        width: '70%',
-        height: '70%',
-        modal: true,
-        contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
-        baseZIndex: 10000, // Adjust if needed
-      });
-    }
 }

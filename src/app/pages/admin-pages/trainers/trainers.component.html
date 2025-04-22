@@ -34,7 +34,7 @@
             <tr>
                 <!-- Profile Image Column -->
                 <td>
-                    <p-avatar [image]="trainer?.profilePicture || 'assets/images/logo.png'" shape="circle"
+                    <p-avatar [image]="trainer?.user.profilePicture || 'assets/images/logo.png'" shape="circle"
                         size="large"></p-avatar>
                 </td>
 
@@ -153,7 +153,7 @@
                     shape="circle" size="xlarge" class="profile-image"></p-avatar>
 
                 <div class="name-type-container">
-                    <h2>{{ selectedTrainerDetails?.username }}</h2>
+                    <h2>{{ selectedTrainerDetails?.user.username }}</h2>
                     <p-tag [value]="selectedTrainerDetails?.trainerType || 'UNKNOWN'"
                         [severity]="selectedTrainerDetails?.trainerType === 'INTERNAL' ? 'success' : 'info'"
                         class="type-tag">
@@ -170,27 +170,20 @@
         <div class="right-section p-col-7">
             <div class="details-container">
                 <div class="p-grid">
-                    <!-- First Name + Last Name in same row -->
                     <div class="p-col-6">
-                        <p><strong>Username:</strong> {{ selectedTrainerDetails?.username || '-' }}</p>
-                        <p><strong>Email:</strong> {{ selectedTrainerDetails?.email || '-' }}</p>
+                        <p><strong>Gender:</strong> {{ selectedTrainerDetails?.user.gender || '-' }}</p>
+                        <p><strong>Email:</strong> {{ selectedTrainerDetails?.user.email || '-' }}</p>
                     </div>
 
-                    <!-- Gender + Date of Birth in same row -->
                     <div class="p-col-6">
-                        <p><strong> Date of Birth:</strong> {{ (selectedTrainerDetails?.dateOfBirth | date) || '-' }}
+                        <p><strong> Date of Birth:</strong> {{ (selectedTrainerDetails?.user.dateOfBirth | date) || '-' }}
                         </p>
-                    </div>
-
-                    <!-- Phone + Email in same row -->
-                    <div class="p-col-6">
-                        <p><strong>Phone:</strong> {{ selectedTrainerDetails?.phoneNumber || '-' }}</p>
-                        <p><strong>Gender:</strong> {{ selectedTrainerDetails?.gender || '-' }}</p>
+                        <p><strong>Phone:</strong> {{ selectedTrainerDetails?.user.phoneNumber || '-' }}</p>
                     </div>
                     <!-- Description full width -->
                     <div class="p-col-12">
-                        <p><strong> Description:</strong></p>
-                        {{ selectedTrainerDetails?.description || 'No description provided' }}
+                        <strong> Description:</strong>
+                      <p class="description">{{ selectedTrainerDetails?.user.description || 'No description provided' }}</p>
                     </div>
                 </div>
             </div>
