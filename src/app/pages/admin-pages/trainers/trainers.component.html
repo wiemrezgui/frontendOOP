@@ -78,8 +78,14 @@
             </div>
             <div class="form-group">
                 <label for="employer">Employer name <span class="required">*</span></label>
-                <p-dropdown [options]="employers" optionLabel="employerName" [(ngModel)]="selectedEmployer" placeholder="Select Employer"
-                    fluid></p-dropdown>
+                <p-dropdown 
+                [options]="employers" 
+                optionLabel="employerName" 
+                [(ngModel)]="selectedEmployer" 
+                placeholder="Select Employer"
+                name="employer"
+                fluid>
+                </p-dropdown>
             </div>
         </div>
         <div class="form-row">

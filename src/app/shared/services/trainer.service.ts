@@ -34,10 +34,8 @@ export class TrainerService {
     });
   }
 
-  updateTrainer(id: number, trainer: Partial<Trainer>): Observable<Trainer> {
-    return this.http.put<Trainer>(`${this.apiUrl}/${id}`, trainer).pipe(
-      map(trainer => new Trainer(trainer))
-    );
+  updateTrainer(id: number, trainer: any): Observable<Trainer> {
+    return this.http.patch<Trainer>(`${this.apiUrl}/${id}`, trainer, { headers: this.getAuthHeaders()});
   }
 
   deleteTrainer(id: number): Observable<void> {

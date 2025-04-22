@@ -52,7 +52,8 @@ export class TrainersComponent {
     gender: 'FEMALE',
     description: '',
     dateOfBirth: '',
-    profilePicture: ''
+    profilePicture: '',
+    phoneNumber:''
   };
   trainerToDelete: any;
   selectedTrainerDetails: any;
@@ -62,7 +63,8 @@ export class TrainersComponent {
   displayDetailsDialog = false;
   isAddTrainer = true;
   loading = false;
-  selectedEmployer!: Employer;
+  selectedEmployer: any;
+  employerIdToDelete:any
   // Pagination
   rows = 10;
   first = 0;
@@ -102,7 +104,7 @@ export class TrainersComponent {
       next: (trainers) => {
         this.trainers = trainers;
         console.log(this.trainers);
-        this.totalRecords = trainers.length; // Adjust based on your API pagination
+        this.totalRecords = trainers.length;
         this.loading = false;
       },
       error: (err) => {
@@ -128,6 +130,7 @@ export class TrainersComponent {
       email: '',
       role: 'TRAINER'
     };
+    this.selectedEmployer=null
     this.displayTrainerDialog = true;
   }
 
@@ -173,9 +176,9 @@ export class TrainersComponent {
         }
       });
     } else {
-      alert("here update")
-      if (!this.trainerForm.trainerId) return;
-      this.trainerService.updateTrainer(this.trainerForm.trainerId, this.trainerForm).subscribe({
+      if (!this.employerIdToDelete) return;
+      console.log(this.trainerForm);
+      this.trainerService.updateTrainer(this.employerIdToDelete, this.trainerForm).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer updated successfully');
           this.loadTrainers();
@@ -243,6 +246,7 @@ export class TrainersComponent {
       this.trainerService.getTrainerById(id).subscribe({
         next: (trainer) => {
           this.selectedTrainerDetails = trainer
+          console.log(this.selectedTrainerDetails);
         },
         error: (err) => {
           this.toastService.showError(err.error.message);
@@ -270,6 +274,15 @@ export class TrainersComponent {
     this.trainerForm.trainerType = trainer.trainerType
     this.trainerForm.gender = trainer.user.gender
     this.trainerForm.employerName = trainer.employerName
+    if (trainer.employerName) {
+    this.selectedEmployer = this.employers.find(emp => 
+      emp.employerName === trainer.employerName
+    );
+    if (!this.selectedEmployer) {
+      this.selectedEmployer = { employerName: trainer.employerName };
+    }
+    this.employerIdToDelete=trainer.trainerId
+  }    
 
   }
   openManageEmployersDialog() {
