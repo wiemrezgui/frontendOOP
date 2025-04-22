@@ -1,29 +1,31 @@
 <div class="card">
-    <p-table #dt [value]="trainers | search: searchTerm: ['username']"  dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="false"
-        [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
+    <p-table #dt [value]="trainers | search: searchTerm: ['username']" dataKey="id"
+        [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
+        [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} trainers">
         <!-- Header with search and add button -->
         <ng-template pTemplate="caption">
             <div class="flex align-items-center">
                 <p-iconField iconPosition="left">
                     <p-inputIcon class="pi pi-search"></p-inputIcon>
-                    <input pInputText type="text" placeholder="Search trainers..." fluid
-                    [(ngModel)]="searchTerm" style="width:450px" />
+                    <input pInputText type="text" placeholder="Search trainers..." fluid [(ngModel)]="searchTerm"
+                        style="width:450px" />
                 </p-iconField>
                 <button pButton icon="pi pi-plus" label="Add Trainer" (click)="openAddTrainerDialog()"
                     class="p-button-primary"></button>
-                    <p-button label="Manage employers" severity="info" class="right-position" (onClick)="openManageEmployersDialog()"/>
+                <p-button label="Manage employers" severity="info" class="right-position"
+                    (onClick)="openManageEmployersDialog()" />
             </div>
         </ng-template>
         <!-- Table Header -->
         <ng-template pTemplate="header">
             <tr>
                 <th>#</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Type</th>
-                    <th>Employer</th>
-                    <th>Actions</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Employer</th>
+                <th>Actions</th>
             </tr>
         </ng-template>
 
@@ -39,8 +41,8 @@
                 <td>{{ trainer.user.username }}</td>
                 <td>{{ trainer.user.email }}</td>
                 <td>
-                  <p-tag [value]="trainer.trainerType" 
-                         [severity]="trainer.trainerType === 'INTERNAL' ? 'success' : 'info'"></p-tag>
+                    <p-tag [value]="trainer.trainerType"
+                        [severity]="trainer.trainerType === 'INTERNAL' ? 'success' : 'info'"></p-tag>
                 </td>
                 <td>{{ trainer.employerName }}</td>
 
@@ -72,63 +74,61 @@
         <div class="form-row">
             <div class="form-group">
                 <label for="username">Username <span class="required">*</span></label>
-                <input id="username" pInputText required fluid placeholder="John" [(ngModel)]="trainerForm.username"/>
+                <input id="username" pInputText required fluid placeholder="John" [(ngModel)]="trainerForm.username" />
             </div>
             <div class="form-group">
                 <label for="employer">Employer name <span class="required">*</span></label>
-                <input id="employer" pInputText required fluid placeholder="John" [(ngModel)]="trainerForm.employerName" />
+                <p-dropdown [options]="employers" optionLabel="employerName" [(ngModel)]="selectedEmployer" placeholder="Select Employer"
+                    fluid></p-dropdown>
             </div>
         </div>
         <div class="form-row">
             <div class="form-group full-width">
                 <label for="email">Email <span class="required">*</span></label>
-                <input id="email" pInputText type="email" required fluid placeholder="you@example.com" [(ngModel)]="trainerForm.email"/>
+                <input id="email" pInputText type="email" required fluid placeholder="you@example.com"
+                    [(ngModel)]="trainerForm.email" />
             </div>
-                 <div class="form-group">
-                    <label for="dateOfBirth">Date of Birth</label>
-                    <p-datepicker [(ngModel)]="trainerForm.dateOfBirth" name="dateOfBirth" 
-                      dateFormat="yy-mm-dd" placeholder="YYYY-MM-DD" fluid/>
-                </div>     
+            <div class="form-group">
+                <label for="dateOfBirth">Date of Birth</label>
+                <p-datepicker [(ngModel)]="trainerForm.dateOfBirth" name="dateOfBirth" dateFormat="yy-mm-dd"
+                    placeholder="YYYY-MM-DD" fluid />
+            </div>
         </div>
 
         <div class="form-row">
             <div class="form-group">
-                <label for="phone">Phone <span class="required">*</span></label>
+                <label for="phone">Phone </label>
                 <p-inputgroup>
                     <p-inputgroup-addon>+216</p-inputgroup-addon>
-                    <input pInputText
-                        maxlength="8" required placeholder="98147852" [(ngModel)]="trainerForm.phoneNumber"/>
+                    <input pInputText maxlength="8" required placeholder="98147852"
+                        [(ngModel)]="trainerForm.phoneNumber" />
                 </p-inputgroup>
             </div>
             <div class="form-group full-width">
-                <label for="email">Gender <span class="required">*</span></label>
-                <p-dropdown [options]="gender"
-                [(ngModel)]="trainerForm.gender" placeholder="Select Gender" fluid></p-dropdown>  
-                 </div>
-        </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea pInputTextarea [(ngModel)]="trainerForm.description" 
-                          name="description" rows="7" placeholder="Description" class="no-resize"></textarea>
+                <label for="email">Gender </label>
+                <p-dropdown [options]="gender" [(ngModel)]="trainerForm.gender" placeholder="Select Gender"
+                    fluid></p-dropdown>
             </div>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea pInputTextarea [(ngModel)]="trainerForm.description" name="description" rows="7"
+                placeholder="Description" class="no-resize"></textarea>
+        </div>
         <!-- Row 4: Trainer Type (full width) -->
         <div class="form-row">
             <div class="form-group full-width">
                 <div class="trainer-type-container">
-                    <div 
-                        class="trainer-type-card internal" 
-                        [class.selected]="trainerForm.trainerType === 'INTERNAL'"
+                    <div class="trainer-type-card internal" [class.selected]="trainerForm.trainerType === 'INTERNAL'"
                         (click)="trainerForm.trainerType = 'INTERNAL'">
                         <p>Internal</p>
                     </div>
-                    <div 
-                        class="trainer-type-card external" 
-                        [class.selected]="trainerForm.trainerType === 'EXTERNAL'"
+                    <div class="trainer-type-card external" [class.selected]="trainerForm.trainerType === 'EXTERNAL'"
                         (click)="trainerForm.trainerType = 'EXTERNAL'">
                         <p>External</p>
                     </div>
-                </div>          
-             </div>
+                </div>
+            </div>
         </div>
     </div>
     <ng-template pTemplate="footer">
@@ -143,22 +143,21 @@
         <!-- Left Section -->
         <div class="left-section p-col-5">
             <div class="profile-container">
-            <p-avatar [image]="selectedTrainerDetails?.profilePicture || 'assets/images/user-logo.png'" 
-                      shape="circle" size="xlarge" class="profile-image"></p-avatar>
+                <p-avatar [image]="selectedTrainerDetails?.profilePicture || 'assets/images/user-logo.png'"
+                    shape="circle" size="xlarge" class="profile-image"></p-avatar>
 
-            <div class="name-type-container">
-                <h2>{{ selectedTrainerDetails?.username }}</h2>
-                <p-tag 
-                [value]="selectedTrainerDetails?.trainerType || 'UNKNOWN'"
-                [severity]="selectedTrainerDetails?.trainerType === 'INTERNAL' ? 'success' : 'info'"
-                class="type-tag">
-              </p-tag>
+                <div class="name-type-container">
+                    <h2>{{ selectedTrainerDetails?.username }}</h2>
+                    <p-tag [value]="selectedTrainerDetails?.trainerType || 'UNKNOWN'"
+                        [severity]="selectedTrainerDetails?.trainerType === 'INTERNAL' ? 'success' : 'info'"
+                        class="type-tag">
+                    </p-tag>
+                </div>
+
+                <p class="employer">
+                    <i class="pi pi-briefcase"></i> {{ selectedTrainerDetails?.employerName || 'Not specified' }}
+                </p>
             </div>
-
-            <p class="employer">
-                <i class="pi pi-briefcase"></i> {{ selectedTrainerDetails?.employerName || 'Not specified' }}
-            </p>
-        </div>
         </div>
 
         <!-- Right Section -->
@@ -173,7 +172,8 @@
 
                     <!-- Gender + Date of Birth in same row -->
                     <div class="p-col-6">
-                        <p><strong> Date of Birth:</strong> {{ (selectedTrainerDetails?.dateOfBirth | date) || '-' }}</p>
+                        <p><strong> Date of Birth:</strong> {{ (selectedTrainerDetails?.dateOfBirth | date) || '-' }}
+                        </p>
                     </div>
 
                     <!-- Phone + Email in same row -->
@@ -215,11 +215,13 @@
 <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
     <div *ngIf="trainerToDelete">
         <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.user.username }}</strong>
-            having the ID  <strong>{{ trainerToDelete.trainerId }}</strong>
-                ?</p>
+            having the ID <strong>{{ trainerToDelete.trainerId }}</strong>
+            ?</p>
     </div> <ng-template pTemplate="footer">
         <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
             class="p-button-text"></button>
-        <button pButton label="Yes" icon="pi pi-check"  class="p-button-danger" (click)="confirmDeleteTrainer()"></button>
+        <button pButton label="Yes" icon="pi pi-check" class="p-button-danger"
+            (click)="confirmDeleteTrainer()"></button>
     </ng-template>
 </p-dialog>
+<p-toast ></p-toast>

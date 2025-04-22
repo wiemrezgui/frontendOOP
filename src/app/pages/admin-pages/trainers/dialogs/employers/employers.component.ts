@@ -11,12 +11,14 @@ import { EmployerService } from '../../services/employer.service';
 import { ToastServiceService } from '../../../../../shared/services/toast-service.service';
 import { HttpClientModule } from '@angular/common/http';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CommonModule } from '@angular/common';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-employers',
   standalone:true,
   imports: [TabsModule,TableModule,ButtonModule,FormsModule,InputTextModule,DividerModule,HttpClientModule
-    ,DropdownModule
+    ,DropdownModule,CommonModule,CheckboxModule
   ],
   templateUrl: './employers.component.html',
   styleUrl: './employers.component.scss',
@@ -27,8 +29,9 @@ export class EmployersComponent {
   employers: Employer[] = [];
   IDEmployers: any[] = [];
   newEmployer: string = '';
-  selectedEmployerId: number | null = null;
+  selectedEmployerId: number =0;
   editEmployerName: string = '';
+  deleteConfirmed: boolean = false;
 
   constructor(
     private employerService: EmployerService, 
@@ -44,6 +47,7 @@ export class EmployersComponent {
     this.employerService.getAllEmployers().subscribe({
       next: (employers) => {
         this.employers = employers;
+        console.log(this.employers);
         this.updateDropdownOptions();
       },
       error: (err) => {
@@ -62,20 +66,26 @@ export class EmployersComponent {
   onEmployerSelected(event: any) {
     if (event.value) {
       this.selectedEmployerId = event.value;
-      if(this.selectedEmployerId)
-     { this.loadEmployerDetails(this.selectedEmployerId);}
+      if(this.selectedEmployerId) {
+        this.loadEmployerDetails(this.selectedEmployerId);
+      }
     }
   }
 
   loadEmployerDetails(id: number) {
-    this.employerService.getEmployerById(id).subscribe({
-      next: (employer) => {
-        this.editEmployerName = employer.name;
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to load employer details');
-      }
-    });
+    const employer = this.employers.find(emp => emp.id === id);
+    if (employer) {
+      if(employer.employerName) {this.editEmployerName = employer.employerName;}
+    } else {
+      this.employerService.getEmployerById(id).subscribe({
+        next: (employer) => {
+          this.editEmployerName = employer.employerName;
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message || 'Failed to load employer details');
+        }
+      });
+    }
   }
 
   saveEmployer() {
@@ -84,10 +94,10 @@ export class EmployersComponent {
       return;
     }
 
-    this.employerService.createEmployer({ name: this.newEmployer }).subscribe({
+    this.employerService.createEmployer({ employerName: this.newEmployer }).subscribe({
       next: (response) => {
         this.toastService.showSuccess('Employer added successfully');
-        this.newEmployer = '';
+        this.resetAddForm()
         this.getAllEmployers();
       },
       error: (err) => {
@@ -106,15 +116,14 @@ export class EmployersComponent {
       this.toastService.showError('Employer name is required');
       return;
     }
-    const employerData:Employer={
-      id: this.selectedEmployerId ,
+    const employerData: Employer = {
+      id: this.selectedEmployerId,
       employerName: this.editEmployerName
     }
-    this.employerService.updateEmployer(employerData).subscribe({
+    this.employerService.createEmployer(employerData).subscribe({
       next: () => {
         this.toastService.showSuccess('Employer updated successfully');
-        this.selectedEmployerId = null;
-        this.editEmployerName = '';
+        this.resetEditForm()
         this.getAllEmployers();
       },
       error: (err) => {
@@ -129,20 +138,35 @@ export class EmployersComponent {
       return;
     }
 
-    if (confirm('Are you sure you want to delete this employer?')) {
-      this.employerService.deleteEmployer(this.selectedEmployerId).subscribe({
-        next: () => {
-          this.toastService.showSuccess('Employer deleted successfully');
-          this.selectedEmployerId = null;
-          this.getAllEmployers();
-        },
-        error: (err) => {
-          this.toastService.showError(err.error.message || 'Failed to delete employer');
-        }
-      });
+    if (!this.deleteConfirmed) {
+      this.toastService.showError('Please confirm deletion by checking the checkbox');
+      return;
     }
+
+    this.employerService.deleteEmployer(this.selectedEmployerId).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Employer deleted successfully');
+        this.resetDeleteForm()
+        this.getAllEmployers();
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message || 'Failed to delete employer');
+      }
+    });
   }
+
   closeDialog() {
-    this.ref.close(); // This will close the dialog
+    this.ref.close();
+  }
+  resetAddForm() {
+    this.newEmployer = '';
+  }
+  resetEditForm() {
+    this.selectedEmployerId = 0;
+    this.editEmployerName = '';
+  }
+  resetDeleteForm() {
+    this.selectedEmployerId = 0;
+    this.deleteConfirmed = false;
   }
 }

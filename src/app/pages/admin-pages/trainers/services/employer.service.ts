@@ -20,7 +20,7 @@ export class EmployerService {
     });
   }
   getAllEmployers(): Observable<Employer[]> {
-    return this.http.get<any>(this.apiUrl, {headers: this.getAuthHeaders()
+    return this.http.get<Employer[]>(this.apiUrl, {headers: this.getAuthHeaders()
     });
   }
 
@@ -32,12 +32,6 @@ export class EmployerService {
     return this.http.post<any>(this.apiUrl, employer, {
       headers: this.getAuthHeaders()
     });
-  }
-
-  updateEmployer(employer:Employer): Observable<Employer> {
-    return this.http.put<Employer>(`${this.apiUrl}/${employer.id}`, employer).pipe(
-      map(employer => new Employer(employer))
-    );
   }
 
   deleteEmployer(id: number): Observable<void> {

@@ -24,17 +24,20 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SearchPipe } from '../../../shared/pipes/search.pipe';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EmployersComponent } from './dialogs/employers/employers.component';
+import { EmployerService } from './services/employer.service';
+import { Employer } from '../../../shared/models/employer.model';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-trainers',
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
-    DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule,
+    DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule,ToastModule,
     CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
-  providers: [TrainerService, ConfirmationService,DialogService]
+  providers: [TrainerService, ConfirmationService,DialogService,EmployerService]
 })
 export class TrainersComponent {
   searchTerm: string = ''
@@ -59,7 +62,7 @@ export class TrainersComponent {
   displayDetailsDialog = false;
   isAddTrainer = true;
   loading = false;
-
+  selectedEmployer!: Employer;
   // Pagination
   rows = 10;
   first = 0;
@@ -82,13 +85,15 @@ export class TrainersComponent {
     { label: 'Trainer', value: 'TRAINER' },
     { label: 'Admin', value: 'ADMIN' }
   ];
-
+  employers:Employer[] =[];
   constructor(
     private trainerService: TrainerService,
-    private toastService: ToastServiceService , private dialogService: DialogService) { }
+    private toastService: ToastServiceService , private dialogService: DialogService
+  ,private employerService:EmployerService) { }
 
   ngOnInit(): void {
     this.loadTrainers();
+    this.getAllEmployers()
   }
 
   loadTrainers(page: number = 0): void {
@@ -142,6 +147,7 @@ export class TrainersComponent {
 
   saveTrainer(): void {
     if (this.isAddTrainer) {
+      
       const requestBody = {
         username: this.trainerForm.username,
         email: this.trainerForm.email,
@@ -151,7 +157,7 @@ export class TrainersComponent {
         profilePicture: this.trainerForm.profilePicture || '',
         description: this.trainerForm.description,
         trainerType: this.trainerForm.trainerType,
-        employerName: this.trainerForm.employerName
+        employerName: this.selectedEmployer.employerName
       };
       console.log(requestBody);
 
@@ -274,6 +280,16 @@ export class TrainersComponent {
       modal: true,
       contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
       baseZIndex: 10000, // Adjust if needed
+    });
+  }
+  getAllEmployers(){
+    this.employerService.getAllEmployers().subscribe({
+      next: (employers) => {
+        this.employers=employers
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
     });
   }
 }
