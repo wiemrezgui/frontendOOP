@@ -1,5 +1,5 @@
 <div class="card">
-    <p-table #dt [value]="participants | search: searchTerm: ['username']" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="false"
+    <p-table #dt [value]="participants | search: searchTerm: ['user.username']" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }" [paginator]="false"
         [rows]="rows" [totalRecords]="totalRecords" [first]="first" (onPageChange)="onPageChange($event)"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} participants">
         <ng-template pTemplate="caption">
@@ -34,9 +34,9 @@
                         size="large"></p-avatar>
                 </td>
 
-                <td>{{ participant.username }}</td>
+                <td>{{ participant.user.username }}</td>
 
-                <td>{{ participant.email }}</td>
+                <td>{{ participant.user.email }}</td>
 
                 <td>{{ participant.structure }}</td>
 
@@ -135,19 +135,19 @@
             <div class="details-container">
                 <div class="p-grid">
                     <div class="p-col-6">
-                        <p><strong>Gender:</strong> {{ selectedParticipantDetails?.gender || '-' }}</p>
-                        <p><strong>Email:</strong> {{ selectedParticipantDetails?.email || '-' }}</p>
+                        <p><strong>Gender:</strong> {{ selectedParticipantDetails.gender || '-' }}</p>
+                        <p><strong>Email:</strong> {{ selectedParticipantDetails.email || '-' }}</p>
                     </div>
 
                     <div class="p-col-6">
-                        <p><strong> Date of Birth:</strong> {{ (selectedParticipantDetails?.dateOfBirth | date) || '-' }}
+                        <p><strong> Date of Birth:</strong> {{ (selectedParticipantDetails.dateOfBirth | date) || '-' }}
                         </p>
-                        <p><strong>Phone:</strong> {{ selectedParticipantDetails?.phoneNumber || '-' }}</p>
+                        <p><strong>Phone:</strong> {{ selectedParticipantDetails.phoneNumber || '-' }}</p>
                     </div>
                     <!-- Description full width -->
                     <div class="p-col-12">
                         <strong> Description:</strong>
-                      <p class="description">{{ selectedParticipantDetails?.description || 'No description provided' }}</p>
+                      <p class="description">{{ selectedParticipantDetails.description || 'No description provided' }}</p>
                     </div>
                 </div>
             </div>

@@ -127,9 +127,7 @@ export class TrainersComponent {
       trainerType: 'INTERNAL',
       employerName: '',
       username: '',
-      email: '',
-      role: 'TRAINER'
-    };
+      email: ''    };
     this.selectedEmployer = null
     this.displayTrainerDialog = true;
   }

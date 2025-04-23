@@ -65,7 +65,17 @@ export class ParticipantsComponent {
   loading = false;
   
   // Form Data
-  participantForm: Participant = new Participant();
+  participantForm: Partial<Participant> = {
+      profile: '',
+      structure: '',
+      username: '',
+      email: '',
+      gender: 'FEMALE',
+      description: '',
+      dateOfBirth: '',
+      profilePicture: '',
+      phoneNumber: ''
+    };
   
   // Selection Data
   participantToDelete: Participant | null = null;
@@ -98,9 +108,11 @@ export class ParticipantsComponent {
     this.loading = true;
     this.participantService.getAllParticipants(page).subscribe({
       next: (participants) => {
-        this.participants = participants.map(p => new Participant(p));
+        this.participants = participants;
         this.totalRecords = participants.length;
         this.loading = false;
+        console.log(participants);
+        
       },
       error: (err) => {
         this.toastService.showError(err.error.message);
@@ -141,12 +153,18 @@ export class ParticipantsComponent {
     if (!this.validateParticipantForm()) return;
 
     const participantData = {
-      ...this.participantForm,
+      username: this.participantForm.username,
+      email: this.participantForm.email,
+      phoneNumber: this.participantForm.phoneNumber,
+      dateOfBirth: this.formatDate(this.participantForm.dateOfBirth),
+      gender: this.participantForm.gender,
+      profilePicture: this.participantForm.profilePicture || '',
+      description: this.participantForm.description,
       structure: this.selectedStructure?.structureName || this.participantForm.structure,
-      profile: this.selectedProfile?.profileName || this.participantForm.profile,
-      dateOfBirth: this.formatDate(this.participantForm.dateOfBirth)
+      profile: this.selectedProfile?.profileType || this.participantForm.profile
     };
-
+    console.log(participantData);
+    
     if (this.isAddParticipant) {
       this.participantService.createParticipant(participantData).subscribe({
         next: () => {
@@ -307,7 +325,7 @@ export class ParticipantsComponent {
     const ref = this.dialogService.open(StructuresComponent, {
       header: 'Manage Structures',
       width: '70%',
-      height: '70%',
+      height: '73%',
       modal: true,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,
@@ -322,7 +340,7 @@ export class ParticipantsComponent {
     const ref = this.dialogService.open(ProfilesComponent, {
       header: 'Manage Profiles',
       width: '70%',
-      height: '70%',
+      height: '73%',
       modal: true,
       contentStyle: { overflow: 'auto' },
       baseZIndex: 10000,

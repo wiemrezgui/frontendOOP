@@ -11,7 +11,6 @@ export class Participant {
   gender: 'MALE' | 'FEMALE' | 'OTHER' | null = null;
   profilePicture: string | null = null;
   description: string | null = null;
-  role: 'PARTICIPANT' | 'TRAINER' | 'ADMIN' | null = 'PARTICIPANT';
 
   constructor(data?: Partial<Participant>) {
     if (data) {
