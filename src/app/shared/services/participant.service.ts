@@ -25,7 +25,7 @@ export class ParticipantService {
   }
 
   getParticipantById(id: number){
-    return this.http.get<Participant>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
+    return this.http.get<any>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
   }
 
   createParticipant(participant: any): Observable<any> {
@@ -34,10 +34,10 @@ export class ParticipantService {
     });
   }
 
-  updateParticipant(id: number, participant: Partial<Participant>): Observable<Participant> {
-    return this.http.put<Participant>(`${this.apiUrl}/${id}`, participant).pipe(
-      map(participant => new Participant(participant))
-    );
+  updateParticipant(id: number, participant: any): Observable<Participant> {
+    return this.http.patch<Participant>(`${this.apiUrl}/${id}`, participant, {
+      headers: this.getAuthHeaders()
+    })
   }
 
   deleteParticipant(id: number): Observable<void> {

@@ -33,12 +33,6 @@ export class ProfileService {
     });
   }
 
-  updateProfile(id: number, profile: Partial<Profile>): Observable<Profile> {
-    return this.http.put<Profile>(`${this.apiUrl}/${id}`, profile).pipe(
-      map(profile => new Profile(profile))
-    );
-  }
-
   deleteProfile(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, {headers: this.getAuthHeaders()});
   }

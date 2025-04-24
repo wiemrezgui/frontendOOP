@@ -25,7 +25,7 @@ import { MenuModule } from 'primeng/menu';
 import { NavigationService } from '../../shared/services/navigation.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService } from 'primeng/api';
-import { ManagersComponent } from '../../pages/admin-pages/managers/managers.component';
+import { ManagersComponent } from './dialogs/managers/managers.component';
 @Component({
   selector: 'app-header',
   standalone: true,

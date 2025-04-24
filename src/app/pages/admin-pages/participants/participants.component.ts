@@ -11,7 +11,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { PaginatorModule } from 'primeng/paginator';
-import { CommonModule } from '@angular/common';
+import { CommonModule, getLocaleFirstDayOfWeek } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -78,12 +78,11 @@ export class ParticipantsComponent {
     };
   
   // Selection Data
-  participantToDelete: Participant | null = null;
-  selectedParticipantDetails: Participant = new Participant();
+  participantToDelete: any;
+  selectedParticipantDetails: any;
   selectedStructure: any = null;
   selectedProfile: any = null;
-  participantIdToDelete: number | null = null;
-
+  participantIDToEdit: any;
   // Dropdown Options
   structures: Structure[] = [];
   profiles: Profile[] = [];
@@ -130,28 +129,35 @@ export class ParticipantsComponent {
 
   openAddParticipantDialog(): void {
     this.isAddParticipant = true;
-    this.participantForm = new Participant();
+    this.participantForm ={
+      profile: '',
+      structure: '',
+      username: '',
+      email: '',
+      gender: 'FEMALE',
+      description: '',
+      dateOfBirth: '',
+      profilePicture: '',
+      phoneNumber: ''
+    };
     this.selectedStructure = null;
     this.selectedProfile = null;
     this.displayParticipantDialog = true;
   }
-
-  openEditParticipantDialog(participant: Participant): void {
-    this.resetForm();
+  openEditParticipantDialog(participant: any): void {
     this.isAddParticipant = false;
-    this.getParticipantById(participant.participantId!, 'edit');
+    this.participantIDToEdit = participant.participantId;
     this.displayParticipantDialog = true;
+    this.resetForm();
+    this.getParticipantById(this.participantIDToEdit, 'edit');
   }
-
-  openDetails(participant: Participant): void {
-    this.selectedParticipantDetails = new Participant(participant);
-    this.getParticipantById(participant.participantId!, 'details');
+  openDetails(participant: any): void {
+    this.selectedParticipantDetails = participant;
+    this.getParticipantById(participant.participantId, 'details');
     this.displayDetailsDialog = true;
   }
 
   saveParticipant(): void {
-    if (!this.validateParticipantForm()) return;
-
     const participantData = {
       username: this.participantForm.username,
       email: this.participantForm.email,
@@ -162,49 +168,33 @@ export class ParticipantsComponent {
       description: this.participantForm.description,
       structure: this.selectedStructure?.structureName || this.participantForm.structure,
       profile: this.selectedProfile?.profileType || this.participantForm.profile
-    };
-    console.log(participantData);
-    
+    };    
     if (this.isAddParticipant) {
       this.participantService.createParticipant(participantData).subscribe({
         next: () => {
-          this.handleSuccess('Participant created successfully');
-        },
+          this.toastService.showSuccess('Participant updated successfully');
+          this.loadParticipants();
+          this.displayParticipantDialog = false;
+          this.resetForm();
+          this.participantIDToEdit=null        },
         error: (err) => {
           this.toastService.showError(err.error.message);
         }
       });
     } else {
-      if (!this.participantIdToDelete) return;
-      
-      this.participantService.updateParticipant(this.participantIdToDelete, participantData).subscribe({
+      this.participantService.updateParticipant(this.participantIDToEdit, participantData).subscribe({
         next: () => {
-          this.handleSuccess('Participant updated successfully');
+          this.toastService.showSuccess('Participant updated successfully');
+          this.loadParticipants();
+          this.displayParticipantDialog = false;
+          this.resetForm();
+          this.participantIDToEdit=null
         },
         error: (err) => {
           this.toastService.showError(err.error.message);
         }
       });
     }
-  }
-
-  private validateParticipantForm(): boolean {
-    if (!this.participantForm.username) {
-      this.toastService.showError('Username is required');
-      return false;
-    }
-    if (!this.participantForm.email) {
-      this.toastService.showError('Email is required');
-      return false;
-    }
-    return true;
-  }
-
-  private handleSuccess(message: string): void {
-    this.toastService.showSuccess(message);
-    this.loadParticipants();
-    this.displayParticipantDialog = false;
-    this.resetForm();
   }
 
   formatDate(date?: string | Date | null): string | undefined {
@@ -223,7 +213,17 @@ export class ParticipantsComponent {
   }
 
   private resetForm(): void {
-    this.participantForm = new Participant();
+    this.participantForm = {
+      profile: '',
+      structure: '',
+      username: '',
+      email: '',
+      gender: 'FEMALE',
+      description: '',
+      dateOfBirth: null,
+      profilePicture: '',
+      phoneNumber: ''
+    };
     this.selectedStructure = null;
     this.selectedProfile = null;
   }
@@ -257,7 +257,7 @@ export class ParticipantsComponent {
     this.participantService.getParticipantById(id).subscribe({
       next: (participant) => {
         if (type === 'details') {
-          this.selectedParticipantDetails = new Participant(participant);
+          this.selectedParticipantDetails = participant;
         } else {
           this.initializeParticipantData(participant);
         }
@@ -269,34 +269,24 @@ export class ParticipantsComponent {
   }
 
   initializeParticipantData(participant: any): void {
-    this.participantForm = new Participant({
-      participantId: participant.participantId,
-      username: participant.username || participant.user?.username,
-      email: participant.email || participant.user?.email,
-      phoneNumber: participant.phoneNumber || participant.user?.phoneNumber,
-      dateOfBirth: participant.dateOfBirth || participant.user?.dateOfBirth,
-      gender: participant.gender || participant.user?.gender,
-      profilePicture: participant.profilePicture || participant.user?.profilePicture,
-      description: participant.description || participant.user?.description,
-      structure: participant.structure,
-      profile: participant.profile
-    });
-
-    // Find matching structure
+    this.participantForm.email = participant.user.email
+    this.participantForm.dateOfBirth = participant.user.dateOfBirth
+    this.participantForm.description = participant.user.description
+    this.participantForm.profilePicture = participant.user.profilePicture
+    this.participantForm.phoneNumber = participant.user.phoneNumber
+    this.participantForm.username = participant.user.username
+    this.participantForm.gender = participant.user.gender
     if (participant.structure) {
       this.selectedStructure = this.structures.find(s => 
         s.structureName === participant.structure
       );
     }
 
-    // Find matching profile
     if (participant.profile) {
       this.selectedProfile = this.profiles.find(p => 
         p.profileType === participant.profile
       );
     }
-
-    this.participantIdToDelete = participant.participantId;
   }
 
   getAllStructures(): void {

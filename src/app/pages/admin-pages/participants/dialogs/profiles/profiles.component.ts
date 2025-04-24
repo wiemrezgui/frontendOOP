@@ -11,6 +11,8 @@ import { ProfileService } from '../../services/profile.service';
 import { ToastServiceService } from '../../../../../shared/services/toast-service.service';
 import { HttpClientModule } from '@angular/common/http';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CommonModule } from '@angular/common';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-profiles',
@@ -23,7 +25,7 @@ import { DynamicDialogRef } from 'primeng/dynamicdialog';
     InputTextModule,
     DividerModule,
     HttpClientModule,
-    DropdownModule
+    DropdownModule,CommonModule,CheckboxModule
   ],
   templateUrl: './profiles.component.html',
   styleUrl: './profiles.component.scss',
@@ -34,7 +36,8 @@ export class ProfilesComponent {
   IDProfiles: any[] = [];
   newProfile: string = '';
   selectedProfileId: number | null = null;
-  editProfileType: string = '';
+  editProfileType: string = ''; 
+  deleteConfirmed: boolean = false;
 
   constructor(
     private profileService: ProfileService,
@@ -75,9 +78,11 @@ export class ProfilesComponent {
   }
 
   loadProfileDetails(id: number) {
+    this.editProfileType = '';
     this.profileService.getProfileById(id).subscribe({
       next: (profile) => {
-        this.editProfileType = profile.profileType;
+        this.editProfileType = profile.profileType || '';
+        console.log('Loaded profile type:', this.editProfileType);
       },
       error: (err) => {
         this.toastService.showError(err.error.message || 'Failed to load profile details');
@@ -119,7 +124,7 @@ export class ProfilesComponent {
       profileType: this.editProfileType
     };
 
-    this.profileService.updateProfile(this.selectedProfileId, profileData).subscribe({
+    this.profileService.createProfile(profileData).subscribe({
       next: () => {
         this.toastService.showSuccess('Profile updated successfully');
         this.selectedProfileId = null;
@@ -137,22 +142,29 @@ export class ProfilesComponent {
       this.toastService.showError('Please select a profile to delete');
       return;
     }
-
-    if (confirm('Are you sure you want to delete this profile?')) {
+    if (!this.deleteConfirmed) {
+      this.toastService.showError('Please confirm deletion by checking the checkbox');
+      return;
+    }
       this.profileService.deleteProfile(this.selectedProfileId).subscribe({
         next: () => {
           this.toastService.showSuccess('Profile deleted successfully');
           this.selectedProfileId = null;
           this.getAllProfiles();
+          this.resetDeleteForm()
         },
         error: (err) => {
           this.toastService.showError(err.error.message || 'Failed to delete profile');
         }
       });
-    }
+    
   }
 
   closeDialog() {
     this.ref.close();
+  }
+  resetDeleteForm() {
+    this.selectedProfileId = null;
+    this.deleteConfirmed = false;
   }
 }

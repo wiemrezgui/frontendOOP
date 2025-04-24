@@ -64,7 +64,7 @@ export class TrainersComponent {
   isAddTrainer = true;
   loading = false;
   selectedEmployer: any;
-  employerIdToDelete: any
+  trainerIdToEdit: any
   // Pagination
   rows = 10;
   first = 0;
@@ -172,9 +172,9 @@ export class TrainersComponent {
         }
       });
     } else {
-      if (!this.employerIdToDelete) return;
+      if (!this.trainerIdToEdit) return;
       console.log(this.trainerForm);
-      this.trainerService.updateTrainer(this.employerIdToDelete, this.trainerForm).subscribe({
+      this.trainerService.updateTrainer(this.trainerIdToEdit, this.trainerForm).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer updated successfully');
           this.loadTrainers();
@@ -277,7 +277,7 @@ export class TrainersComponent {
       if (!this.selectedEmployer) {
         this.selectedEmployer = { employerName: trainer.employerName };
       }
-      this.employerIdToDelete = trainer.trainerId
+      this.trainerIdToEdit = trainer.trainerId
     }
 
   }

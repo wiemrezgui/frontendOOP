@@ -122,11 +122,11 @@
     <div class="dialog-container p-grid">
         <div class="left-section p-col-5">
             <div class="profile-container">
-                <p-avatar [image]="selectedParticipantDetails.profilePicture || 'assets/images/user-logo.png'" shape="circle"
+                <p-avatar [image]="selectedParticipantDetails?.profilePicture || 'assets/images/user-logo.png'" shape="circle"
                     size="xlarge" class="profile-image"></p-avatar>
 
                 <div class="name-type-container">
-                    <h2>{{ selectedParticipantDetails.username }}</h2>
+                    <h2>{{ selectedParticipantDetails?.username }}</h2>
                 </div>
             </div>
         </div>
@@ -135,19 +135,19 @@
             <div class="details-container">
                 <div class="p-grid">
                     <div class="p-col-6">
-                        <p><strong>Gender:</strong> {{ selectedParticipantDetails.gender || '-' }}</p>
-                        <p><strong>Email:</strong> {{ selectedParticipantDetails.email || '-' }}</p>
+                        <p><strong>Gender:</strong> {{ selectedParticipantDetails?.gender || '-' }}</p>
+                        <p><strong>Email:</strong> {{ selectedParticipantDetails?.email || '-' }}</p>
                     </div>
 
                     <div class="p-col-6">
-                        <p><strong> Date of Birth:</strong> {{ (selectedParticipantDetails.dateOfBirth | date) || '-' }}
+                        <p><strong> Date of Birth:</strong> {{ (selectedParticipantDetails?.dateOfBirth | date) || '-' }}
                         </p>
-                        <p><strong>Phone:</strong> {{ selectedParticipantDetails.phoneNumber || '-' }}</p>
+                        <p><strong>Phone:</strong> {{ selectedParticipantDetails?.phoneNumber || '-' }}</p>
                     </div>
                     <!-- Description full width -->
                     <div class="p-col-12">
                         <strong> Description:</strong>
-                      <p class="description">{{ selectedParticipantDetails.description || 'No description provided' }}</p>
+                      <p class="description">{{ selectedParticipantDetails?.description || 'No description provided' }}</p>
                     </div>
                 </div>
             </div>
