@@ -72,13 +72,17 @@ export class LoginComponent {
         this.loading = false;
         this.toastService.showSuccess('Login successful!');
         console.log(response);
-        // Store token and user data (implement your storage service)
         localStorage.setItem('auth_token', response.token);
         localStorage.setItem('user_email', response.email);
-        // Delay navigation to ensure toast is visible
-        setTimeout(() => {
-          this.router.navigate(['/admin']);
-        }, 1200); // 1.2 second delay
+        const role = this.authService.getRole()
+        if (role === 'ADMIN') {
+          this.router.navigate(['/admin/dashboard']);
+        } else if (role === 'MANAGER') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/login']);
+        }
+
       },
       error: (error: HttpErrorResponse) => {
         this.loading = false;

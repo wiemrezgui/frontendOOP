@@ -5,6 +5,7 @@ import { MyPreset } from './styles/prime-ng-preset';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { providePrimeNG } from 'primeng/config';
+import { provideHttpClient } from '@angular/common/http';
 bootstrapApplication(AppComponent, {
   providers: [
     provideAnimationsAsync(),
@@ -16,6 +17,7 @@ bootstrapApplication(AppComponent, {
         },
       },
     }),
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient()
   ],
 }).catch((err) => console.error(err));

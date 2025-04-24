@@ -7,9 +7,11 @@ import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ToastServiceService } from './shared/services/toast-service.service';
 import { AuthService } from './auth/services/auth.service';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { ApiInterceptor } from './shared/interceptors/api.interceptor';
 import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthGuard } from './shared/guards/authGuard';
+import { AdminGuard } from './shared/guards/adminGuard';
+import { ManagerGuard } from './shared/guards/managerGuard';
 
 @Component({
   selector: 'app-root',
@@ -17,11 +19,7 @@ import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
   imports: [RouterOutlet,CommonModule,HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [MessageService, ToastServiceService, AuthService, DynamicDialogModule,DialogService ,{
-    provide: HTTP_INTERCEPTORS,
-    useClass: ApiInterceptor,
-    multi: true
-  }],
+  providers: [MessageService, ToastServiceService, AuthService, DynamicDialogModule,DialogService,AuthGuard,AdminGuard,ManagerGuard]
 
 })
 export class AppComponent {

@@ -60,7 +60,8 @@ export class HeaderComponent implements OnInit {
     private renderer: Renderer2,
     private router: Router,
     private navigationService: NavigationService,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private authService :AuthService
   ) { }
   ngOnInit() {
     // Set title from current route
@@ -103,7 +104,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.router.navigate(['/login']);
+    this.authService.logout()
   }
 
   captureScreen() {
