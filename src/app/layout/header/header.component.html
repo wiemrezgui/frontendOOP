@@ -7,12 +7,12 @@
   
     <!-- Right: Tools & Avatar -->
     <div class="flex-row-base">
-      <p-button label="Managers" icon="pi pi-plus" severity="danger" (click)="openManageManagersDialog()"/>
+      <p-button label="Managers" icon="pi pi-plus" severity="danger" (click)="openManageManagersDialog()" *ngIf="isAdminAuthenticated"/>
       <div class="tool-box-container">
-        <i class="pi pi-window-maximize notification-icon" (click)="fullScreen()" pTooltip="Full screen"
+        <i class="pi pi-window-maximize notification-icon" (click)="fullScreen()" pTooltip="Full screen" *ngIf="isAdminAuthenticated"
           tooltipPosition="top"></i>
   
-        <i class="pi pi-camera notification-icon" (click)="captureScreen()" pTooltip="Screenshot"
+        <i class="pi pi-camera notification-icon" (click)="captureScreen()" pTooltip="Screenshot" *ngIf="isAdminAuthenticated"
           tooltipPosition="top"></i>
 
         <i class="pi pi-sign-out notification-icon" (click)="navigateTo('logout')" pTooltip="Log out"

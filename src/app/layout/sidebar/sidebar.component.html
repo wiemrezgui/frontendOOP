@@ -1,4 +1,4 @@
-<nav class="sidebar" [class.collapsed]="isCollapsed">
+<nav class="sidebar" [class.collapsed]="isCollapsed" *ngIf="showSideBar">
     <!-- Sidebar Logo -->
     <div class="sidebar-logo">
       <img *ngIf="!isCollapsed" src="assets/images/logo.png" alt="Logo" class="logo" />

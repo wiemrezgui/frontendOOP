@@ -52,7 +52,7 @@ export class HeaderComponent implements OnInit {
     'https://media.istockphoto.com/id/177373093/photo/indian-male-doctor.jpg?s=612x612&w=0&k=20&c=5FkfKdCYERkAg65cQtdqeO_D0JMv6vrEdPw3mX1Lkfg=';
 
   currentPageTitle: string = '';
-
+  isAdminAuthenticated:boolean=false
   @Input() isSidebarCollapsed: boolean = false;
 
   constructor(
@@ -71,9 +71,8 @@ export class HeaderComponent implements OnInit {
         this.setTitleFromUrl(this.router.url);
       });
     this.selectedNavItem$ = this.navigationService.selectedNavItem$;
-
-    // Initial call in case router event doesn't fire
     this.setTitleFromUrl(this.router.url);
+    this.showAdminItems()
   }
 
   setTitleFromUrl(url: string) {
@@ -144,5 +143,8 @@ export class HeaderComponent implements OnInit {
         contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
         baseZIndex: 10000, // Adjust if needed
       });
+    }
+    showAdminItems() {
+      this.isAdminAuthenticated = this.authService.isAdmin();
     }
 }

@@ -4,11 +4,12 @@ import { Router, RouterModule } from '@angular/router';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { CommonModule } from '@angular/common';
 import { NavigationService } from '../../shared/services/navigation.service';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
-  standalone:true,
-  imports: [PopoverModule,CommonModule,RouterModule],
+  standalone: true,
+  imports: [PopoverModule, CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
@@ -18,15 +19,17 @@ export class SidebarComponent {
 
   @ViewChild('op') op!: Popover;
   hoveredSubItems: NavItem[] = [];
-
-  constructor(private router: Router,private navigationService:NavigationService) { }
+  showSideBar: boolean = true
+  constructor(private router: Router, private navigationService: NavigationService, private authService: AuthService) { }
 
   navItems: NavItem[] = [
     { title: 'Dashboard', image: 'assets/images/dashboard.png', route: '/admin/dashboard' },
     { title: 'Trainers', image: 'assets/images/trainers.png', route: '/admin/trainers' },
     { title: 'Participants', image: 'assets/images/participants.png', route: '/admin/participants' },
-    { title: 'Sessions', image: 'assets/images/training-sessions.png', route: '/admin/training-sessions' }  ];
-
+    { title: 'Sessions', image: 'assets/images/training-sessions.png', route: '/admin/training-sessions' }];
+  ngOnInit() {
+    this.showSidebar()
+  }
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
     this.collapsedState.emit(this.isCollapsed);
@@ -39,5 +42,8 @@ export class SidebarComponent {
   }
   hideHoverMenu() {
     this.op.hide();
+  }
+  showSidebar() {
+    this.showSideBar = this.authService.isAdmin();
   }
 }
