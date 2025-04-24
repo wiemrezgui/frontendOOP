@@ -24,12 +24,13 @@ import { ToastServiceService } from '../../../shared/services/toast-service.serv
 import { TrainingsService } from '../../../shared/services/trainings.service';
 import { TrainerService } from '../../../shared/services/trainer.service';
 import { Trainer } from '../../../shared/models/trainer.model';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-training-session',
   imports: [TableModule,DialogModule,ButtonModule,InputTextModule,AvatarModule,TagModule,FileUploadModule,FormsModule,
     DropdownModule,SelectButtonModule,IconFieldModule,InputIconModule,PaginatorModule,CommonModule,HttpClientModule,
-    CardModule ,SearchPipe
+    CardModule ,SearchPipe,ToastModule
   ],
   templateUrl: './training-session.component.html',
   styleUrl: './training-session.component.scss',
@@ -132,8 +133,8 @@ openManageDomainsDialog() {
       width: '70%',
       height: '75%',
       modal: true,
-      contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
-      baseZIndex: 10000, // Adjust if needed
+      contentStyle: { overflow: 'auto' },
+      baseZIndex: 10000,
     });
   }
   loadTrainers(page: number = 0): void {

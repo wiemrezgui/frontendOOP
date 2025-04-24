@@ -11,11 +11,12 @@ import { Domain } from '../../../../../shared/models/domain.model';
 import { DomainService } from '../../services/domain.service';
 import { ToastServiceService } from '../../../../../shared/services/toast-service.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-domains',
   imports: [TabsModule,TableModule,ButtonModule,FormsModule,InputTextModule,DividerModule,HttpClientModule
-    ,DropdownModule
+    ,DropdownModule,CheckboxModule
   ],
   templateUrl: './domains.component.html',
   styleUrl: './domains.component.scss',
@@ -27,6 +28,7 @@ export class DomainsComponent {
   newDomain: string = '';
   selectedDomainId: number | null = null;
   editDomainName: string = '';
+  deleteConfirmed: boolean = false;
 
   constructor(
     private domainService: DomainService, 
@@ -82,7 +84,7 @@ export class DomainsComponent {
       return;
     }
 
-    this.domainService.createDomain(this.newDomain).subscribe({
+    this.domainService.createDomain({ domainName: this.newDomain }).subscribe({
       next: (response) => {
         this.toastService.showSuccess('Domain added successfully');
         this.newDomain = '';
@@ -124,6 +126,10 @@ export class DomainsComponent {
   deleteDomain() {
     if (!this.selectedDomainId) {
       this.toastService.showError('Please select Domain to delete');
+      return;
+    }
+    if (!this.deleteConfirmed) {
+      this.toastService.showError('Please confirm deletion by checking the checkbox');
       return;
     }
 

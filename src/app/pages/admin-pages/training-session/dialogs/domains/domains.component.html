@@ -69,6 +69,12 @@
                              placeholder="Select ID" fluid  (onChange)="onDomainselected($event)"></p-dropdown>  
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="flex items-center">
+                          <p-checkbox [(ngModel)]="deleteConfirmed" inputId="deleteConfirm" name="deleteConfirm" binary="true"></p-checkbox>
+                          <label for="deleteConfirm" class="ml-2"> Please check if you confirm domain delete </label>
+                        </div>
+                      </div>
                 </div>
                 <button pButton label="Delete domain" icon="pi pi-check" class="p-button-danger" (click)="deleteDomain()"></button>
                 </div>
