@@ -61,81 +61,81 @@ export class DomainsComponent {
     if (event.value) {
       this.selectedDomainId = event.value;
       if(this.selectedDomainId)
-     { this.loadEmployerDetails(this.selectedDomainId);}
+     { this.loadDomainDetails(this.selectedDomainId);}
     }
   }
 
-  loadEmployerDetails(id: number) {
+  loadDomainDetails(id: number) {
     this.domainService.getDomainById(id).subscribe({
-      next: (employer) => {
-        this.editDomainName = employer.name;
+      next: (domain) => {
+        this.editDomainName = domain.name;
       },
       error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to load employer details');
+        this.toastService.showError(err.error.message || 'Failed to load Domain details');
       }
     });
   }
 
   saveDomain() {
     if (!this.newDomain.trim()) {
-      this.toastService.showError('Employer name is required');
+      this.toastService.showError('Domain name is required');
       return;
     }
 
-    this.domainService.createDomain({ name: this.newDomain }).subscribe({
+    this.domainService.createDomain(this.newDomain).subscribe({
       next: (response) => {
-        this.toastService.showSuccess('Employer added successfully');
+        this.toastService.showSuccess('Domain added successfully');
         this.newDomain = '';
         this.getAlldomains();
       },
       error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to add employer');
+        this.toastService.showError(err.error.message || 'Failed to add Domain');
       }
     });
   }
 
-  updateEmployer() {
+  updateDomain() {
     if (!this.selectedDomainId) {
-      this.toastService.showError('Please select an employer to edit');
+      this.toastService.showError('Please select a Domain to edit');
       return;
     }
 
     if (!this.editDomainName.trim()) {
-      this.toastService.showError('Employer name is required');
+      this.toastService.showError('Domain name is required');
       return;
     }
-    const employerData:Domain={
+    const domainData:Domain={
       domainId: this.selectedDomainId ,
       domainName: this.editDomainName
     }
-    /*this.domainService.updateDomain(employerData,employerData.domainId).subscribe({
+    /*this.domainService.updateDomain(domainData,domainData.domainId).subscribe({
       next: () => {
-        this.toastService.showSuccess('Employer updated successfully');
+        this.toastService.showSuccess('domain updated successfully');
         this.selectedDomainId = null;
         this.editDomainName = '';
         this.getAlldomains();
       },
       error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to update employer');
+        this.toastService.showError(err.error.message || 'Failed to update domain');
       }
     });*/
   }
 
   deleteDomain() {
     if (!this.selectedDomainId) {
-      this.toastService.showError('Please select an employer to delete');
+      this.toastService.showError('Please select Domain to delete');
       return;
     }
 
-    if (confirm('Are you sure you want to delete this employer?')) {
+    if (confirm('Are you sure you want to delete this domain?')) {
       this.domainService.deleteDomain(this.selectedDomainId).subscribe({
         next: () => {
-          this.toastService.showSuccess('Employer deleted successfully');
+          this.toastService.showSuccess('Domain deleted successfully');
           this.selectedDomainId = null;
           this.getAlldomains();
         },
         error: (err) => {
-          this.toastService.showError(err.error.message || 'Failed to delete employer');
+          this.toastService.showError(err.error.message || 'Failed to delete Domain');
         }
       });
     }

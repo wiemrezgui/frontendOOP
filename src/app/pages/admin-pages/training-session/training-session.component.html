@@ -70,6 +70,11 @@
                 <input id="budget" pInputText type="text" [(ngModel)]="trainingForm.domainName" required fluid placeholder="domain"/>
             </div>
             </div>
+            <div class="form-group full-width">
+                <label for="email">Trainer <span class="required">*</span></label>
+                <p-dropdown [options]="trainers" optionLabel="user.username" 
+                [(ngModel)]="trainingForm.type" placeholder="Select trainer" fluid></p-dropdown>  
+                 </div>
         </div>
         <div class="form-row">
             <div class="form-group full-width">

@@ -28,8 +28,8 @@ export class DomainService {
     return this.http.get<any>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
   }
 
-  createDomain(Domain: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, Domain, {
+  createDomain(domainName: string): Observable<any> {
+    return this.http.post<any>(this.apiUrl, domainName, {
       headers: this.getAuthHeaders()
     });
   }

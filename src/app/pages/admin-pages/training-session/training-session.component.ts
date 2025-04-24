@@ -15,13 +15,15 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
-import { Training, TrainingType } from '../../../shared/models/training.model';
+import { Training } from '../../../shared/models/training.model';
 import { SearchPipe } from '../../../shared/pipes/search.pipe';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService } from 'primeng/api';
 import { DomainsComponent } from './dialogs/domains/domains.component';
 import { ToastServiceService } from '../../../shared/services/toast-service.service';
 import { TrainingsService } from '../../../shared/services/trainings.service';
+import { TrainerService } from '../../../shared/services/trainer.service';
+import { Trainer } from '../../../shared/models/trainer.model';
 
 @Component({
   selector: 'app-training-session',
@@ -31,13 +33,14 @@ import { TrainingsService } from '../../../shared/services/trainings.service';
   ],
   templateUrl: './training-session.component.html',
   styleUrl: './training-session.component.scss',
-  providers: [ConfirmationService,DialogService,TrainingsService]
+  providers: [ConfirmationService,DialogService,TrainingsService,TrainerService]
 })
 export class TrainingSessionComponent {
 types=['ONLINE','HYBRID','ONSITE']
 searchTerm:string=''
 // Table data
 trainings: Training[] = [];
+trainers: Trainer[] = [];
 filteredtrainings: Training[] = [];
 durationTypes = ['Weeks','Hours'];
 
@@ -57,9 +60,10 @@ displayDetailsDialog = false;
   selectedtraining: Training = new Training;
   selectedTrainingDetails: Training = new Training;
   isAddTraining:boolean=false
-   constructor( private trainingService:TrainingsService,
+   constructor( private trainerService: TrainerService, private trainingService:TrainingsService,
       private toastService: ToastServiceService , private dialogService: DialogService) { }
 ngOnInit() {
+  this.loadTrainers()
   this.loadtrainings();
 }
 
@@ -130,6 +134,18 @@ openManageDomainsDialog() {
       modal: true,
       contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
       baseZIndex: 10000, // Adjust if needed
+    });
+  }
+  loadTrainers(page: number = 0): void {
+    this.trainerService.getAllTrainers(page).subscribe({
+      next: (trainers) => {
+        this.trainers = trainers;
+        console.log(this.trainers);
+        this.totalRecords = trainers.length;
+      },
+      error: (err) => {
+        this.toastService.showError(err.error.message);
+      }
     });
   }
 }
