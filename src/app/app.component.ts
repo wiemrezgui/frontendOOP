@@ -11,7 +11,6 @@ import { DynamicDialogModule, DialogService } from 'primeng/dynamicdialog';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthGuard } from './shared/guards/authGuard';
 import { AdminGuard } from './shared/guards/adminGuard';
-import { ManagerGuard } from './shared/guards/managerGuard';
 
 @Component({
   selector: 'app-root',
@@ -19,7 +18,7 @@ import { ManagerGuard } from './shared/guards/managerGuard';
   imports: [RouterOutlet,CommonModule,HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [MessageService, ToastServiceService, AuthService, DynamicDialogModule,DialogService,AuthGuard,AdminGuard,ManagerGuard]
+  providers: [MessageService, ToastServiceService, AuthService, DynamicDialogModule,DialogService,AuthGuard,AdminGuard]
 
 })
 export class AppComponent {

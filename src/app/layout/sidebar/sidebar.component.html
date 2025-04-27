@@ -1,12 +1,10 @@
 <nav class="sidebar" [class.collapsed]="isCollapsed" *ngIf="showSideBar">
     <!-- Sidebar Logo -->
-    <div class="sidebar-logo">
+    <div class="sidebar-logo" (click)="toggleSidebar()">
       <img *ngIf="!isCollapsed" src="assets/images/logo.png" alt="Logo" class="logo" />
+      <img *ngIf="isCollapsed" src="assets/images/mini-logo.png" alt="Logo" class="mini-logo" />
+
     </div>
-    <!-- Toggle Sidebar Button -->
-    <button class="toggle-btn" (click)="toggleSidebar()">
-      <i [class]="isCollapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
-    </button>
     <!-- Sidebar Menu -->
     <div class="menu-section">
       <ul class="menu">

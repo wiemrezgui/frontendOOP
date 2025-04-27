@@ -103,35 +103,6 @@ export class StructuresComponent {
     });
   }
 
-  updateStructure() {
-    if (!this.selectedStructureId) {
-      this.toastService.showError('Please select a structure to edit');
-      return;
-    }
-
-    if (!this.editStructureName.trim()) {
-      this.toastService.showError('Structure name is required');
-      return;
-    }
-
-    const structureData: Structure = {
-      structureId: this.selectedStructureId,
-      structureName: this.editStructureName
-    };
-
-    this.structureService.updateStructure(this.selectedStructureId, structureData).subscribe({
-      next: () => {
-        this.toastService.showSuccess('Structure updated successfully');
-        this.selectedStructureId = null;
-        this.editStructureName = '';
-        this.getAllStructures();
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to update structure');
-      }
-    });
-  }
-
   deleteStructure() {
     if (!this.selectedStructureId) {
       this.toastService.showError('Please select a structure to delete');

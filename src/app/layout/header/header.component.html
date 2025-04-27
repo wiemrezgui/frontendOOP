@@ -19,8 +19,8 @@
           tooltipPosition="bottom"></i>
       </div>
   
-      <div class="profile-section">
-        <avvvatars [value]="adminName" [size]="45" [shadow]="true"></avvvatars>
+      <div class="profile-section" *ngIf="profileImage">
+        <p-avatar [image]="profileImage" class="mr-2" size="xlarge" shape="circle" class="profile-image"/>
       </div>
     </div>
   </header>

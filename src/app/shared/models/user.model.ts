@@ -9,6 +9,7 @@ export enum Gender {
 }
 
 export class User{
+  userId:Number=0;
   username: string='';
   email: string='';
   password: string='';

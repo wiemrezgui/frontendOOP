@@ -34,18 +34,21 @@
     margin-bottom: 5px;
     margin-top: 20px;
     margin-left: 20px;
-  
+    cursor: pointer;
     .logo {
       width: 120px;
       height: 40px;
       transition: opacity 0.3s ease-in-out;
     }
+
+    .mini-logo{
+      width: 42px;
+      height: 40px;
+      padding-right: 5px;
+    }
   
   }
-  .logo {
-    max-width: 130px;
-    transition: opacity 0.3s ease-in-out;
-  }
+
   
   /* Sidebar Toggle Button */
   .toggle-btn {

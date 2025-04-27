@@ -31,13 +31,14 @@ import { StructureService } from './services/structure.service';
 import { ProfileService } from './services/profile.service';
 import { Profile } from '../../../shared/models/profile.model';
 import { Structure } from '../../../shared/models/structure.model';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-participants',
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
     DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, PaginatorModule, CommonModule, HttpClientModule,
-    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule,ToastModule
+    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule,ToastModule,ProgressSpinnerModule
   ],
   templateUrl: './participants.component.html',
   styleUrl: './participants.component.scss',
@@ -53,9 +54,8 @@ export class ParticipantsComponent {
   ];
 
   // Pagination
-  rows = 10;
-  first = 0;
-  totalRecords = 0;
+  currentPage = 0;
+  hasMore = true;
 
   // UI Controls
   displayParticipantDialog = false;
@@ -66,8 +66,8 @@ export class ParticipantsComponent {
   
   // Form Data
   participantForm: Partial<Participant> = {
-      profile: '',
-      structure: '',
+      profileId: '',
+      structureId: '',
       username: '',
       email: '',
       gender: 'FEMALE',
@@ -86,7 +86,10 @@ export class ParticipantsComponent {
   // Dropdown Options
   structures: Structure[] = [];
   profiles: Profile[] = [];
-
+//image
+selectedFileName: string = '';
+imagePreview: string | ArrayBuffer | null = null;
+selectedFile: File | null = null;
   @ViewChild('dt') dt!: Table;
 
   constructor(
@@ -108,7 +111,7 @@ export class ParticipantsComponent {
     this.participantService.getAllParticipants(page).subscribe({
       next: (participants) => {
         this.participants = participants;
-        this.totalRecords = participants.length;
+        this.hasMore = participants.length === 10;
         this.loading = false;
         console.log(participants);
         
@@ -119,32 +122,31 @@ export class ParticipantsComponent {
       }
     });
   }
-
-  onPageChange(event: any): void {
-    this.first = event.first;
-    this.rows = event.rows;
-    const page = event.first / event.rows;
-    this.loadParticipants(page);
+  nextPage(): void {
+    this.currentPage++;
+    this.loadParticipants(this.currentPage);
+  }
+  
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadParticipants(this.currentPage);
+      (this.currentPage);
+    }
   }
 
   openAddParticipantDialog(): void {
+    this.getAllStructures();
+    this.getAllProfiles();
     this.isAddParticipant = true;
-    this.participantForm ={
-      profile: '',
-      structure: '',
-      username: '',
-      email: '',
-      gender: 'FEMALE',
-      description: '',
-      dateOfBirth: '',
-      profilePicture: '',
-      phoneNumber: ''
-    };
+   this.resetForm()
     this.selectedStructure = null;
     this.selectedProfile = null;
     this.displayParticipantDialog = true;
   }
   openEditParticipantDialog(participant: any): void {
+    this.getAllStructures();
+    this.getAllProfiles();
     this.isAddParticipant = false;
     this.participantIDToEdit = participant.participantId;
     this.displayParticipantDialog = true;
@@ -166,8 +168,8 @@ export class ParticipantsComponent {
       gender: this.participantForm.gender,
       profilePicture: this.participantForm.profilePicture || '',
       description: this.participantForm.description,
-      structure: this.selectedStructure?.structureName || this.participantForm.structure,
-      profile: this.selectedProfile?.profileType || this.participantForm.profile
+      structureId: this.selectedStructure?.structureId || '',
+      profileId: this.selectedProfile?.profileId || ''
     };    
     if (this.isAddParticipant) {
       this.participantService.createParticipant(participantData).subscribe({
@@ -177,7 +179,7 @@ export class ParticipantsComponent {
           this.displayParticipantDialog = false;
           this.resetForm();
           this.participantIDToEdit=null        },
-        error: (err) => {
+        error: (err) => {          
           this.toastService.showError(err.error.message);
         }
       });
@@ -214,8 +216,8 @@ export class ParticipantsComponent {
 
   private resetForm(): void {
     this.participantForm = {
-      profile: '',
-      structure: '',
+      profileId: '',
+      structureId: '',
       username: '',
       email: '',
       gender: 'FEMALE',
@@ -226,6 +228,7 @@ export class ParticipantsComponent {
     };
     this.selectedStructure = null;
     this.selectedProfile = null;
+    this.clearImage()
   }
 
   openDeleteDialog(participant: Participant): void {
@@ -259,6 +262,8 @@ export class ParticipantsComponent {
         if (type === 'details') {
           this.selectedParticipantDetails = participant;
         } else {
+          console.log('par'+ participant);
+          
           this.initializeParticipantData(participant);
         }
       },
@@ -276,17 +281,9 @@ export class ParticipantsComponent {
     this.participantForm.phoneNumber = participant.user.phoneNumber
     this.participantForm.username = participant.user.username
     this.participantForm.gender = participant.user.gender
-    if (participant.structure) {
-      this.selectedStructure = this.structures.find(s => 
-        s.structureName === participant.structure
-      );
-    }
+    this.selectedProfile=participant.profile
+    this.selectedStructure=participant.structure
 
-    if (participant.profile) {
-      this.selectedProfile = this.profiles.find(p => 
-        p.profileType === participant.profile
-      );
-    }
   }
 
   getAllStructures(): void {
@@ -341,14 +338,24 @@ export class ParticipantsComponent {
     });
   }
 
-  onImageSelect(event: any): void {
+  onFileSelect(event: any) {
     const file = event.files[0];
     if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
-        this.participantForm.profilePicture = e.target?.result as string;
+        this.imagePreview = e.target?.result as string;
       };
       reader.readAsDataURL(file);
+      this.participantForm.profilePicture = `assets/images/${file.name}`;
     }
+  }
+  clearImage() {
+    this.selectedFileName = '';
+    this.imagePreview = null;
+    this.selectedFile = null;
+    this.participantForm.profilePicture = '';
   }
 }

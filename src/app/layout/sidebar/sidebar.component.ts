@@ -26,7 +26,8 @@ export class SidebarComponent {
     { title: 'Dashboard', image: 'assets/images/dashboard.png', route: '/admin/dashboard' },
     { title: 'Trainers', image: 'assets/images/trainers.png', route: '/admin/trainers' },
     { title: 'Participants', image: 'assets/images/participants.png', route: '/admin/participants' },
-    { title: 'Sessions', image: 'assets/images/training-sessions.png', route: '/admin/training-sessions' }];
+    { title: 'Sessions', image: 'assets/images/training-sessions.png', route: '/admin/training-sessions' },
+    { title: 'Enrollment', image: 'assets/images/enroll.png', route: '/admin/enrollment' }];
   ngOnInit() {
     this.showSidebar()
   }
@@ -38,7 +39,7 @@ export class SidebarComponent {
     return this.router.url.includes(route);
   }
   onItemClick(item: any): void {
-    this.navigationService.setSelectedNavItem(item); // Only update if it's a final route
+    this.navigationService.setSelectedNavItem(item);
   }
   hideHoverMenu() {
     this.op.hide();

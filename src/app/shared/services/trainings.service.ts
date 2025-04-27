@@ -18,30 +18,36 @@ export class TrainingsService {
       'Authorization': `Bearer ${token}`
     });
   }
-  getAlltrainings(page: number): Observable<Training[]> {
+  
+  getAllTrainings(page: number): Observable<Training[]> {
     return this.http.get<Training[]>(this.apiUrl, {
-      params: { page: page.toString() }, headers: this.getAuthHeaders()
-    });
-  }
-
-  gettrainingById(id: number){
-    return this.http.get<any>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
-  }
-
-  createtraining(training: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, training, {
+      params: { page: page.toString() }, 
       headers: this.getAuthHeaders()
     });
   }
-
-  updatetraining(id: number, training: Partial<Training>): Observable<Training> {
-    return this.http.put<Training>(`${this.apiUrl}/${id}`, training).pipe(
-      map(training => new Training(training))
-    );
+  
+  getTrainingById(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`, { 
+      headers: this.getAuthHeaders()
+    });
   }
-
-  deletetraining(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, {headers: this.getAuthHeaders()});
+  
+  createTraining(training: any): Observable<any> {
+    return this.http.post(this.apiUrl, training, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  
+  updateTraining(id: string, training: Partial<Training>): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${id}`, training, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  
+  deleteTraining(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders()
+    });
   }
 
 }

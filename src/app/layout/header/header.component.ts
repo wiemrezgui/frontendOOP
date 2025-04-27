@@ -26,6 +26,7 @@ import { NavigationService } from '../../shared/services/navigation.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService } from 'primeng/api';
 import { ManagersComponent } from './dialogs/managers/managers.component';
+import { TokenService } from '../../shared/services/token.service';
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -47,13 +48,13 @@ import { ManagersComponent } from './dialogs/managers/managers.component';
 
 export class HeaderComponent implements OnInit {
   selectedNavItem$!: Observable<NavItem | null>;
-  adminName: string = 'Dr. Inconnu';
   adminImage: string =
     'https://media.istockphoto.com/id/177373093/photo/indian-male-doctor.jpg?s=612x612&w=0&k=20&c=5FkfKdCYERkAg65cQtdqeO_D0JMv6vrEdPw3mX1Lkfg=';
 
   currentPageTitle: string = '';
   isAdminAuthenticated:boolean=false
   @Input() isSidebarCollapsed: boolean = false;
+  profileImage: string | null =null;
 
   constructor(
     private el: ElementRef,
@@ -61,7 +62,8 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private navigationService: NavigationService,
     private dialogService: DialogService,
-    private authService :AuthService
+    private authService :AuthService,
+    private tokenService:TokenService
   ) { }
   ngOnInit() {
     // Set title from current route
@@ -73,6 +75,7 @@ export class HeaderComponent implements OnInit {
     this.selectedNavItem$ = this.navigationService.selectedNavItem$;
     this.setTitleFromUrl(this.router.url);
     this.showAdminItems()
+    this.getProfileImage()
   }
 
   setTitleFromUrl(url: string) {
@@ -138,7 +141,7 @@ export class HeaderComponent implements OnInit {
       const ref = this.dialogService.open(ManagersComponent, {
         header: 'Manage Managers',
         width: '70%',
-        height: '70%',
+        height: '79%',
         modal: true,
         contentStyle: { overflow: 'auto' }, // Enable scrolling if content is long
         baseZIndex: 10000, // Adjust if needed
@@ -146,5 +149,8 @@ export class HeaderComponent implements OnInit {
     }
     showAdminItems() {
       this.isAdminAuthenticated = this.authService.isAdmin();
+    }
+    getProfileImage(){
+    this.profileImage=  this.tokenService.geProfilePicture()
     }
 }

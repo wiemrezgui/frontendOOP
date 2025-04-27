@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
 import { AuthGuard } from './shared/guards/authGuard';
-import { ManagerGuard } from './shared/guards/managerGuard';
 import { AdminGuard } from './shared/guards/adminGuard';
 
 export const routes: Routes = [
@@ -14,6 +13,9 @@ export const routes: Routes = [
       { path: 'login', loadComponent: () => import('./auth/login/login.component').then(m => m.LoginComponent) },
       { path: 'register', loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent) },
       { path: 'forgot-password', loadComponent: () => import('./auth/forget-password/forget-password.component').then(m => m.ForgetPasswordComponent) },
+      { path: 'reset-password', loadComponent: () => import('./auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent) },
+      { path: 'access-denied', loadComponent: () => import('./pages/unauthorized/access-denied/access-denied.component').then(m => m.AccessDeniedComponent) },
+
     ]
   },
   {
@@ -39,6 +41,10 @@ export const routes: Routes = [
       { 
         path: 'training-sessions', 
         loadComponent: () => import('./pages/admin-pages/training-session/training-session.component').then(m => m.TrainingSessionComponent),
+        canActivate: [AdminGuard]
+      },{ 
+        path: 'enrollment', 
+        loadComponent: () => import('./pages/admin-pages/enrollment/enrollment.component').then(m => m.EnrollmentComponent),
         canActivate: [AdminGuard]
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

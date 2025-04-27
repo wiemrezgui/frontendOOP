@@ -36,7 +36,7 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,private authService:AuthService,
     private router: Router,
-    private toastService: ToastServiceService  ) {
+    private toastService: ToastServiceService ) {
     this.signUpForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(25)]],
       email: ['', [Validators.required, Validators.email]],
@@ -178,14 +178,9 @@ export class RegisterComponent {
   }
 
   onFileSelect(event: any): void {
-    const file = event.files[0];
-    if (file) {
-      // Preview image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.profileImage = e.target?.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+    const file = event.target.files[0];
+    if (file) { 
+      this.profileImage = `assets/images/${file.name}`;
   }
+}
 }

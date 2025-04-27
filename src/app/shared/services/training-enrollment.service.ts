@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { TrainingParticipant } from '../models/training-participant.model';
-import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrainingEnrollmentService {
-  private apiUrl = `${environment.baseUrl}/trainings`;
+  private apiUrl = `${environment.baseUrl}/trainingsEnrollment`;
 
   constructor(private http: HttpClient) { }
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('auth_token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+  }
   enrollParticipant(trainingId: string, userId: number): Observable<TrainingParticipant> {
     if (!trainingId || !userId) {
       return throwError(() => new Error('Training ID and User ID are required'));
@@ -19,31 +25,42 @@ export class TrainingEnrollmentService {
 
     return this.http.post<TrainingParticipant>(
       `${this.apiUrl}/${trainingId}/enroll/${userId}`,
-      null
+      null ,{headers:this.getAuthHeaders()}
     ).pipe(
       catchError(this.handleError)
     );
   }
 
-  getTrainingParticipants(trainingId: string): Observable<User[]> {
+  getTrainingParticipants(trainingId: string): Observable<any> {
     if (!trainingId) {
       return throwError(() => new Error('Training ID is required'));
     }
 
-    return this.http.get<User[]>(
-      `${this.apiUrl}/${trainingId}/participants`
+    return this.http.get<any>(
+      `${this.apiUrl}/${trainingId}/participants`,{headers:this.getAuthHeaders()}
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getTrainingAvailablesParticipants(trainingId: string): Observable<any> {
+    if (!trainingId) {
+      return throwError(() => new Error('Training ID is required'));
+    }
+
+    return this.http.get<any>(
+      `${this.apiUrl}/${trainingId}/available-participants`,{headers:this.getAuthHeaders()}
     ).pipe(
       catchError(this.handleError)
     );
   }
 
-  unenrollParticipant(trainingId: string, participantId: number): Observable<void> {
-    if (!trainingId || !participantId) {
+  unenrollParticipant(trainingId: string, participantEmail: string): Observable<void> {
+    if (!trainingId || !participantEmail) {
       return throwError(() => new Error('Training ID and Participant ID are required'));
     }
 
     return this.http.delete<void>(
-      `${this.apiUrl}/${trainingId}/unenroll/${participantId}`
+      `${this.apiUrl}/${trainingId}/unenroll/${participantEmail}`,{headers:this.getAuthHeaders()}
     ).pipe(
       catchError(this.handleError)
     );

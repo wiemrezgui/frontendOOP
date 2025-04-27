@@ -86,6 +86,7 @@ export class LoginComponent {
       },
       error: (error: HttpErrorResponse) => {
         this.loading = false;
+        this.toastService.showError(error.error.details);
         console.error('Login error:', error);
       }
     });

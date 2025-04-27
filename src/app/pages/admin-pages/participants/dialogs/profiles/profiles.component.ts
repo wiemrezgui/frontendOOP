@@ -103,36 +103,8 @@ export class ProfilesComponent {
         this.getAllProfiles();
       },
       error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to add profile');
-      }
-    });
-  }
-
-  updateProfile() {
-    if (!this.selectedProfileId) {
-      this.toastService.showError('Please select a profile to edit');
-      return;
-    }
-
-    if (!this.editProfileType.trim()) {
-      this.toastService.showError('Profile type is required');
-      return;
-    }
-
-    const profileData: Profile = {
-      profileId: this.selectedProfileId,
-      profileType: this.editProfileType
-    };
-
-    this.profileService.createProfile(profileData).subscribe({
-      next: () => {
-        this.toastService.showSuccess('Profile updated successfully');
-        this.selectedProfileId = null;
-        this.editProfileType = '';
-        this.getAllProfiles();
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to update profile');
+        console.log(err);
+        this.toastService.showError(err.error.details || 'Failed to add profile');
       }
     });
   }

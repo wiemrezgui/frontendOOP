@@ -20,10 +20,15 @@ export class AuthService {
   login(credentials: { email: string, password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
-
-  logout(): void {
-    this.tokenService.removeToken();
+  forgotPassword(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/forgot-password`, { params: { email: email }});
+  }
+  resetPassword(data: { email: string; code: string; password: string }): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/reset-password`, data);
+  }
+  logout(): Observable<any>{
     this.router.navigate(['/login']);
+    return this.http.delete(`${this.apiUrl}/logout`);
   }
 
   getRole(): string | null {

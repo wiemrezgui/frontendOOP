@@ -1,0 +1,64 @@
+.training-enrollment-admin-container {
+    .card {
+      padding: 1rem;
+    }
+    
+    .training-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 100%;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      .training-card-header {
+        height: 80px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+        padding: 0.5rem;
+        position: relative;
+        
+        .training-type-badge {
+          background-color: rgba(255, 255, 255, 0.2);
+          padding: 0.25rem 0.75rem;
+          border-radius: 1rem;
+          color: white;
+          font-weight: 600;
+          font-size: 0.8rem;
+        }
+      }
+      
+      .training-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      
+      .training-info {
+        min-height: 200px;
+      }
+    }
+    
+    .empty-message {
+      color: var(--text-color-secondary);
+      
+      i {
+        display: block;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    // Responsive adjustments
+    @media screen and (max-width: 768px) {
+      .training-card {
+        .training-info {
+          min-height: auto;
+        }
+      }
+    }
+  }

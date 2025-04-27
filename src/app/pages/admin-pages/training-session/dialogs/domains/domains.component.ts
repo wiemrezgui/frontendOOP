@@ -96,32 +96,6 @@ export class DomainsComponent {
     });
   }
 
-  updateDomain() {
-    if (!this.selectedDomainId) {
-      this.toastService.showError('Please select a Domain to edit');
-      return;
-    }
-
-    if (!this.editDomainName.trim()) {
-      this.toastService.showError('Domain name is required');
-      return;
-    }
-    const domainData:Domain={
-      domainId: this.selectedDomainId ,
-      domainName: this.editDomainName
-    }
-    /*this.domainService.updateDomain(domainData,domainData.domainId).subscribe({
-      next: () => {
-        this.toastService.showSuccess('domain updated successfully');
-        this.selectedDomainId = null;
-        this.editDomainName = '';
-        this.getAlldomains();
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message || 'Failed to update domain');
-      }
-    });*/
-  }
 
   deleteDomain() {
     if (!this.selectedDomainId) {

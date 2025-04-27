@@ -18,12 +18,17 @@ export class TrainerService {
       'Authorization': `Bearer ${token}`
     });
   }
-  getAllTrainers(page: number): Observable<Trainer[]> {
-    return this.http.get<any>(this.apiUrl, {
-      params: { page: page.toString() }, headers: this.getAuthHeaders()
+  getAllTrainers(page: number = 0): Observable<Trainer[]> {
+    return this.http.get<Trainer[]>(this.apiUrl, {
+      params: { page: page.toString() }, 
+      headers: this.getAuthHeaders()
     });
   }
-
+  getAllTrainersWithoutPagination(): Observable<Trainer[]> {
+    return this.http.get<Trainer[]>(`${this.apiUrl}/trainers/all`, {
+      headers: this.getAuthHeaders()
+    });
+  }
   getTrainerById(id: number){
     return this.http.get<any>(`${this.apiUrl}/${id}` , { headers: this.getAuthHeaders()});
   }

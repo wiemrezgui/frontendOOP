@@ -1,9 +1,10 @@
+import { Profile } from "./profile.model";
+import { Structure } from "./structure.model";
+
 export class Participant {
-  participantId: number | null = null;
-  structure: string = '';
-  profile: string = '';
-  
-  // User fields
+  participantId: number = 0;
+  structureId: string = '';
+  profileId: string = '';
   username: string = '';
   email: string = '';
   phoneNumber: string | null = null;
@@ -11,9 +12,17 @@ export class Participant {
   gender: 'MALE' | 'FEMALE' | 'OTHER' | null = null;
   profilePicture: string | null = null;
   description: string | null = null;
-
+  user?: { 
+    username: string;
+    email: string;
+  };
+  profile? : Profile;
+  structure?:Structure;
   constructor(data?: Partial<Participant>) {
     if (data) {
+      // Ensure participantId is always set
+      this.participantId = data.participantId ?? 0;
+      // Map all other properties
       Object.assign(this, data);
     }
   }

@@ -20,7 +20,7 @@
             <div class="form-group password-container">
               <p-password formControlName="password" [feedback]="false" placeholder="Password" fluid>
               </p-password>
-              <small class="password-hint">💡 Utilisez au moins 6 caractères, incluant chiffres et lettres.</small>
+              <small class="password-hint">💡Use at least 6 characters, including numbers and letters.</small>
             </div>
 
             <!-- Confirm Password -->
@@ -46,15 +46,16 @@
                 <div class="card flex flex-col gap-4 items-center justify-center">
                   <p-toast />
                   <p-fileUpload
-                    mode="basic" 
-                    chooseLabel="Choisir" 
-                    chooseIcon="pi pi-upload" 
-                    name="demo[]"
-                    url="https://www.primefaces.org/cdn/api/upload.php" 
-                    accept="image/*" 
-                    maxFileSize="1000000"
-                    (onSelect)="onFileSelect($event)">
-                  </p-fileUpload>
+                  mode="basic"
+                  chooseLabel="Choisir"
+                  chooseIcon="pi pi-upload"
+                  name="demo[]"
+                  accept="image/*"
+                  maxFileSize="1000000"
+                  [auto]="false"
+                  [customUpload]="true"
+                  (onSelect)="onFileSelect($event)">
+                </p-fileUpload>
                 </div>
               </div>
             </div>

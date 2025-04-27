@@ -33,28 +33,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="structure">Structure name <span class="required">*</span></label>
-                            <input id="structure" pInputText required placeholder="Headquarters" [(ngModel)]="newStructure"/>
+                            <input id="structure" pInputText required placeholder="Structure name" [(ngModel)]="newStructure"/>
                         </div>
                     </div>
                 </div>
                 <button pButton label="Save structure" icon="pi pi-save" class="p-button-primary" (click)="saveStructure()"></button>
-            </div>
-            <p-divider />
-            <div class="container">
-                <h3>Edit structure</h3>
-                <div class="form-container">
-                    <div class="form-group">
-                        <label for="structure">The structure you want to edit <span class="required">*</span></label>
-                        <p-dropdown [options]="IDStructures" placeholder="Select ID" fluid (onChange)="onStructureSelected($event)"></p-dropdown>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="structure">Structure name <span class="required">*</span></label>
-                            <input id="structure" pInputText required placeholder="Headquarters" [(ngModel)]="editStructureName"/>
-                        </div>
-                    </div>
-                </div>
-                <button pButton label="Edit structure" icon="pi pi-save" class="p-button-primary" (click)="updateStructure()"></button>
             </div>
         </p-tabpanel>
         <p-tabpanel value="2">

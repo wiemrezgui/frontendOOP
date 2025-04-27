@@ -1,226 +1,254 @@
-<div class="card">
-    <p-table #dt [value]="trainers | search: searchTerm: ['user.username']" dataKey="id"
-        [tableStyle]="{ 'min-width': '75rem' }" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
-        [first]="first" (onPageChange)="onPageChange($event)"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} trainers">
-        <!-- Header with search and add button -->
-        <ng-template pTemplate="caption">
-            <div class="flex align-items-center">
-                <p-iconField iconPosition="left">
-                    <p-inputIcon class="pi pi-search"></p-inputIcon>
-                    <input pInputText type="text" placeholder="Search trainers..." fluid [(ngModel)]="searchTerm"
-                        style="width:450px" />
-                </p-iconField>
-                <button pButton icon="pi pi-plus" label="Add Trainer" (click)="openAddTrainerDialog()"
-                    class="p-button-primary"></button>
-                <p-button label="Manage employers" severity="info" class="right-position"
-                    (onClick)="openManageEmployersDialog()" />
+<div class="trainers-admin-container">
+    <p-toast></p-toast>
+    <div class="flex justify-content-between align-items-center mb-1 p-5">
+        <h1 class="m-0">Trainers Management</h1>
+        <p-button label="Refresh" icon="pi pi-refresh" styleClass="p-button-outlined"
+            (click)="loadTrainers()"></p-button>
+    </div>
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="flex justify-content-center">
+        <p-progressSpinner strokeWidth="4" [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+    </div>
+    <div class="card">
+        <p-table #dt [value]="trainers | search: searchTerm: ['user.username']" dataKey="id"
+            [tableStyle]="{ 'min-width': '75rem' }" *ngIf="!loading">
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center">
+                    <p-iconField iconPosition="left">
+                        <p-inputIcon class="pi pi-search"></p-inputIcon>
+                        <input pInputText type="text" placeholder="Search trainers..." fluid [(ngModel)]="searchTerm"
+                            style="width:450px" />
+                    </p-iconField>
+                    <button pButton icon="pi pi-plus" label="Add Trainer" (click)="openAddTrainerDialog()"
+                        class="p-button-primary"></button>
+                    <p-button label="Manage employers" severity="info" class="right-position"
+                        (onClick)="openManageEmployersDialog()" />
+                </div>
+            </ng-template>
+            <!-- Table Header -->
+            <ng-template pTemplate="header" >
+                <tr>
+                    <th>#</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>Employer</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <!-- Table Body -->
+            <ng-template pTemplate="body" let-trainer >
+                <tr>
+                    <!-- Profile Image Column -->
+                    <td>
+                        <p-avatar [image]="trainer?.user.profilePicture || 'assets/images/logo.png'" shape="circle"
+                            size="large"></p-avatar>
+                    </td>
+
+                    <td>{{ trainer.user.username }}</td>
+                    <td>{{ trainer.user.email }}</td>
+                    <td>
+                        <p-tag [value]="trainer.trainerType"
+                            [severity]="trainer.trainerType === 'INTERNAL' ? 'success' : 'info'"></p-tag>
+                    </td>
+                    <td>{{ trainer?.employer.employerName }}</td>
+
+                    <!-- Actions Column -->
+                    <td>
+                        <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text "
+                            severity="info" pTooltip="Voir les détails" tooltipPosition="top"
+                            (click)="openDetails(trainer)"></button>
+                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
+                            (click)="openEditTrainerDialog(trainer)" pTooltip="Edit" tooltipPosition="top"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                            (click)="openDeleteDialog(trainer)" pTooltip="Delete" tooltipPosition="top"></button>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <!-- Empty Message -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" style="text-align: center;">No trainers found</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="flex justify-content-center align-items-center mt-4 gap-3 pagination" *ngIf="!loading">
+            <button pButton icon="pi pi-chevron-left" class="p-button-rounded p-button-text"
+                [ngClass]="{'blue-icon': currentPage !== 0}" (click)="previousPage()"
+                [disabled]="currentPage === 0"></button>
+            <span>Page : {{ currentPage + 1 }}</span>
+            <button pButton icon="pi pi-chevron-right" class="p-button-rounded p-button-text" (click)="nextPage()"
+                [disabled]="!hasMore"></button>
+        </div>
+    </div>
+    <!-- Add/Edit Trainer Dialog -->
+    <p-dialog [(visible)]="displayTrainerDialog" [header]="isAddTrainer ? 'Add Trainer' : 'Edit Trainer'"
+        [style]="{ width: '50vw'}" [modal]="true" [styleClass]="'trainer-dialog'">
+        <div class="form-container">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="username">Username <span class="required">*</span></label>
+                    <input id="username" pInputText required fluid placeholder="John"
+                        [(ngModel)]="trainerForm.username" />
+                </div>
+                <div class="form-group">
+                    <label for="employer">Employer name <span class="required">*</span></label>
+                    <p-dropdown [options]="employers" optionLabel="employerName" [(ngModel)]="selectedEmployer"
+                        placeholder="Select Employer" name="employer" fluid>
+                    </p-dropdown>
+                </div>
             </div>
-        </ng-template>
-        <!-- Table Header -->
-        <ng-template pTemplate="header">
-            <tr>
-                <th>#</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Type</th>
-                <th>Employer</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="email">Email <span class="required">*</span></label>
+                    <input id="email" pInputText type="email" required fluid placeholder="you@example.com"
+                        [(ngModel)]="trainerForm.email" />
+                </div>
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <p-datepicker [(ngModel)]="trainerForm.dateOfBirth" name="dateOfBirth" dateFormat="yy-mm-dd"
+                        placeholder="YYYY-MM-DD" fluid />
+                </div>
+            </div>
 
-        <!-- Table Body -->
-        <ng-template pTemplate="body" let-trainer>
-            <tr>
-                <!-- Profile Image Column -->
-                <td>
-                    <p-avatar [image]="trainer?.user.profilePicture || 'assets/images/logo.png'" shape="circle"
-                        size="large"></p-avatar>
-                </td>
-
-                <td>{{ trainer.user.username }}</td>
-                <td>{{ trainer.user.email }}</td>
-                <td>
-                    <p-tag [value]="trainer.trainerType"
-                        [severity]="trainer.trainerType === 'INTERNAL' ? 'success' : 'info'"></p-tag>
-                </td>
-                <td>{{ trainer.employerName }}</td>
-
-                <!-- Actions Column -->
-                <td>
-                    <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text "
-                        severity="info" pTooltip="Voir les détails" tooltipPosition="top"
-                        (click)="openDetails(trainer)"></button>
-                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
-                        (click)="openEditTrainerDialog(trainer)" pTooltip="Edit" tooltipPosition="top"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
-                        (click)="openDeleteDialog(trainer)" pTooltip="Delete" tooltipPosition="top"></button>
-                </td>
-            </tr>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone </label>
+                    <p-inputgroup>
+                        <p-inputgroup-addon>+216</p-inputgroup-addon>
+                        <input pInputText maxlength="8" required placeholder="98147852"
+                            [(ngModel)]="trainerForm.phoneNumber" />
+                    </p-inputgroup>
+                </div>
+                <div class="form-group full-width">
+                    <label for="email">Gender </label>
+                    <p-dropdown [options]="gender" [(ngModel)]="trainerForm.gender" placeholder="Select Gender"
+                        fluid></p-dropdown>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea pInputTextarea [(ngModel)]="trainerForm.description" name="description" rows="4"
+                    placeholder="Description" class="no-resize"></textarea>
+            </div>
+            <!-- Row 4: Trainer Type (full width) -->
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <div class="trainer-type-container">
+                        <div class="trainer-type-card internal"
+                            [class.selected]="trainerForm.trainerType === 'INTERNAL'"
+                            (click)="trainerForm.trainerType = 'INTERNAL'">
+                            <p>Internal</p>
+                        </div>
+                        <div class="trainer-type-card external"
+                            [class.selected]="trainerForm.trainerType === 'EXTERNAL'"
+                            (click)="trainerForm.trainerType = 'EXTERNAL'">
+                            <p>External</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="image-upload-container">
+                  <!-- Image preview -->
+                  <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" width="100" height="100">
+                  
+                  <!-- Upload controls -->
+                  <div class="upload-controls">
+                    <p-fileUpload #fu 
+                      mode="basic" 
+                      chooseLabel="Choose image" 
+                      chooseIcon="pi pi-upload" 
+                      name="profileImage"
+                      accept="image/*" 
+                      maxFileSize="1000000" 
+                      (onSelect)="onFileSelect($event)"
+                      auto="true"
+                      customUpload="true" />
+                    
+                    <div *ngIf="selectedFileName" class="file-info">
+                      <span>{{ selectedFileName }}</span>
+                      <button pButton pRipple type="button" icon="pi pi-times" class="p-button-text p-button-sm" 
+                              (click)="clearImage()"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton label="Cancel" icon="pi pi-times" (click)="closeTrainerDialog()"
+                class="p-button-text"></button>
+            <button pButton label="Save" icon="pi pi-save" (click)="saveTrainer()" class="p-button-primary"></button>
         </ng-template>
+    </p-dialog>
+    <!-- details Trainer Dialog -->
+    <p-dialog [(visible)]="displayDetailsDialog" [header]="'Trainer Details'" [style]="{ width: '66vw' }" [modal]="true"
+        [styleClass]="'trainer-dialog'">
+        <div class="dialog-container p-grid">
+            <div class="left-section p-col-5">
+                <div class="profile-container">
+                    <p-avatar [image]="selectedTrainerDetails?.profilePicture || 'assets/images/user-logo.png'"
+                        shape="circle" size="xlarge" class="profile-image"></p-avatar>
 
-        <!-- Empty Message -->
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="6" style="text-align: center;">No trainers found</td>
-            </tr>
+                    <div class="name-type-container">
+                        <h2>{{ selectedTrainerDetails?.user.username }}</h2>
+                        <p-tag [value]="selectedTrainerDetails?.trainerType || 'UNKNOWN'"
+                            [severity]="selectedTrainerDetails?.trainerType === 'INTERNAL' ? 'success' : 'info'"
+                            class="type-tag">
+                        </p-tag>
+                    </div>
+
+                    <p class="employer">
+                        <i class="pi pi-briefcase"></i> {{ selectedTrainerDetails?.employer.employerName || 'Not specified' }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div class="right-section p-col-7">
+                <div class="details-container">
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <p><strong>Gender:</strong> {{ selectedTrainerDetails?.user.gender || 'No gender provided'
+                                }}</p>
+                        </div>
+                        <div class="p-col-6">
+                            <p><strong>Email:</strong> {{ selectedTrainerDetails?.user.email || '-' }}</p>
+                        </div>
+
+                        <div class="p-col-6">
+                            <p><strong> Date of Birth:</strong> {{ (selectedTrainerDetails?.user.dateOfBirth | date) ||
+                                'No date of birth provided'
+                                }}
+                            </p>
+                        </div>
+                        <div class="p-col-6">
+                            <p><strong>Phone:</strong> {{ selectedTrainerDetails?.user.phoneNumber || 'No phone
+                                provided' }}</p>
+                        </div>
+                        <!-- Description full width -->
+                        <div class="p-col-12">
+                            <strong> Description:</strong>
+                            <p class="description" style=" width: 700px;">{{ selectedTrainerDetails?.user.description ||
+                                'No description provided'
+                                }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </p-dialog>
+    <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
+        <div *ngIf="trainerToDelete">
+            <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.user.username }}</strong>
+                having the ID <strong>{{ trainerToDelete.trainerId }}</strong>
+                ?</p>
+        </div> <ng-template pTemplate="footer">
+            <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
+                class="p-button-text"></button>
+            <button pButton label="Yes" icon="pi pi-check" class="p-button-danger"
+                (click)="confirmDeleteTrainer()"></button>
         </ng-template>
-    </p-table>
+    </p-dialog>
 </div>
-<!-- Add/Edit Trainer Dialog -->
-<p-dialog [(visible)]="displayTrainerDialog" [header]="isAddTrainer ? 'Add Trainer' : 'Edit Trainer'"
-    [style]="{ width: '50vw'}" [modal]="true" [styleClass]="'trainer-dialog'">
-    <div class="form-container">
-        <div class="form-row">
-            <div class="form-group">
-                <label for="username">Username <span class="required">*</span></label>
-                <input id="username" pInputText required fluid placeholder="John" [(ngModel)]="trainerForm.username" />
-            </div>
-            <div class="form-group">
-                <label for="employer">Employer name <span class="required">*</span></label>
-                <p-dropdown 
-                [options]="employers" 
-                optionLabel="employerName" 
-                [(ngModel)]="selectedEmployer" 
-                placeholder="Select Employer"
-                name="employer"
-                fluid>
-                </p-dropdown>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group full-width">
-                <label for="email">Email <span class="required">*</span></label>
-                <input id="email" pInputText type="email" required fluid placeholder="you@example.com"
-                    [(ngModel)]="trainerForm.email" />
-            </div>
-            <div class="form-group">
-                <label for="dateOfBirth">Date of Birth</label>
-                <p-datepicker [(ngModel)]="trainerForm.dateOfBirth" name="dateOfBirth" dateFormat="yy-mm-dd"
-                    placeholder="YYYY-MM-DD" fluid />
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="phone">Phone </label>
-                <p-inputgroup>
-                    <p-inputgroup-addon>+216</p-inputgroup-addon>
-                    <input pInputText maxlength="8" required placeholder="98147852"
-                        [(ngModel)]="trainerForm.phoneNumber" />
-                </p-inputgroup>
-            </div>
-            <div class="form-group full-width">
-                <label for="email">Gender </label>
-                <p-dropdown [options]="gender" [(ngModel)]="trainerForm.gender" placeholder="Select Gender"
-                    fluid></p-dropdown>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea pInputTextarea [(ngModel)]="trainerForm.description" name="description" rows="7"
-                placeholder="Description" class="no-resize"></textarea>
-        </div>
-        <!-- Row 4: Trainer Type (full width) -->
-        <div class="form-row">
-            <div class="form-group full-width">
-                <div class="trainer-type-container">
-                    <div class="trainer-type-card internal" [class.selected]="trainerForm.trainerType === 'INTERNAL'"
-                        (click)="trainerForm.trainerType = 'INTERNAL'">
-                        <p>Internal</p>
-                    </div>
-                    <div class="trainer-type-card external" [class.selected]="trainerForm.trainerType === 'EXTERNAL'"
-                        (click)="trainerForm.trainerType = 'EXTERNAL'">
-                        <p>External</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <ng-template pTemplate="footer">
-        <button pButton label="Cancel" icon="pi pi-times" (click)="closeTrainerDialog()" class="p-button-text"></button>
-        <button pButton label="Save" icon="pi pi-save" (click)="saveTrainer()" class="p-button-primary"></button>
-    </ng-template>
-</p-dialog>
-<!-- details Trainer Dialog -->
-<p-dialog [(visible)]="displayDetailsDialog" [header]="'Trainer Details'" [style]="{ width: '66vw' }" [modal]="true"
-    [styleClass]="'trainer-dialog'">
-    <div class="dialog-container p-grid">
-        <!-- Left Section -->
-        <div class="left-section p-col-5">
-            <div class="profile-container">
-                <p-avatar [image]="selectedTrainerDetails?.profilePicture || 'assets/images/user-logo.png'"
-                    shape="circle" size="xlarge" class="profile-image"></p-avatar>
-
-                <div class="name-type-container">
-                    <h2>{{ selectedTrainerDetails?.user.username }}</h2>
-                    <p-tag [value]="selectedTrainerDetails?.trainerType || 'UNKNOWN'"
-                        [severity]="selectedTrainerDetails?.trainerType === 'INTERNAL' ? 'success' : 'info'"
-                        class="type-tag">
-                    </p-tag>
-                </div>
-
-                <p class="employer">
-                    <i class="pi pi-briefcase"></i> {{ selectedTrainerDetails?.employerName || 'Not specified' }}
-                </p>
-            </div>
-        </div>
-
-        <!-- Right Section -->
-        <div class="right-section p-col-7">
-            <div class="details-container">
-                <div class="p-grid">
-                    <div class="p-col-6">
-                        <p><strong>Gender:</strong> {{ selectedTrainerDetails?.user.gender || '-' }}</p>
-                        <p><strong>Email:</strong> {{ selectedTrainerDetails?.user.email || '-' }}</p>
-                    </div>
-
-                    <div class="p-col-6">
-                        <p><strong> Date of Birth:</strong> {{ (selectedTrainerDetails?.user.dateOfBirth | date) || '-' }}
-                        </p>
-                        <p><strong>Phone:</strong> {{ selectedTrainerDetails?.user.phoneNumber || '-' }}</p>
-                    </div>
-                    <!-- Description full width -->
-                    <div class="p-col-12">
-                        <strong> Description:</strong>
-                      <p class="description">{{ selectedTrainerDetails?.user.description || 'No description provided' }}</p>
-                    </div>
-                </div>
-            </div>
-            <!-- Training Sessions Section -->
-            <div class="sessions-container">
-                <h3>Training Sessions</h3>
-                <div class="sessions-flex-container">
-                    <!-- Static session cards - replace with your actual data -->
-                    <div *ngFor="let session of [1,2,3]">
-                        <p-card class="session-card">
-                            <ng-template pTemplate="header">
-                                <div class="session-header">
-                                    <span>Session</span>
-                                </div>
-                            </ng-template>
-                            <div class="session-content">
-                                <p><i class="pi pi-calendar"></i>2025</p>
-                                <p><i class="pi pi-clock"></i> 10:00 AM - 12:00 PM</p>
-                                <p><i class="pi pi-calendar"></i> 6 weeks</p>
-                            </div>
-                        </p-card>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</p-dialog>
-<p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
-    <div *ngIf="trainerToDelete">
-        <p>Are you sure you want to delete the trainer <strong>{{ trainerToDelete.user.username }}</strong>
-            having the ID <strong>{{ trainerToDelete.trainerId }}</strong>
-            ?</p>
-    </div> <ng-template pTemplate="footer">
-        <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
-            class="p-button-text"></button>
-        <button pButton label="Yes" icon="pi pi-check" class="p-button-danger"
-            (click)="confirmDeleteTrainer()"></button>
-    </ng-template>
-</p-dialog>
-<p-toast ></p-toast>

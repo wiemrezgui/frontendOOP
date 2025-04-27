@@ -1,3 +1,5 @@
+import { Domain } from "./domain.model";
+
 export enum TrainingType {
     ONLINE = 'ONLINE',
     ONSITE = 'ONSITE',
@@ -5,17 +7,30 @@ export enum TrainingType {
   }
   
   export class Training {
-    trainingId!: string;  // UUID from backend
+    trainingId!: string;
     title!: string;
     startDate!: string;
     endDate!: string;
     description?: string;
-    domainName?: string;
+    domainId?: string;
     price!: number;
-    startTime!: string;   // LocalTime as string (e.g., "09:00")
-    endTime!: string;     // LocalTime as string (e.g., "17:00")
-    type!: TrainingType;
-    
+    startTime!: string; 
+    endTime!: string;
+    type!: string;
+    trainerId !: number;
+    trainer?: { 
+      trainerId?: number;
+      trainerType?: string;
+      employerName?: string;
+      user?: { 
+          userId?: number;
+          username?: string;
+          email?: string;
+          phoneNumber?: string;
+          profilePicture?: string;
+      };
+  };
+    domain?:Domain
     constructor(init?: Partial<Training>) {
       if (init) {
         Object.assign(this, init);

@@ -15,7 +15,8 @@
     white-space: nowrap;
   }
 
-  .p-inputtext ,textarea{
+  .p-inputtext,
+  textarea {
     width: 100%;
     padding: 8px;
     border-radius: 5px;
@@ -27,9 +28,11 @@
     display: flex;
     gap: 10px;
   }
+
   .no-resize {
     resize: none;
   }
+
   .p-button-primary {
     margin-left: 10px;
     padding-left: 15px;
@@ -174,8 +177,8 @@
     gap: 0.5rem;
   }
 
-  /* Sessions section */
-  .sessions-container {
+  /* trainers section */
+  .trainers-container {
     margin-top: 1rem;
     cursor: pointer;
 
@@ -183,10 +186,20 @@
       text-align: center;
     }
   }
-  .right-position{
-    margin-left: 39%;}
-  /* Sessions flex container */
-  .sessions-flex-container {
+
+  .description {
+    padding: 0.8rem;
+    background-color: #f8f7f7;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+  }
+
+  .right-position {
+    margin-left: 39%;
+  }
+
+  /* trainers flex container */
+  .trainers-flex-container {
     display: flex;
     flex-wrap: wrap;
     gap: 1.2rem;

@@ -61,7 +61,13 @@ export class TokenService {
     const decodedToken = this.decodeToken(token);
     return decodedToken?.email || null;
   }
-
+  geProfilePicture(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+    
+    const decodedToken = this.decodeToken(token);
+    return decodedToken?.profileImage || null;
+  }
   isTokenExpired(): boolean {
     const token = this.getToken();
     if (!token) return true;

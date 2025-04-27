@@ -15,7 +15,7 @@ import { HttpClient } from "@angular/common/http";
       if (this.authService.isAuthenticated()) {
         return true;
       }
-      this.router.navigate(['/login']);
+      this.router.navigate(['/access-denied']);
       return false;
     }
   }

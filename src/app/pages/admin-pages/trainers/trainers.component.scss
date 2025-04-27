@@ -30,7 +30,7 @@
     padding-right:15px;
   }
   .right-position{
-    margin-left: 40%;}
+    margin-left: 37%;}
   .p-dialog-footer {
     margin-top: 10px;
   }
@@ -102,6 +102,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  width: 100%;
 }
 
 .description {
@@ -111,67 +112,7 @@
   margin-top: 0.5rem;
 }
 
-/* Sessions section */
-.sessions-container {
-  margin-top: 1rem;
-  cursor: pointer;
-  h3{
-    text-align: center;
-  }
-}
-p-card{
-  width: 30%;
-}
-.session-card {
-  margin-bottom: 1rem;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
 
-.session-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.session-header {
-  padding: 0.5rem;
-  background-color:  #75ace8;
-  font-weight: bold;
-  border-top-left-radius: 12px;
-  border-top-right-radius: 12px;
-}
-
-.session-content {
-  padding: 0.5rem;
-}
-
-.session-content p {
-  margin: 0.3rem 0;
-  font-size: 0.9rem;
-}
-/* Sessions flex container */
-.sessions-flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.sessions-flex-container > div {
-  min-width: 220px; /* Minimum width before wrapping */
-}
-
-/* Responsive adjustments */
-@media (max-width: 960px) {
-  .sessions-flex-container > div {
-      flex: 1 1 calc(50% - 1rem); /* Two cards per row on medium screens */
-  }
-}
-
-@media (max-width: 640px) {
-  .sessions-flex-container > div {
-      flex: 1 1 100%; /* One card per row on small screens */
-  }
-  
-}
 .required {
   color: red;
 }
@@ -213,5 +154,33 @@ p-card{
 
 .trainer-type-card.selected.external {
   border: 2px solid #892f09; /* Dark orange */
+}
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.preview-image {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.upload-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
 }
 

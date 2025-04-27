@@ -11,7 +11,7 @@ import { AuthService } from "../../auth/services/auth.service";
     canActivate(
       next: ActivatedRouteSnapshot,
       state: RouterStateSnapshot): boolean {
-      if (this.authService.isAdmin()) {
+      if (this.authService.isAdmin() && this.authService.isAuthenticated()) {
         return true;
       }
       this.router.navigate(['/access-denied']);

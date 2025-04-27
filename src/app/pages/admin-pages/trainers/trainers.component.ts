@@ -27,13 +27,14 @@ import { EmployersComponent } from './dialogs/employers/employers.component';
 import { EmployerService } from './services/employer.service';
 import { Employer } from '../../../shared/models/employer.model';
 import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-trainers',
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
     DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule, ToastModule,
-    CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe
+    CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe,ProgressSpinnerModule
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
@@ -46,7 +47,7 @@ export class TrainersComponent {
   trainers: Trainer[] = [];
   trainerForm: Partial<Trainer> = {
     trainerType: 'INTERNAL',
-    employerName: '',
+    employerId: '',
     username: '',
     email: '',
     gender: 'FEMALE',
@@ -66,9 +67,8 @@ export class TrainersComponent {
   selectedEmployer: any;
   trainerIdToEdit: any
   // Pagination
-  rows = 10;
-  first = 0;
-  totalRecords = 0;
+  currentPage = 0;
+  hasMore = true;
 
   // Dropdown options
   trainerTypes = [
@@ -88,6 +88,10 @@ export class TrainersComponent {
     { label: 'Admin', value: 'ADMIN' }
   ];
   employers: Employer[] = [];
+//image
+selectedFileName: string = '';
+imagePreview: string | ArrayBuffer | null = null;
+selectedFile: File | null = null;
   constructor(
     private trainerService: TrainerService,
     private toastService: ToastServiceService, private dialogService: DialogService
@@ -103,8 +107,7 @@ export class TrainersComponent {
     this.trainerService.getAllTrainers(page).subscribe({
       next: (trainers) => {
         this.trainers = trainers;
-        console.log(this.trainers);
-        this.totalRecords = trainers.length;
+        this.hasMore = trainers.length === 10;
         this.loading = false;
       },
       error: (err) => {
@@ -113,21 +116,22 @@ export class TrainersComponent {
       }
     });
   }
-
-  onPageChange(event: any): void {
-    this.first = event.first;
-    this.rows = event.rows;
-    const page = event.first / event.rows;
-    this.loadTrainers(page);
+  
+  nextPage(): void {
+    this.currentPage++;
+    this.loadTrainers(this.currentPage);
   }
-
+  
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadTrainers(this.currentPage);
+    }
+  }
   openAddTrainerDialog(): void {
+    this.getAllEmployers()
     this.isAddTrainer = true;
-    this.trainerForm = {
-      trainerType: 'INTERNAL',
-      employerName: '',
-      username: '',
-      email: ''    };
+    this.resetForm()
     this.selectedEmployer = null
     this.displayTrainerDialog = true;
   }
@@ -137,7 +141,7 @@ export class TrainersComponent {
     this.isAddTrainer = false;
     this.getTrainerById(trainer.trainerId, 'edit')
     this.displayTrainerDialog = true;
-
+    this.getAllEmployers()
   }
 
   openDetails(trainer: Trainer): void {
@@ -148,18 +152,19 @@ export class TrainersComponent {
   }
 
   saveTrainer(): void {
+    const requestBody = {
+      username: this.trainerForm.username,
+      email: this.trainerForm.email,
+      phoneNumber: this.trainerForm.phoneNumber,
+      dateOfBirth: this.formatDate(this.trainerForm.dateOfBirth),
+      gender: this.trainerForm.gender,
+      profilePicture: this.trainerForm.profilePicture || '',
+      description: this.trainerForm.description,
+      trainerType: this.trainerForm.trainerType,
+      employerId: this.selectedEmployer.id
+    };
+    console.log(requestBody);
     if (this.isAddTrainer) {
-      const requestBody = {
-        username: this.trainerForm.username,
-        email: this.trainerForm.email,
-        phoneNumber: this.trainerForm.phoneNumber,
-        dateOfBirth: this.formatDate(this.trainerForm.dateOfBirth),
-        gender: this.trainerForm.gender,
-        profilePicture: this.trainerForm.profilePicture || '',
-        description: this.trainerForm.description,
-        trainerType: this.trainerForm.trainerType,
-        employerName: this.selectedEmployer.employerName
-      };
       this.trainerService.createTrainer(requestBody).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer created successfully');
@@ -173,12 +178,12 @@ export class TrainersComponent {
       });
     } else {
       if (!this.trainerIdToEdit) return;
-      console.log(this.trainerForm);
-      this.trainerService.updateTrainer(this.trainerIdToEdit, this.trainerForm).subscribe({
+      this.trainerService.updateTrainer(this.trainerIdToEdit, requestBody).subscribe({
         next: () => {
           this.toastService.showSuccess('Trainer updated successfully');
           this.loadTrainers();
           this.displayTrainerDialog = false;
+          this.resetForm()
         },
         error: (err) => {
           this.toastService.showError(err.error.message);
@@ -207,7 +212,7 @@ export class TrainersComponent {
   private resetForm(): void {
     this.trainerForm = {
       trainerType: 'INTERNAL',
-      employerName: '',
+      employerId: '',
       username: '',
       email: '',
       gender: 'FEMALE',
@@ -215,6 +220,7 @@ export class TrainersComponent {
       dateOfBirth: '',
       profilePicture: ''
     };
+    this.clearImage()
   }
   openDeleteDialog(trainer: Trainer): void {
     this.displayDeleteDialog = true
@@ -269,16 +275,9 @@ export class TrainersComponent {
     this.trainerForm.username = trainer.user.username
     this.trainerForm.trainerType = trainer.trainerType
     this.trainerForm.gender = trainer.user.gender
-    this.trainerForm.employerName = trainer.employerName
-    if (trainer.employerName) {
-      this.selectedEmployer = this.employers.find(emp =>
-        emp.employerName === trainer.employerName
-      );
-      if (!this.selectedEmployer) {
-        this.selectedEmployer = { employerName: trainer.employerName };
-      }
-      this.trainerIdToEdit = trainer.trainerId
-    }
+    this.trainerForm.employerId = trainer.employerId
+    this.selectedEmployer = trainer.employer;
+    this.trainerIdToEdit = trainer.trainerId
 
   }
   openManageEmployersDialog() {
@@ -300,5 +299,25 @@ export class TrainersComponent {
         this.toastService.showError(err.error.message);
       }
     });
+  }
+  onFileSelect(event: any) {
+    const file = event.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+      this.trainerForm.profilePicture = `assets/images/${file.name}`;
+    }
+  }
+  clearImage() {
+    this.selectedFileName = '';
+    this.imagePreview = null;
+    this.selectedFile = null;
+    this.trainerForm.profilePicture = '';
   }
 }
