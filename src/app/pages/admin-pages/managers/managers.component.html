@@ -1,36 +1,147 @@
+<div class="exit">
+    <p class="exit" (click)="closeDialog()"> X </p>
+</div>
 <p-tabs value="0">
     <p-tablist>
-        <p-tab value="0">All managers</p-tab>
-        <p-tab value="1">Add/Edit manager</p-tab>
-        <p-tab value="2">Delete manager</p-tab>
+        <p-tab value="0">All Managers</p-tab>
+        <p-tab value="1">Add/Edit Manager</p-tab>
+        <p-tab value="2">Delete Manager</p-tab>
     </p-tablist>
     <p-tabpanels>
         <p-tabpanel value="0">
-            <p class="m-0">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-                ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-                anim id est laborum.
-            </p>
+            <div class="container">
+                <p-table [value]="managers" [tableStyle]="{ 'min-width': '60rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Gender</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-manager>
+                        <tr>
+                            <td>{{ manager.username }}</td>
+                            <td>{{ manager.email }}</td>
+                            <td>{{ manager.role }}</td>
+                            <td>{{ manager.phoneNumber }}</td>
+                            <td>{{ manager.gender }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
         </p-tabpanel>
         <p-tabpanel value="1">
-            <p class="m-0">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem
-                aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
-                Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni
-                dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-                modi.
-            </p>
+            <div class="container">
+                <h3>Add Manager</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username <span class="required">*</span></label>
+                            <input id="username" pInputText required placeholder="Username" [(ngModel)]="newManager.username"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input id="email" pInputText required placeholder="Email" type="email" [(ngModel)]="newManager.email"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input id="password" pInputText required placeholder="Password" type="password" [(ngModel)]="newManager.password"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role <span class="required">*</span></label>
+                            <p-dropdown [options]="roles" [(ngModel)]="newManager.role" placeholder="Select Role" optionLabel="label" optionValue="value"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input id="phone" pInputText placeholder="Phone Number" [(ngModel)]="newManager.phoneNumber"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <p-calendar id="dob" [(ngModel)]="newManager.dateOfBirth" dateFormat="yy-mm-dd" [showIcon]="true"></p-calendar>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <p-dropdown [options]="genders" [(ngModel)]="newManager.gender" placeholder="Select Gender" optionLabel="label" optionValue="value"></p-dropdown>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" pInputTextarea [(ngModel)]="newManager.description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Save Manager" icon="pi pi-save" class="p-button-primary" (click)="saveManager()"></button>
+            </div>
+            <p-divider />
+            <div class="container">
+                <h3>Edit Manager</h3>
+                <div class="form-container">
+                    <div class="form-group">
+                        <label for="manager">Select Manager <span class="required">*</span></label>
+                        <p-dropdown [options]="managerOptions" [(ngModel)]="selectedManager" optionLabel="label" optionValue="value"
+                                   (onChange)="onManagerSelected($event)" placeholder="Select Manager"></p-dropdown>
+                    </div>
+                    <div class="form-row" *ngIf="editManager">
+                        <div class="form-group">
+                            <label for="edit-username">Username <span class="required">*</span></label>
+                            <input id="edit-username" pInputText required [(ngModel)]="editManager.username"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-email">Email <span class="required">*</span></label>
+                            <input id="edit-email" pInputText required type="email" [(ngModel)]="editManager.email"/>
+                        </div>
+                    </div>
+                    <div class="form-row" *ngIf="editManager">
+                        <div class="form-group">
+                            <label for="edit-role">Role <span class="required">*</span></label>
+                            <p-dropdown [options]="roles" [(ngModel)]="editManager.role" placeholder="Select Role" optionLabel="label" optionValue="value"></p-dropdown>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-phone">Phone Number</label>
+                            <input id="edit-phone" pInputText [(ngModel)]="editManager.phoneNumber"/>
+                        </div>
+                    </div>
+                    <div class="form-row" *ngIf="editManager">
+                        <div class="form-group">
+                            <label for="edit-dob">Date of Birth</label>
+                            <p-calendar id="edit-dob" [(ngModel)]="editManager.dateOfBirth" dateFormat="yy-mm-dd" [showIcon]="true"></p-calendar>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-gender">Gender</label>
+                            <p-dropdown [options]="genders" [(ngModel)]="editManager.gender" placeholder="Select Gender" optionLabel="label" optionValue="value"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-row" *ngIf="editManager">
+                        <div class="form-group">
+                            <label for="edit-description">Description</label>
+                            <textarea id="edit-description" pInputTextarea [(ngModel)]="editManager.description"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Update Manager" icon="pi pi-save" class="p-button-primary" (click)="updateManager()"></button>
+            </div>
         </p-tabpanel>
         <p-tabpanel value="2">
-            <p class="m-0">
-                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
-                atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique
-                sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum
-                facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil
-                impedit quo minus.
-            </p>
+            <div class="container">
+                <h3>Delete Manager</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="delete-manager">Select Manager <span class="required">*</span></label>
+                            <p-dropdown [options]="managerOptions" [(ngModel)]="selectedManager" optionLabel="label" optionValue="value"
+                                       placeholder="Select Manager"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Delete Manager" icon="pi pi-trash" class="p-button-danger" (click)="deleteManager()"></button>
+            </div>
         </p-tabpanel>
     </p-tabpanels>
 </p-tabs>
