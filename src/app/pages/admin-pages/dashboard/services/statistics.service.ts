@@ -80,14 +80,18 @@ export class StatisticsService {
     // Group participants by domain
     const domainMap = new Map<string, any[]>();
     
+    if (!participantsWithDomains || !Array.isArray(participantsWithDomains)) {
+      console.error('Invalid participantsWithDomains data:', participantsWithDomains);
+      return [];
+    }
+    
     participantsWithDomains.forEach(p => {
       if (!domainMap.has(p.domain)) {
         domainMap.set(p.domain, []);
       }
-      const engagement = p.domainTrainingCount ? (p.count / p.domainTrainingCount) * 100 : 0;
       domainMap.get(p.domain)?.push({
         name: p.username,
-        value: engagement
+        value: p.count  // Use count directly as the engagement value
       });
     });
     
@@ -95,7 +99,7 @@ export class StatisticsService {
     return Array.from(domainMap.entries()).map(([domain, participants]) => {
       return {
         name: domain,
-        series: participants.slice(0, 3)
+        series: participants
       };
     });
   }

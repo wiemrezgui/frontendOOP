@@ -245,7 +245,7 @@ export class TrainingSessionComponent {
       price: this.trainingForm.price,
       type: this.trainingForm.type,
       trainerId: this.trainingForm.trainerId,
-      domainId: this.selectedDomain?.domainId 
+      domainId: this.selectedDomain?.domainId
     };
      // Format dates to YYYY-MM-DD
   if (this.trainingForm.startDate) {
