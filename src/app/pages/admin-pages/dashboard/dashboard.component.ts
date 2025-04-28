@@ -5,11 +5,12 @@ import { StatisticsService } from './services/statistics.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [NgxChartsModule, ProgressSpinnerModule, ButtonModule, CommonModule  ],
+  imports: [NgxChartsModule, ProgressSpinnerModule, ButtonModule, CommonModule ,DividerModule  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
