@@ -40,9 +40,17 @@
 
             <ng-template pTemplate="body" let-participant>
                 <tr>
-                    <td>
-                        <p-avatar [image]="participant.profilePicture || 'assets/images/logo.png'" shape="circle"
-                            size="large"></p-avatar>
+                            <td>
+                                <p-avatar *ngIf="participant?.user.profilePicture" 
+                                          [image]="participant?.user.profilePicture" 
+                                          styleClass="mr-2" 
+                                          size="xlarge" 
+                                          shape="circle"></p-avatar>
+                                <p-avatar *ngIf="!participant?.user.profilePicture" 
+                                          label="P" 
+                                          styleClass="mr-2" 
+                                          size="xlarge" 
+                                          shape="circle" [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"/>
                     </td>
 
                     <td>{{ participant.user.username }}</td>
@@ -172,9 +180,13 @@
         <div class="dialog-container p-grid">
             <div class="left-section p-col-5">
                 <div class="profile-container">
-                    <p-avatar [image]="selectedParticipantDetails?.profilePicture || 'assets/images/user-logo.png'"
+                    <p-avatar *ngIf="selectedParticipantDetails?.profilePicture" [image]="selectedParticipantDetails?.profilePicture"
                         shape="circle" size="xlarge" class="profile-image"></p-avatar>
-
+                        <p-avatar *ngIf="!selectedParticipantDetails?.profilePicture" 
+                        label="P" 
+                        class="profile-image"
+                        size="xlarge" 
+                        shape="circle" [style]="{ 'background-color': '#ece9fc', color: '#2a1261' }"/>
                     <div class="name-type-container">
                         <h2>{{ selectedParticipantDetails?.user.username }}</h2>
                     </div>

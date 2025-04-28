@@ -10,7 +10,7 @@ export class Participant {
   phoneNumber: string | null = null;
   dateOfBirth: string | null = null;
   gender: 'MALE' | 'FEMALE' | 'OTHER' | null = null;
-  profilePicture: string | null = null;
+  profilePicture: string | null = '';
   description: string | null = null;
   user?: { 
     username: string;

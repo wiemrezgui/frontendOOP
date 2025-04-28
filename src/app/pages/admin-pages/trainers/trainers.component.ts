@@ -34,7 +34,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
     DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, CommonModule, ToastModule,
-    CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe,ProgressSpinnerModule
+    CardModule, InputGroupModule, InputGroupAddonModule, HttpClientModule, DatePickerModule, SearchPipe, ProgressSpinnerModule
   ],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.scss',
@@ -88,10 +88,10 @@ export class TrainersComponent {
     { label: 'Admin', value: 'ADMIN' }
   ];
   employers: Employer[] = [];
-//image
-selectedFileName: string = '';
-imagePreview: string | ArrayBuffer | null = null;
-selectedFile: File | null = null;
+  //image
+  selectedFileName: string = '';
+  imagePreview: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null;
   constructor(
     private trainerService: TrainerService,
     private toastService: ToastServiceService, private dialogService: DialogService
@@ -116,12 +116,12 @@ selectedFile: File | null = null;
       }
     });
   }
-  
+
   nextPage(): void {
     this.currentPage++;
     this.loadTrainers(this.currentPage);
   }
-  
+
   previousPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -152,6 +152,7 @@ selectedFile: File | null = null;
   }
 
   saveTrainer(): void {
+    if(!this.validateTrainerForm()) {return ;}
     const requestBody = {
       username: this.trainerForm.username,
       email: this.trainerForm.email,
@@ -191,6 +192,32 @@ selectedFile: File | null = null;
       });
     }
   }
+  validateTrainerForm(): boolean {
+    if (!this.trainerForm.username || this.trainerForm.username.trim() === '') {
+      this.toastService.showError('Username is required');
+      return false;
+    }
+    if (!this.selectedEmployer) {
+      this.toastService.showError('Employer is required');
+      return false;
+    }
+    if (!this.trainerForm.email || this.trainerForm.email.trim() === '') {
+      this.toastService.showError('Email is required');
+      return false;
+    } else {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!emailPattern.test(this.trainerForm.email)) {
+        this.toastService.showError('Please enter a valid email address');
+        return false;
+      }
+    }
+    if (!this.trainerForm.trainerType) {
+      this.toastService.showError('Trainer type (Internal/External) is required');
+      return false;
+    }
+    
+    return true;
+  }
   formatDate(date?: string | Date | null): string | undefined {
     if (!date) return undefined;
 
@@ -224,7 +251,7 @@ selectedFile: File | null = null;
   }
   openDeleteDialog(trainer: Trainer): void {
     this.displayDeleteDialog = true
-    this.trainerToDelete = trainer    
+    this.trainerToDelete = trainer
   }
 
   confirmDeleteTrainer(): void {
@@ -248,6 +275,7 @@ selectedFile: File | null = null;
       this.trainerService.getTrainerById(id).subscribe({
         next: (trainer) => {
           this.selectedTrainerDetails = trainer
+          this.selectedTrainerDetails.profilePicture=trainer.user.profilePicture
           console.log(this.selectedTrainerDetails);
         },
         error: (err) => {
@@ -278,7 +306,6 @@ selectedFile: File | null = null;
     this.trainerForm.employerId = trainer.employerId
     this.selectedEmployer = trainer.employer;
     this.trainerIdToEdit = trainer.trainerId
-
   }
   openManageEmployersDialog() {
     const ref = this.dialogService.open(EmployersComponent, {
@@ -305,7 +332,6 @@ selectedFile: File | null = null;
     if (file) {
       this.selectedFile = file;
       this.selectedFileName = file.name;
-      // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
         this.imagePreview = e.target?.result as string;

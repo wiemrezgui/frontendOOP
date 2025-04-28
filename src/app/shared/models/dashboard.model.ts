@@ -16,12 +16,21 @@ export interface TrainersDetails {
     externalTrainersCount: number;
     topTrainers: TopUser[];
 }
-
 export interface TrainingsDetails {
     nbTrainings: number;
     totalIncome: number;
+    trainingsPerDomain: {
+        domainName: string;
+        count: number;
+    }[];
 }
 
+export interface DashboardData {
+    participants: ParticipantsDetails;
+    trainers: TrainersDetails;
+    trainings: TrainingsDetails;
+    otherDetails: OtherDetails;
+}
 export interface OtherDetails {
     nbOfMale: number;
     nbOfFemale: number;

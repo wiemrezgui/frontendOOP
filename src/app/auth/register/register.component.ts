@@ -33,6 +33,10 @@ export class RegisterComponent {
   currentStep = 0;
   profileImage: string = 'assets/images/logo.png';
   gender=['FEMALE','MALE'];
+  //image
+selectedFileName: string = '';
+imagePreview: string | ArrayBuffer | null = null;
+selectedFile: File | null = null;
   constructor(
     private fb: FormBuilder,private authService:AuthService,
     private router: Router,
@@ -144,8 +148,8 @@ export class RegisterComponent {
       role: this.signUpForm.get('role')?.value.name,
       phoneNumber: this.signUpForm.get('phoneNumber')?.value,
       dateOfBirth: this.formatDate(this.signUpForm.get('dateOfBirth')?.value),
-      gender: this.signUpForm.get('gender')?.value, // Extract the value property
-      profilePicture: this.profileImage !== 'assets/images/logo.png' ? this.profileImage : null,
+      gender: this.signUpForm.get('gender')?.value,
+      profilePicture: this.signUpForm.get('profilePicture')?.value,
       description: this.signUpForm.get('description')?.value
     };
     console.log(userData);
@@ -153,10 +157,10 @@ export class RegisterComponent {
     this.authService.register(userData).subscribe({
       next: (response) => {
         this.toastService.showSuccess('Registration successful!');
-        // Delay navigation to ensure toast is visible
+        this.clearImage()
       setTimeout(() => {
         this.router.navigate(['/login']);
-      }, 1500); // 1.5 second delay
+      }, 1200);
       },
       error: (err) => {
         this.toastService.showError(err.error?.message || 'Registration failed');
@@ -177,10 +181,24 @@ export class RegisterComponent {
     this.router.navigate(['/login']);
   }
 
-  onFileSelect(event: any): void {
-    const file = event.target.files[0];
-    if (file) { 
-      this.profileImage = `assets/images/${file.name}`;
+  onFileSelect(event: any) {
+    const file = event.files[0];
+    if (file) {
+      this.selectedFile = file;
+      this.selectedFileName = file.name;
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+      this.signUpForm.value.profilePicture = `assets/images/${file.name}`;
+    }
   }
+clearImage() {
+  this.selectedFileName = '';
+  this.imagePreview = null;
+  this.selectedFile = null;
+  this.signUpForm.value.profilePicture = '';
 }
 }

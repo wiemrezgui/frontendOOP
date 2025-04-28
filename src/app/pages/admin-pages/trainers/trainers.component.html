@@ -41,10 +41,17 @@
                 <tr>
                     <!-- Profile Image Column -->
                     <td>
-                        <p-avatar [image]="trainer?.user.profilePicture || 'assets/images/logo.png'" shape="circle"
-                            size="large"></p-avatar>
+                        <p-avatar *ngIf="trainer?.user?.profilePicture" 
+                                  [image]="trainer?.user?.profilePicture" 
+                                  styleClass="mr-2" 
+                                  size="xlarge" 
+                                  shape="circle"></p-avatar>
+                        <p-avatar *ngIf="!trainer?.user?.profilePicture" 
+                                  label="T" 
+                                  styleClass="mr-2" 
+                                  size="xlarge" 
+                                  shape="circle" />
                     </td>
-
                     <td>{{ trainer.user.username }}</td>
                     <td>{{ trainer.user.email }}</td>
                     <td>
@@ -151,9 +158,11 @@
             </div>
             <div class="form-group">
                 <div class="image-upload-container">
-                  <!-- Image preview -->
+                    <img *ngIf="!selectedFile && trainerForm.profilePicture" 
+                    [src]="trainerForm.profilePicture" 
+                    class="preview-image" 
+                    width="100" height="100">
                   <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" width="100" height="100">
-                  
                   <!-- Upload controls -->
                   <div class="upload-controls">
                     <p-fileUpload #fu 
@@ -188,9 +197,9 @@
         <div class="dialog-container p-grid">
             <div class="left-section p-col-5">
                 <div class="profile-container">
-                    <p-avatar [image]="selectedTrainerDetails?.profilePicture || 'assets/images/user-logo.png'"
+                    <p-avatar *ngIf="selectedTrainerDetails?.profilePicture" [image]="selectedTrainerDetails?.profilePicture"
                         shape="circle" size="xlarge" class="profile-image"></p-avatar>
-
+                        <p-avatar *ngIf="!selectedTrainerDetails?.profilePicture" label="T" styleClass="mr-2" size="xlarge" class="profile-image" shape="circle" />
                     <div class="name-type-container">
                         <h2>{{ selectedTrainerDetails?.user.username }}</h2>
                         <p-tag [value]="selectedTrainerDetails?.trainerType || 'UNKNOWN'"

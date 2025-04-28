@@ -38,24 +38,29 @@
 
         <p-step-panel [value]="2">
           <ng-template #content let-activateCallback="activateCallback">
-            <div class="file-upload">
-              <div class="file-upload-content">
-                <div>
-                  <p-avatar [image]="profileImage" size="xlarge" shape="circle" class="avatar-image"/>
-                </div>
-                <div class="card flex flex-col gap-4 items-center justify-center">
-                  <p-toast />
-                  <p-fileUpload
-                  mode="basic"
-                  chooseLabel="Choisir"
-                  chooseIcon="pi pi-upload"
-                  name="demo[]"
-                  accept="image/*"
-                  maxFileSize="1000000"
-                  [auto]="false"
-                  [customUpload]="true"
-                  (onSelect)="onFileSelect($event)">
-                </p-fileUpload>
+            <div class="form-group">
+              <div class="image-upload-container">
+                <!-- Image preview -->
+                <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" width="100" height="100">
+                
+                <!-- Upload controls -->
+                <div class="upload-controls">
+                  <p-fileUpload #fu 
+                    mode="basic" 
+                    chooseLabel="Choose image" 
+                    chooseIcon="pi pi-upload" 
+                    name="profileImage"
+                    accept="image/*" 
+                    maxFileSize="1000000" 
+                    (onSelect)="onFileSelect($event)"
+                    auto="true"
+                    customUpload="true" />
+                  
+                  <div *ngIf="selectedFileName" class="file-info">
+                    <span>{{ selectedFileName }}</span>
+                    <button pButton pRipple type="button" icon="pi pi-times" class="p-button-text p-button-sm" 
+                            (click)="clearImage()"></button>
+                  </div>
                 </div>
               </div>
             </div>

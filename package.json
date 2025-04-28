@@ -30,7 +30,7 @@
     "@ngxpert/avvvatars": "^2.0.2",
     "@popperjs/core": "~2.11.8",
     "@primeng/themes": "^19.0.6",
-    "@swimlane/ngx-charts": "^22.0.0-alpha.1",
+    "@swimlane/ngx-charts": "^20.1.0",
     "angular-calendar": "^0.31.1",
     "angular-calendar-scheduler": "^18.0.2",
     "angular-email-editor": "^15.2.0",

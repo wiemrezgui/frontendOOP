@@ -11,6 +11,7 @@ export class StatisticsService {
   private apiUrl = `${environment.baseUrl}/dashboard`;
 
   constructor(private http: HttpClient) {}
+
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('auth_token');
     return new HttpHeaders({
@@ -18,7 +19,25 @@ export class StatisticsService {
       'Authorization': `Bearer ${token}`
     });
   }
-  // Fetch all dashboard data at once
+
+  // Individual API calls
+  getParticipantsDetails(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/participants`, {headers: this.getAuthHeaders()});
+  }
+
+  getTrainersDetails(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/trainers`, {headers: this.getAuthHeaders()});
+  }
+
+  getTrainingsDetails(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/trainings`, {headers: this.getAuthHeaders()});
+  }
+
+  getOtherDetails(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/others`, {headers: this.getAuthHeaders()});
+  }
+
+  // Add the combined method needed by your component
   getDashboardData(): Observable<DashboardData> {
     return forkJoin({
       participants: this.getParticipantsDetails(),
@@ -28,93 +47,69 @@ export class StatisticsService {
     });
   }
 
-  // Individual API calls
-  getParticipantsDetails(): Observable<ParticipantsDetails> {
-    return this.http.get<ParticipantsDetails>(`${this.apiUrl}/participants`,{headers: this.getAuthHeaders()
-    });
-  }
-
-  getTrainersDetails(): Observable<TrainersDetails> {
-    return this.http.get<TrainersDetails>(`${this.apiUrl}/trainers`,{headers: this.getAuthHeaders()
-    });
-  }
-
-  getTrainingsDetails(): Observable<TrainingsDetails> {
-    return this.http.get<TrainingsDetails>(`${this.apiUrl}/trainings`,{headers: this.getAuthHeaders()
-    });
-  }
-
-  getOtherDetails(): Observable<OtherDetails> {
-    return this.http.get<OtherDetails>(`${this.apiUrl}/others`,{headers: this.getAuthHeaders()
-    });
-  }
-
-  // Transformation helpers for charts
-  transformToGenderDistribution(otherDetails: OtherDetails): ChartSeries[] {
+  // Data transformation methods
+  transformToGenderDistribution(otherDetails: any): ChartSeries[] {
     return [
-      { name: 'MALE', value: otherDetails.nbOfMale },
-      { name: 'FEMALE', value: otherDetails.nbOfFemale }
+      { name: 'Male', value: otherDetails.nbOfMale },
+      { name: 'Female', value: otherDetails.nbOfFemale }
     ];
   }
 
-  transformToTrainerTypeRatio(trainersDetails: TrainersDetails): ChartSeries[] {
+  transformToTrainerTypeRatio(trainers: any): ChartSeries[] {
     return [
-      { name: 'INTERNAL', value: trainersDetails.internalTrainersCount },
-      { name: 'EXTERNAL', value: trainersDetails.externalTrainersCount }
+      { name: 'Internal', value: trainers.internalTrainersCount },
+      { name: 'External', value: trainers.externalTrainersCount }
     ];
   }
 
-  transformTopTrainers(topTrainers: TopUser[]): ChartSeries[] {
+  transformTopTrainers(topTrainers: any[]): ChartSeries[] {
     return topTrainers.map(trainer => ({
-      name: trainer.username || 'Unknown',
-      value: trainer.nb
+      name: trainer.username,
+      value: trainer.count
     }));
   }
 
-  transformTopParticipants(topParticipants: TopUser[]): ChartSeries[] {
+  transformTopParticipants(topParticipants: any[]): ChartSeries[] {
     return topParticipants.map(participant => ({
-      name: participant.username || 'Unknown',
-      value: participant.nb
+      name: participant.username,
+      value: participant.count
     }));
   }
 
-  transformToEngagementData(topParticipantsWithDomains: TopUser[]): HeatMapItem[] {
-    // Group participants by username
-    const participantMap = new Map<string, Map<string, number>>();
+  transformToEngagementData(participantsWithDomains: any[]): HeatMapItem[] {
+    // Group participants by domain
+    const domainMap = new Map<string, any[]>();
     
-    // Process the API data to transform it into the format needed for the heat map
-    topParticipantsWithDomains.forEach(item => {
-      const username = item.username || 'Unknown';
-      const domain = item.Domain || 'Unknown';
-      const sessions = item.nb || 0;
-      
-      if (!participantMap.has(username)) {
-        participantMap.set(username, new Map<string, number>());
+    participantsWithDomains.forEach(p => {
+      if (!domainMap.has(p.domain)) {
+        domainMap.set(p.domain, []);
       }
-      
-      const domainMap = participantMap.get(username)!;
-      domainMap.set(domain, sessions);
-    });
-    
-    // Get all unique domains
-    const allDomains = new Set<string>();
-    participantMap.forEach((domainMap) => {
-      domainMap.forEach((_, domain) => {
-        allDomains.add(domain);
+      const engagement = p.domainTrainingCount ? (p.count / p.domainTrainingCount) * 100 : 0;
+      domainMap.get(p.domain)?.push({
+        name: p.username,
+        value: engagement
       });
     });
     
-    // Convert map to array format needed for chart
-    return Array.from(participantMap.entries()).map(([username, domainMap]) => {
-      const series = Array.from(allDomains).map(domain => ({
-        name: domain,
-        value: domainMap.get(domain) || 0
-      }));
-      
+    // Convert to heat map format
+    return Array.from(domainMap.entries()).map(([domain, participants]) => {
       return {
-        name: username,
-        series: series
+        name: domain,
+        series: participants.slice(0, 3)
       };
     });
   }
+  transformToSessionsPerDomain(trainings: TrainingsDetails): ChartSeries[] {
+    // Check if trainingsPerDomain exists and is an array
+    if (!trainings?.trainingsPerDomain || !Array.isArray(trainings.trainingsPerDomain)) {
+        console.error('Invalid trainingsPerDomain data:', trainings);
+        return [];
+    }
+    
+    // Transform the data
+    return trainings.trainingsPerDomain.map(domain => ({
+        name: domain.domainName,
+        value: domain.count
+    }));
+}
 }

@@ -38,11 +38,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   standalone: true,
   imports: [TableModule, DialogModule, ButtonModule, InputTextModule, AvatarModule, TagModule, FileUploadModule, FormsModule,
     DropdownModule, SelectButtonModule, IconFieldModule, InputIconModule, PaginatorModule, CommonModule, HttpClientModule,
-    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule,ToastModule,ProgressSpinnerModule
+    CardModule, InputGroupModule, InputGroupAddonModule, SearchPipe, DatePickerModule, ToastModule, ProgressSpinnerModule
   ],
   templateUrl: './participants.component.html',
   styleUrl: './participants.component.scss',
-  providers: [ParticipantService,ConfirmationService,DialogService,StructureService,ProfileService]  
+  providers: [ParticipantService, ConfirmationService, DialogService, StructureService, ProfileService]
 })
 export class ParticipantsComponent {
   searchTerm: string = '';
@@ -63,20 +63,20 @@ export class ParticipantsComponent {
   displayDetailsDialog = false;
   isAddParticipant = true;
   loading = false;
-  
+
   // Form Data
   participantForm: Partial<Participant> = {
-      profileId: '',
-      structureId: '',
-      username: '',
-      email: '',
-      gender: 'FEMALE',
-      description: '',
-      dateOfBirth: '',
-      profilePicture: '',
-      phoneNumber: ''
-    };
-  
+    profileId: '',
+    structureId: '',
+    username: '',
+    email: '',
+    gender: 'FEMALE',
+    description: '',
+    dateOfBirth: '',
+    profilePicture: '',
+    phoneNumber: ''
+  };
+
   // Selection Data
   participantToDelete: any;
   selectedParticipantDetails: any;
@@ -86,15 +86,15 @@ export class ParticipantsComponent {
   // Dropdown Options
   structures: Structure[] = [];
   profiles: Profile[] = [];
-//image
-selectedFileName: string = '';
-imagePreview: string | ArrayBuffer | null = null;
-selectedFile: File | null = null;
+  //image
+  selectedFileName: string = '';
+  imagePreview: string | ArrayBuffer | null = null;
+  selectedFile: File | null = null;
   @ViewChild('dt') dt!: Table;
 
   constructor(
     private participantService: ParticipantService,
-    private toastService: ToastServiceService, 
+    private toastService: ToastServiceService,
     private dialogService: DialogService,
     private structureService: StructureService,
     private profileService: ProfileService
@@ -114,7 +114,7 @@ selectedFile: File | null = null;
         this.hasMore = participants.length === 10;
         this.loading = false;
         console.log(participants);
-        
+
       },
       error: (err) => {
         this.toastService.showError(err.error.message);
@@ -126,7 +126,7 @@ selectedFile: File | null = null;
     this.currentPage++;
     this.loadParticipants(this.currentPage);
   }
-  
+
   previousPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -139,7 +139,7 @@ selectedFile: File | null = null;
     this.getAllStructures();
     this.getAllProfiles();
     this.isAddParticipant = true;
-   this.resetForm()
+    this.resetForm()
     this.selectedStructure = null;
     this.selectedProfile = null;
     this.displayParticipantDialog = true;
@@ -160,6 +160,7 @@ selectedFile: File | null = null;
   }
 
   saveParticipant(): void {
+    if(!this.validateParticipantForm()) {return ;}
     const participantData = {
       username: this.participantForm.username,
       email: this.participantForm.email,
@@ -170,7 +171,7 @@ selectedFile: File | null = null;
       description: this.participantForm.description,
       structureId: this.selectedStructure?.structureId || '',
       profileId: this.selectedProfile?.profileId || ''
-    };    
+    };
     if (this.isAddParticipant) {
       this.participantService.createParticipant(participantData).subscribe({
         next: () => {
@@ -178,8 +179,9 @@ selectedFile: File | null = null;
           this.loadParticipants();
           this.displayParticipantDialog = false;
           this.resetForm();
-          this.participantIDToEdit=null        },
-        error: (err) => {          
+          this.participantIDToEdit = null
+        },
+        error: (err) => {
           this.toastService.showError(err.error.message);
         }
       });
@@ -190,7 +192,7 @@ selectedFile: File | null = null;
           this.loadParticipants();
           this.displayParticipantDialog = false;
           this.resetForm();
-          this.participantIDToEdit=null
+          this.participantIDToEdit = null
         },
         error: (err) => {
           this.toastService.showError(err.error.message);
@@ -198,7 +200,36 @@ selectedFile: File | null = null;
       });
     }
   }
-
+  validateParticipantForm(): boolean {
+    
+    if (!this.participantForm.username || this.participantForm.username.trim() === '') {
+      this.toastService.showError('Username is required');
+      return false;
+    }
+    
+    if (!this.selectedStructure) {
+      this.toastService.showError('Structure is required');
+      return false;
+    }
+    
+    if (!this.selectedProfile) {
+      this.toastService.showError('Profile is required');
+      return false;
+    }
+    
+    if (!this.participantForm.email || this.participantForm.email.trim() === '') {
+      this.toastService.showError('Email is required');
+      return false;
+    } else {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      if (!emailPattern.test(this.participantForm.email)) {
+        this.toastService.showError('Please enter a valid email address');
+        return false;
+      }
+    }
+    
+    return true;
+  }
   formatDate(date?: string | Date | null): string | undefined {
     if (!date) return undefined;
     if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
@@ -238,7 +269,7 @@ selectedFile: File | null = null;
 
   confirmDeleteParticipant(): void {
     if (!this.participantToDelete?.participantId) return;
-    
+
     this.participantService.deleteParticipant(this.participantToDelete.participantId).subscribe({
       next: () => {
         this.toastService.showSuccess('Participant deleted successfully');
@@ -261,9 +292,11 @@ selectedFile: File | null = null;
       next: (participant) => {
         if (type === 'details') {
           this.selectedParticipantDetails = participant;
-        } else {
-          console.log('par'+ participant);
+          this.selectedParticipantDetails.profilePicture=participant.user.profilePicture
           
+        } else {
+          console.log('par' + participant);
+
           this.initializeParticipantData(participant);
         }
       },
@@ -281,8 +314,8 @@ selectedFile: File | null = null;
     this.participantForm.phoneNumber = participant.user.phoneNumber
     this.participantForm.username = participant.user.username
     this.participantForm.gender = participant.user.gender
-    this.selectedProfile=participant.profile
-    this.selectedStructure=participant.structure
+    this.selectedProfile = participant.profile
+    this.selectedStructure = participant.structure
 
   }
 
