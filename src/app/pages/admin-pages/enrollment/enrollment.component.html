@@ -67,9 +67,9 @@
               <div class="col-4 font-bold">Type :</div>
               <div class="col-8">
                 <div class="flex align-items-center">
-                  <p-tag [value]="training.type === 'ONSITE' ? 'ONSITE' : 
-                        (training.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')" [severity]="training.type === 'ONSITE' ? 'warn' : 
-                        (training.type === 'ONSITE' ? 'success' : 'info')" class="type-tag"></p-tag>
+                        <p-tag [value]="training.type"
+                            [severity]="getTagSeverity(training.type)" class="type-tag">
+                        </p-tag>
                 </div>
               </div>
             </div>

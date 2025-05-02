@@ -45,7 +45,7 @@ export class SidebarComponent {
       this.navItems = this.allNavItems.filter(item => 
         item.title === 'Participants' || 
         item.title === 'Trainers' || 
-        item.title === 'Sessions'
+        item.title === 'Trainings'
       );
     }
   }

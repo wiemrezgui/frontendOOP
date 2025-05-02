@@ -109,6 +109,24 @@ export class HeaderComponent implements OnInit {
     this.authService.logout()
   }
 
+  captureScreen() {
+    const element = document.body;
+    const pageTitle = this.currentPageTitle.replace(/[^a-zA-Z0-9]/g, '_');
+    const now = new Date();
+    const formattedDate = `${now.getFullYear()}-${(now.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+    const filename = `${pageTitle}_${formattedDate}.png`;
+
+    html2canvas(element).then((canvas) => {
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      link.download = filename;
+      link.click();
+    });
+  }
+
   fullScreen() {
     const elem = document.documentElement;
     if (!document.fullscreenElement) {

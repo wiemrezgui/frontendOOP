@@ -1,199 +1,215 @@
-
 <div class="trainings-admin-container">
     <p-toast></p-toast>
     <div class="flex justify-content-between align-items-center mb-4 p-5">
         <h1 class="m-0">Trainings Management</h1>
         <p-button label="Refresh" icon="pi pi-refresh" styleClass="p-button-outlined"
-          (click)="loadTrainings()"></p-button>
-      </div>
-      <!-- Loading Indicator -->
-     <div *ngIf="loading" class="flex justify-content-center">
+            (click)="loadTrainings()"></p-button>
+    </div>
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="flex justify-content-center">
         <p-progressSpinner strokeWidth="4" [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
-      </div>
-<div class="card">
-    <p-table #dt [value]="trainings | search: searchTerm: ['title']" dataKey="id" [tableStyle]="{ 'min-width': '75rem' }"  *ngIf="!loading">
-        <ng-template pTemplate="caption">
-            <div class="flex align-items-center">
-                <p-iconField iconPosition="left">
-                    <p-inputIcon class="pi pi-search"></p-inputIcon>
-                    <input pInputText type="text" placeholder="Search trainings..." fluid [(ngModel)]="searchTerm"
-                        style="width:450px" />
-                </p-iconField>
-                <button pButton icon="pi pi-plus" label="Add training" (click)="openAddTrainingDialog()"
-                    class="p-button-primary"></button>
-                <p-button label="Manage domains" severity="info" class="right-position" (onClick)="openManageDomainsDialog()" *ngIf="!isSimpleUserAuthenticated"/>
-            </div>
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Price</th>
-                <th>Domain</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-session>
-            <tr>
-                <td>{{ session.title }}</td>
-                <td>
-                    <p-tag [value]="session.type === 'ONSITE' ? 'ONSITE' : 
-                (session.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')"
-                [severity]="session.type === 'ONSITE' ? 'warn' : 
-                  (session.type === 'ONSITE' ? 'success' : 'info')"></p-tag>
-                </td>
-                <td>{{ session.price }}</td>
-                <td>{{ session.domain.domainName }}</td>
-                <td>
-                    <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text "
-                        severity="info" pTooltip="Voir les détails" tooltipPosition="top"
-                        (click)="openDetails(session)"></button>
-                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
-                        (click)="openEditTrainingDialog(session)" pTooltip="Edit" tooltipPosition="top"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
-                        (click)="confirmDelete(session)" pTooltip="Delete" tooltipPosition="top"></button>
-                </td>
-            </tr>
-        </ng-template>
+    </div>
+    <div class="card">
+        <p-table #dt [value]="trainings | search: searchTerm: ['title']" dataKey="id"
+            [tableStyle]="{ 'min-width': '75rem' }" *ngIf="!loading">
+            <ng-template pTemplate="caption">
+                <div class="flex align-items-center">
+                    <p-iconField iconPosition="left">
+                        <p-inputIcon class="pi pi-search"></p-inputIcon>
+                        <input pInputText type="text" placeholder="Search trainings..." fluid [(ngModel)]="searchTerm"
+                            style="width:450px" />
+                    </p-iconField>
+                    <button pButton icon="pi pi-plus" label="Add training" (click)="openAddTrainingDialog()"
+                        class="p-button-primary"></button>
+                    <p-button label="Manage domains" severity="info" class="right-position"
+                        (onClick)="openManageDomainsDialog()" *ngIf="!isSimpleUserAuthenticated" />
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Price</th>
+                    <th>Domain</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-session>
+                <tr>
+                    <td>{{ session.title }}</td>
+                    <td>
+                        <p-tag [value]="session.type"
+                            [severity]="getTagSeverity(session.type)" class="type-tag">
+                        </p-tag>
+                    </td>
+                    <td>{{ session.price }}</td>
+                    <td>{{ session.domain.domainName }}</td>
+                    <td>
+                        <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text "
+                            severity="info" pTooltip="Voir les détails" tooltipPosition="top"
+                            (click)="openDetails(session)"></button>
+                        <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-success mr-2"
+                            (click)="openEditTrainingDialog(session)" pTooltip="Edit" tooltipPosition="top"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger"
+                            (click)="confirmDelete(session)" pTooltip="Delete" tooltipPosition="top"></button>
+                    </td>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="7" style="text-align: center;">No sessions found</td>
-            </tr>
-        </ng-template>
-    </p-table>
-    <div class="flex justify-content-center align-items-center mt-4 gap-3 pagination" *ngIf="!loading">
-        <button pButton icon="pi pi-chevron-left" class="p-button-rounded p-button-text" (click)="previousPage()" [disabled]="currentPage === 0"></button>
-        <span>Page : {{ currentPage + 1 }}</span>
-        <button pButton icon="pi pi-chevron-right" class="p-button-rounded p-button-text" (click)="nextPage()" [disabled]="!hasMore"></button>
-      </div>   
-</div>
-<p-dialog [(visible)]="displayTrainingDialog" [header]="isAddTraining ? 'Add Training' : 'Edit Training'"
-    [style]="{ width: '50vw' }" [modal]="true" [styleClass]="'session-dialog'">
-    <div class="form-container">
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="title">Title <span class="required">*</span></label>
-                <input id="title" pInputText required fluid placeholder="title 1 " [(ngModel)]="trainingForm.title"/>
-            </div>
-            <div class="form-group full-width">
-                <label for="budget">Domain <span class="required">*</span></label>
-                <p-dropdown [options]="domains" optionLabel="domainName" 
-            [(ngModel)]="selectedDomain" placeholder="Select domain" fluid>
-</p-dropdown>
-            </div>
-            <div class="form-group full-width">
-                <label for="email">Trainer <span class="required">*</span></label>
-                <p-dropdown [options]="trainersIDS" optionLabel="label" optionValue="value"
-            [(ngModel)]="trainingForm.trainerId" placeholder="Select trainer" fluid>
-            </p-dropdown>
-                 </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group full-width">
-                <label for="startDate">Start date <span class="required">*</span></label>
-                <p-datepicker [(ngModel)]="trainingForm.startDate" placeholder="startDate"  [showIcon]="true"
-                fluid  dateFormat="yy-mm-dd"></p-datepicker>
-            </div>
-            <div class="form-group">
-                <label for="endDate">End date <span class="required">*</span></label>
-                <p-datepicker [(ngModel)]="trainingForm.endDate" placeholder="end Date"  [showIcon]="true"
-                fluid dateFormat="yy-mm-dd"></p-datepicker>
-            </div>
-            <div class="form-group full-width">
-                <label for="email">Type <span class="required">*</span></label>
-                <p-dropdown [options]="types"
-                [(ngModel)]="trainingForm.type" placeholder="Select type" fluid></p-dropdown>  
-                 </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group full-width">
-                <label for="startTime">Start time <span class="required">*</span></label>
-                <p-datepicker [(ngModel)]="trainingForm.startTime" [timeOnly]="true"></p-datepicker>
-            </div>
-            <div class="form-group">
-                <label for="endTime">End time <span class="required">*</span></label>
-                <p-datepicker [(ngModel)]="trainingForm.endTime" [timeOnly]="true"></p-datepicker>
-            </div>
-            <div class="form-group full-width">
-                <label for="budget">Price <span class="required">*</span></label>
-                <input id="budget" pInputText type="text" required fluid placeholder="150" [(ngModel)]="trainingForm.price"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea pInputTextarea [(ngModel)]="trainingForm.description" 
-                      name="description" rows="7" placeholder="Description" class="no-resize"></textarea>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="7" style="text-align: center;">No sessions found</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="flex justify-content-center align-items-center mt-4 gap-3 pagination" *ngIf="!loading">
+            <button pButton icon="pi pi-chevron-left" class="p-button-rounded p-button-text" (click)="previousPage()"
+                [disabled]="currentPage === 0"></button>
+            <span>Page : {{ currentPage + 1 }}</span>
+            <button pButton icon="pi pi-chevron-right" class="p-button-rounded p-button-text" (click)="nextPage()"
+                [disabled]="!hasMore"></button>
         </div>
     </div>
-    <ng-template pTemplate="footer">
-        <button pButton label="Cancel" icon="pi pi-times" (click)="closeTrainingDialog()" class="p-button-text"></button>
-        <button pButton label="Save" icon="pi pi-save" (click)="saveTraining()" class="p-button-primary"></button>
-    </ng-template>
-</p-dialog>
-<p-dialog [(visible)]="displayDetailsDialog" [header]="'Session Details'" [style]="{ width: '66vw' }" [modal]="true"
-    [styleClass]="'session-dialog'">
-    <div class="dialog-container p-grid">
-        <div class="left-section p-col-3">
-            <div class="profile-container">
-                <div class="name-type-container">
-                    <h2>{{ selectedTrainingDetails.title }}</h2>
-                       <p-tag [value]="selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 
-                    (selectedTrainingDetails.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')"
-                    [severity]="selectedTrainingDetails.type === 'ONSITE' ? 'warn' : 
-                    (selectedTrainingDetails.type === 'ONSITE' ? 'success' : 'info')" class="type-tag"></p-tag>
+    <p-dialog [(visible)]="displayTrainingDialog" [header]="isAddTraining ? 'Add Training' : 'Edit Training'"
+        [style]="{ width: '50vw' }" [modal]="true" [styleClass]="'session-dialog'">
+        <div class="form-container">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Title <span class="required">*</span></label>
+                    <input id="title" pInputText required fluid placeholder="Training title "
+                        [(ngModel)]="trainingForm.title" />
+                </div>
+                <div class="form-group full-width">
+                    <label for="budget">Domain <span class="required">*</span></label>
+                    <p-dropdown [options]="domains" optionLabel="domainName" [(ngModel)]="selectedDomain"
+                        placeholder="Select domain" fluid>
+                    </p-dropdown>
+                </div>
+                <div class="form-group full-width">
+                    <label for="email">Trainer <span class="required">*</span></label>
+                    <p-dropdown [options]="trainersIDS" optionLabel="label" optionValue="value"
+                        [(ngModel)]="trainingForm.trainerId" placeholder="Select trainer" fluid>
+                    </p-dropdown>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="startDate">Start date <span class="required">*</span></label>
+                    <p-datepicker [(ngModel)]="trainingForm.startDate" [showIcon]="true" fluid
+                        dateFormat="yy-mm-dd"></p-datepicker>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End date <span class="required">*</span></label>
+                    <p-datepicker [(ngModel)]="trainingForm.endDate" [showIcon]="true" fluid
+                        dateFormat="yy-mm-dd"></p-datepicker>
+                </div>
+                <div class="form-group full-width">
+                    <label for="email">Type <span class="required">*</span></label>
+                    <p-dropdown [options]="types" [(ngModel)]="trainingForm.type" placeholder="Select type"
+                        fluid></p-dropdown>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="startTime">Start time <span class="required">*</span></label>
+                    <p-datepicker [(ngModel)]="trainingForm.startTime" [timeOnly]="true"></p-datepicker>
+                </div>
+                <div class="form-group">
+                    <label for="endTime">End time <span class="required">*</span></label>
+                    <p-datepicker [(ngModel)]="trainingForm.endTime" [timeOnly]="true"></p-datepicker>
+                </div>
+                <div class="form-group full-width">
+                    <label for="budget">Price <span class="required">*</span></label>
+                    <input id="budget" pInputText type="text" required fluid placeholder="150"
+                        [(ngModel)]="trainingForm.price" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea pInputTextarea [(ngModel)]="trainingForm.description" name="description" rows="7"
+                    placeholder="Description" class="no-resize"></textarea>
+            </div>
         </div>
-
-        <div class="right-section p-col-9">
-            <div class="details-container">
-                <div class="p-grid">
-                    <div class="p-col-6">
-                        <p><strong> Domain :</strong> {{ selectedTrainingDetails.domain?.domainName || 'No provided domain name' }}</p>
-                        <p><strong> Price :</strong> {{ selectedTrainingDetails.price || 'No provided price' }} DT</p>
+        <ng-template pTemplate="footer">
+            <button pButton label="Cancel" icon="pi pi-times" (click)="closeTrainingDialog()"
+                class="p-button-text"></button>
+            <button pButton label="Save" icon="pi pi-save" (click)="saveTraining()" class="p-button-primary"></button>
+        </ng-template>
+    </p-dialog>
+    <p-dialog [(visible)]="displayDetailsDialog" [header]="'Session Details'" [style]="{ width: '66vw' }" [modal]="true"
+        [styleClass]="'session-dialog'">
+        <div class="dialog-container p-grid">
+            <div class="left-section p-col-3">
+                <div class="profile-container">
+                    <div class="name-type-container">
+                        <h2>{{ selectedTrainingDetails.title }}</h2>
+                        <p-tag [value]="selectedTrainingDetails.type"
+                            [severity]="getTagSeverity(selectedTrainingDetails.type)" class="type-tag">
+                        </p-tag>
                     </div>
+                </div>
+            </div>
 
-                    <div class="p-col-6">
-                        <p><strong> Start time:</strong> {{ selectedTrainingDetails.startTime|| 'No provided start time' }}</p>
-                        <p><strong> End time:</strong> {{ selectedTrainingDetails.endTime || 'No provided end time' }}</p>
+            <div class="right-section p-col-9">
+                <div class="details-container">
+                    <div class="p-grid">
+                        <div class="p-col-6">
+                            <p><strong> Domain :</strong> {{ selectedTrainingDetails.domain?.domainName || 'No provided
+                                domain name' }}</p>
+                            <p><strong> Price :</strong> {{ selectedTrainingDetails.price || 'No provided price' }} DT
+                            </p>
+                        </div>
 
-                    </div>
+                        <div class="p-col-6">
+                            <p><strong> Start time:</strong> {{ selectedTrainingDetails.startTime|| 'No provided start
+                                time' }}</p>
+                            <p><strong> End time:</strong> {{ selectedTrainingDetails.endTime || 'No provided end time'
+                                }}</p>
 
-                    <div class="p-col-6">
-                        <p><strong> Start Date:</strong> {{ selectedTrainingDetails.startDate || 'No provided start date' }}</p>
-                        <p><strong> End Date:</strong> {{ selectedTrainingDetails.endDate || 'No provided end date' }}</p>                    </div>
+                        </div>
+
+                        <div class="p-col-6">
+                            <p><strong> Start Date:</strong> {{ selectedTrainingDetails.startDate || 'No provided start
+                                date' }}</p>
+                            <p><strong> End Date:</strong> {{ selectedTrainingDetails.endDate || 'No provided end date'
+                                }}</p>
+                        </div>
                         <div class="p-col-12">
                             <strong> Description:</strong>
-                            <p class="description" style=" width: 700px;">{{ selectedTrainingDetails.description || 'No description provided'
+                            <p class="description" style=" width: 700px;">{{ selectedTrainingDetails.description || 'No
+                                description provided'
                                 }}</p>
                         </div>
                     </div>
-            </div>
-            <div class="trainers-container" *ngIf="selectedTrainingDetails.trainer">
-                <h3>Trainer informations</h3>
-                <div class="trainers-flex-container">
-                    <p-avatar [image]="selectedTrainingDetails.trainer.user?.profilePicture || 'assets/images/logo.png'"
-                    shape="circle" size="xlarge" class="profile-image"></p-avatar>
-                    <div class="trainer-infos">
-                        <p><strong>Username:</strong> {{ selectedTrainingDetails.trainer.user?.username || '-' }}</p>
-                        <p><strong>Contact Number:</strong> {{ selectedTrainingDetails.trainer.user?.phoneNumber || '-' }}</p>
-                        <p><strong>Email:</strong> {{ selectedTrainingDetails.trainer.user?.email || '-' }}</p>
+                </div>
+                <div class="trainers-container" *ngIf="selectedTrainingDetails.trainer">
+                    <h3>Trainer informations</h3>
+                    <div class="trainers-flex-container">
+                        <p-avatar
+                            [image]="selectedTrainingDetails.trainer.user?.profilePicture || 'assets/images/logo.png'"
+                            shape="circle" size="xlarge" class="profile-image"></p-avatar>
+                        <div class="trainer-infos">
+                            <p><strong>Username:</strong> {{ selectedTrainingDetails.trainer.user?.username || '-' }}
+                            </p>
+                            <p><strong>Contact Number:</strong> {{ selectedTrainingDetails.trainer.user?.phoneNumber ||
+                                '-' }}</p>
+                            <p><strong>Email:</strong> {{ selectedTrainingDetails.trainer.user?.email || '-' }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</p-dialog>
-<p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
-    <div *ngIf="trainingToDelete">
-        <p>Are you sure you want to delete the training <strong>{{ trainingToDelete.title }} </strong> having UUID <strong>{{trainingToDelete.trainingId}}</strong>?</p>
-    </div>
-    <ng-template pTemplate="footer">
-        <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
-            class="p-button-text"></button>
-        <button pButton label="Yes" icon="pi pi-check" (click)="deleteTraining()" class="p-button-danger"></button>
-    </ng-template>
-</p-dialog>
+    </p-dialog>
+    <p-dialog [(visible)]="displayDeleteDialog" header="Confirm Delete" [style]="{ width: '30vw' }" [modal]="true">
+        <div *ngIf="trainingToDelete">
+            <p>Are you sure you want to delete the training <strong>{{ trainingToDelete.title }} </strong> having UUID
+                <strong>{{trainingToDelete.trainingId}}</strong>?</p>
+        </div>
+        <ng-template pTemplate="footer">
+            <button pButton label="No" icon="pi pi-times" (click)="displayDeleteDialog = false"
+                class="p-button-text"></button>
+            <button pButton label="Yes" icon="pi pi-check" (click)="deleteTraining()" class="p-button-danger"></button>
+        </ng-template>
+    </p-dialog>
 </div>

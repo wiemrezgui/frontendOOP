@@ -5,7 +5,7 @@
   <p-tabs value="0">
     <p-tablist>
       <p-tab value="0">All employers</p-tab>
-      <p-tab value="1">Add/Edit employer</p-tab>
+      <p-tab value="1">Add employer</p-tab>
       <p-tab value="2">Delete employer</p-tab>
     </p-tablist>
     <p-tabpanels>
@@ -34,31 +34,13 @@
             <div class="form-row">
               <div class="form-group">
                 <label for="employer">Employer name <span class="required">*</span></label>
-                <input id="employer" pInputText required placeholder="John" [(ngModel)]="newEmployer"/>
+                <input id="employer" pInputText required placeholder="Employer name" [(ngModel)]="newEmployer"/>
               </div>
             </div>
           </div>
           <button pButton label="Save employer" icon="pi pi-save" class="p-button-primary" (click)="saveEmployer()"></button>
         </div>
         <p-divider />
-        <div class="container">
-          <h3>Edit employer</h3>
-          <div class="form-container">
-            <div class="form-group">
-              <label for="employerDropdown">The employer you want to edit <span class="required">*</span></label>
-              <p-dropdown [options]="IDEmployers" 
-                        placeholder="Select ID" 
-                        (onChange)="onEmployerSelected($event)"></p-dropdown>
-            </div>
-            <div class="form-row" *ngIf="selectedEmployerId">
-              <div class="form-group">
-                <label for="editEmployer">Employer name <span class="required">*</span></label>
-                <input id="editEmployer" pInputText required placeholder="John" [(ngModel)]="editEmployerName"/>
-              </div>
-            </div>
-          </div>
-          <button pButton label="Edit employer" icon="pi pi-save" class="p-button-primary" (click)="updateEmployer()"></button>
-        </div>
       </p-tabpanel>
       <p-tabpanel value="2">
         <div class="container">

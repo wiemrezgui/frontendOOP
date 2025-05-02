@@ -172,7 +172,18 @@ export class EnrollmentComponent {
     this.filteredTrainings = result.slice(start, end);
   }
 
-
+  getTagSeverity(type: string | undefined): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
+    if (!type) return 'info'; // default fallback
+    
+    const normalizedType = type.trim().toUpperCase();
+    
+    switch (normalizedType) {
+      case 'ONSITE': return 'warn';
+      case 'REMOTE': return 'success';
+      case 'HYBRID': return 'info';
+      default: return 'info';
+    }
+  }
   viewParticipants(training: Training): void {
     this.selectedTraining = training;
     this.showParticipantsDialog = true;
