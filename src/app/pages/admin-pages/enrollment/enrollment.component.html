@@ -1,0 +1,212 @@
+<div class="training-enrollment-admin-container p-4">
+  <div class="card">
+    <p-toast></p-toast>
+
+    <div class="flex justify-content-between align-items-center mb-4">
+      <h1 class="m-0">Training Enrollment Management</h1>
+      <p-button label="Refresh" icon="pi pi-refresh" styleClass="p-button-outlined"
+        (click)="loadTrainings()"></p-button>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="mb-4">
+      <p-panel header="Filters" [toggleable]="true">
+        <div class="p-fluid grid">
+          <div class="col-12 md:col-4">
+            <span class="p-input-icon-left w-full">
+              <input type="text" pInputText [(ngModel)]="searchQuery" (input)="filterTrainings()"
+                placeholder="Search trainings..." class="w-full" />
+            </span>
+          </div>
+          <div class="col-12 md:col-4">
+            <p-dropdown [options]="trainingTypes" [(ngModel)]="selectedType" placeholder="Training Type"
+              [showClear]="true" (onChange)="filterTrainings()" styleClass="w-full"></p-dropdown>
+          </div>
+          <div class="col-12 md:col-4">
+            <p-dropdown [options]="domains"  optionLabel="domainName" [(ngModel)]="selectedDomain" placeholder="Domain name"
+              [showClear]="true" (onChange)="filterTrainings()" styleClass="w-full"></p-dropdown>
+          </div>
+        </div>
+      </p-panel>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="flex justify-content-center">
+      <p-progressSpinner strokeWidth="4" [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+    </div>
+
+    <!-- No Results Message -->
+    <div *ngIf="!loading && filteredTrainings.length === 0" class="empty-message p-4 text-center">
+      <i class="pi pi-info-circle" style="font-size: 2rem"></i>
+      <h3>No trainings found</h3>
+    </div>
+
+    <!-- Training Cards -->
+    <div class="grid">
+      <div *ngFor="let training of filteredTrainings" class="col-12 md:col-6 lg:col-4 xl:col-3">
+        <p-card styleClass="h-full training-card">
+          <!-- Card Content -->
+          <div class="training-info">
+            <h2 class="training-title mb-2">{{training.title}}</h2>
+            <p-divider></p-divider>
+
+            <div class="grid mb-2">
+              <div class="col-4 font-bold">Domain:</div>
+              <div class="col-8">
+                <p-tag [value]="training.domain?.domainName"></p-tag>
+              </div>
+            </div>
+
+            <div class="grid mb-2">
+              <div class="col-4 font-bold">Period:</div>
+              <div class="col-8">
+                {{training.startDate | date:'shortDate'}} - {{training.endDate | date:'shortDate'}}
+              </div>
+            </div>
+            <div class="grid mb-2">
+              <div class="col-4 font-bold">Type :</div>
+              <div class="col-8">
+                <div class="flex align-items-center">
+                  <p-tag [value]="training.type === 'ONSITE' ? 'ONSITE' : 
+                        (training.type === 'ONSITE' ? 'ONSITE' : 'HYBRID')" [severity]="training.type === 'ONSITE' ? 'warn' : 
+                        (training.type === 'ONSITE' ? 'success' : 'info')" class="type-tag"></p-tag>
+                </div>
+              </div>
+            </div>
+            <div class="grid mb-2">
+              <div class="col-4 font-bold">Trainer:</div>
+              <div class="col-8">
+                <div class="flex align-items-center">
+                  {{training.trainer?.user?.email || 'No trainer assigned'}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-template pTemplate="footer">
+            <div class="flex justify-content-between">
+              <p-button icon="pi pi-users" label="Participants ({{getParticipantCount(training)}})"
+                styleClass="p-button-outlined p-button-info" (click)="viewParticipants(training)">
+              </p-button>
+
+              <div>
+                <p-button icon="pi pi-user-plus" label="Enroll" styleClass="p-button-success"
+                  (click)="openEnrollDialog(training)">
+                </p-button>
+              </div>
+            </div>
+          </ng-template>
+        </p-card>
+      </div>
+    </div>
+    <div class="flex justify-content-center align-items-center mt-4 gap-3 pagination">
+      <button pButton icon="pi pi-chevron-left" class="p-button-rounded p-button-text" (click)="previousPage()"
+        [disabled]="currentPage === 0"></button>
+      <span>Page : {{ currentPage + 1 }}</span>
+      <button pButton icon="pi pi-chevron-right" class="p-button-rounded p-button-text" (click)="nextPage()"
+        [disabled]="!hasMore"></button>
+    </div>
+  </div>
+
+  <!-- Participants Dialog -->
+  <p-dialog [(visible)]="showParticipantsDialog" [style]="{width: '90%', maxWidth: '800px', height : '300px'}"
+    [header]="selectedTraining?.title + ' - Participants'" [modal]="true" [draggable]="false" [resizable]="false">
+
+    <div *ngIf="loadingParticipants" class="flex justify-content-center my-4">
+      <p-progressSpinner strokeWidth="4" [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+    </div>
+
+    <div *ngIf="!loadingParticipants && participants.length === 0" class="text-center p-4">
+      <i class="pi pi-users" style="font-size: 2rem"></i>
+      <h3>No Participants found</h3>
+    </div>
+
+    <div *ngIf="!loadingParticipants && participants.length > 0">
+      <p-table [value]="participants" styleClass="p-datatable-sm" [paginator]="false">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Username</th>
+            <th>Email </th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-participant>
+          <tr>
+            <td>
+              <div class="flex align-items-center">
+                <p-avatar icon="pi pi-user" shape="circle" [style]="{'margin-right': '0.5rem'}"
+                 >
+                </p-avatar>
+                {{participant.username || 'N/A'}}
+              </div>
+            </td>
+            <td>{{participant.email || 'N/A'}}</td>
+            <td>
+              <p-button icon="pi pi-user" label="Unenroll" styleClass="p-button-rounded p-button-danger p-button-sm"
+                pTooltip="Unenroll participant" (click)="unenrollParticipant(selectedTraining, participant)">
+              </p-button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-between">
+        <p-button icon="pi pi-times" label="Close" (click)="showParticipantsDialog=false" styleClass="p-button-text">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Enroll Dialog -->
+  <p-dialog [(visible)]="showEnrollDialog" [style]="{width: '500px',height : '450px'}"
+    [header]="'Enroll Participant - ' + (selectedTraining?.title || '')" [modal]="true" [draggable]="false"
+    [resizable]="false">
+
+    <div class="p-fluid">
+      <div class="field">
+        <label for="participantDropdown">Select Participant to Enroll</label>
+        <p-dropdown id="participantDropdown" [options]="availableParticipants" [(ngModel)]="selectedParticipantToEnroll"
+          optionLabel="username" placeholder="Select a participant" [filter]="true" filterBy="username,email"
+          [showClear]="true" styleClass="w-full">
+
+          <ng-template pTemplate="selectedItem">
+            <div class="flex align-items-center" *ngIf="selectedParticipantToEnroll">
+              <p-avatar icon="pi pi-user" shape="circle" [style]="{'margin-right': '0.5rem'}">
+              </p-avatar>
+              <div>
+                <div>{{ selectedParticipantToEnroll.username || 'N/A' }}          </div>
+                <div style="font-size: 0.8rem; color: var(--text-color-secondary);">
+                  {{ selectedParticipantToEnroll.email || 'N/A' }}
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template let-participant pTemplate="item">
+            <div class="flex align-items-center">
+              <p-avatar icon="pi pi-user" shape="circle" [style]="{'margin-right': '0.5rem'}"
+               >
+              </p-avatar>
+              <div>
+                <div>{{participant?.username || 'N/A'}}</div>
+                <div style="font-size: 0.8rem; color: var(--text-color-secondary);">
+                  {{participant?.email || 'N/A'}}
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <p-button icon="pi pi-times" label="Cancel" (click)="showEnrollDialog=false" styleClass="p-button-text">
+      </p-button>
+      <p-button icon="pi pi-check" label="Enroll" (click)="enrollSelectedParticipant()"
+        [disabled]="!selectedParticipantToEnroll" styleClass="p-button-success">
+      </p-button>
+    </ng-template>
+  </p-dialog>
+</div>

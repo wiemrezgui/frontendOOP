@@ -1,0 +1,186 @@
+  /* 🔹 Card (Container) */
+  .card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+
+  // ✅ Labels Styling
+  label {
+    display: block;
+    margin-bottom: 3px;
+    font-weight: 400;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .p-inputtext ,textarea{
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+  }  
+  .no-resize {
+    resize: none;
+  }
+  .p-button-primary{
+    margin-left: 10px;
+    padding-left:15px;
+    padding-right:15px;
+  }
+  .right-position{
+    margin-left: 37%;}
+  .p-dialog-footer {
+    margin-top: 10px;
+  }
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: nowrap; /* Prevent fields from stacking */
+}
+.form-group{
+    width: 100%;
+    margin-bottom: 10px;
+}
+.dialog-container {
+  padding: 0.5rem;
+  display: flex;
+}
+/* Left section styles */
+.left-section {
+  padding-right: 1.5rem;
+  border-right: 1px solid #d2ebfd;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-image {
+  margin-bottom: 5px;
+  width: 125px;
+  height: 125px;
+}
+
+.name-type-container {
+  align-items: center;
+  h2{
+    margin-bottom: 3px;
+  }
+}
+
+.type-tag {
+  font-size: 0.8rem;
+}
+
+.employer {
+  color: #6c757d;
+  margin-bottom: 0.8rem;
+}
+
+.infos-line{
+  display: flex;
+  gap: 10px;
+}
+/* Right section styles */
+.right-section {
+  padding-left: 1.5rem;
+}
+.p-col-6{
+  display: flex;
+  p{
+    width: 50%;
+  }
+}
+.details-container p {
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.description {
+  padding: 0.8rem;
+  background-color: #f8f7f7;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+
+.required {
+  color: red;
+}
+.trainer-type-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+.trainer-type-card {
+  text-align: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: white;
+  font-weight: bold;
+  border: 2px solid transparent;
+  width: 120px;
+}
+
+.trainer-type-card.internal {
+  background-color: #dcfce7; /* Green */
+  color: #15803d;
+}
+
+.trainer-type-card.external {
+  background-color: #ffedd5; /* Orange */
+  color: #c2410c;
+}
+
+.trainer-type-card:hover {
+  opacity: 0.9;
+}
+
+.trainer-type-card.selected.internal {
+  border: 2px solid #15803d; /* Dark green */
+}
+
+.trainer-type-card.selected.external {
+  border: 2px solid #892f09; /* Dark orange */
+}
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.preview-image {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.upload-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+

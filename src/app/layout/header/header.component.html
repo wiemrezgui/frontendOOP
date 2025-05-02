@@ -1,0 +1,23 @@
+<header class="app-header">
+    <!-- Left: Page Title -->
+    <div class="title-container">
+      <img *ngIf="(selectedNavItem$ | async)?.image" [src]="(selectedNavItem$ | async)?.image" class="title-icon" />
+      <h1>{{ (selectedNavItem$ | async)?.title || 'Dashboard' }}</h1>
+    </div>
+  
+    <!-- Right: Tools & Avatar -->
+    <div class="flex-row-base">
+      <p-button label="Managers" icon="pi pi-plus" severity="danger" (click)="openManageManagersDialog()" *ngIf="isAdminAuthenticated"/>
+      <div class="tool-box-container">
+        <i class="pi pi-window-maximize notification-icon" (click)="fullScreen()" pTooltip="Full screen" *ngIf="isAdminAuthenticated"
+          tooltipPosition="top"></i>
+  
+        <i class="pi pi-sign-out notification-icon" (click)="navigateTo('logout')" pTooltip="Log out"
+          tooltipPosition="bottom"></i>
+      </div>
+  
+      <div class="profile-section" *ngIf="profileImage">
+        <p-avatar [image]="profileImage" class="mr-2" size="xlarge" shape="circle" class="profile-image"/>
+      </div>
+    </div>
+  </header>

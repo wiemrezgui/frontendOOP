@@ -1,0 +1,35 @@
+<nav class="sidebar" [class.collapsed]="isCollapsed" *ngIf="showSideBar">
+  <!-- Sidebar Logo -->
+  <div class="sidebar-logo" (click)="toggleSidebar()">
+    <img *ngIf="!isCollapsed" src="assets/images/logo.png" alt="Logo" class="logo" />
+    <img *ngIf="isCollapsed" src="assets/images/mini-logo.png" alt="Logo" class="mini-logo" />
+
+  </div>
+  <!-- Sidebar Menu -->
+  <div class="menu-section">
+    <ul class="menu">
+      <li *ngFor="let item of navItems">
+        <div class="navitem" [routerLink]="item.route" routerLinkActive="active"
+          (click)="onItemClick(item)">
+          <span class="icon">
+            <img *ngIf="item.image " [src]="item.image" alt="{{ item.title }} icon" />
+          </span>
+          <span class="title">
+            <span *ngIf="!isCollapsed">{{ item.title }}</span>
+          </span>
+          </div>
+      </li>
+    </ul>
+  </div>    
+  <!-- Hover Menu (PrimeNG OverlayPanel) -->
+  <p-popover #op>
+    <div class="hover-menu">
+      <li *ngFor="let sub of hoveredSubItems">
+        <div class="navitem" [routerLink]="sub.route" (click)="hideHoverMenu()" [class.active]="isActive(sub.route!)">
+          <img *ngIf="sub.image" [src]="sub.image" alt="{{ sub.title }} icon" />
+          {{ sub.title }}
+        </div>
+      </li>
+    </div>
+  </p-popover>
+</nav>

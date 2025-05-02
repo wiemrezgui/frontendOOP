@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: auto;
+
+  button {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
+}
+
+.exit {
+  float: right;
+  margin-top: -2px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+:host ::ng-deep .container .p-datatable {
+  margin: 0 auto;
+  width: 40rem;
+}
+
+:host ::ng-deep .p-datatable-wrapper {
+  width: 100%;
+}
+
+.p-tablist {
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin: auto;
+  width: 100%;
+
+  .p-tab {
+    margin-right: 35px;
+  }
+}
+
+.form-group {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
+  display: flex;
+
+}
+
+.p-inputtext {
+  width: 370px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+.p-dropdown{
+  width: 200px;
+}
+.required {
+  color: red;
+}
+
+.p-divider {
+  width: 70% !important;
+  margin: auto;
+}

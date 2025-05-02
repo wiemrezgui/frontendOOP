@@ -1,0 +1,65 @@
+<div class="exit">
+    <p class="exit" (click)="closeDialog()"> X </p>
+</div>
+<p-tabs value="0">
+    <p-tablist>
+        <p-tab value="0">All domains</p-tab>
+        <p-tab value="1">Add domain</p-tab>
+        <p-tab value="2">Delete domain</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+            <div class="container">
+            <p-table [value]="domains" [tableStyle]="{ 'width': '35rem' }">
+                <ng-template #header>
+                    <tr>
+                        <th>Domain ID</th>
+                        <th>Domain Name</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-domain>
+                    <tr>
+                        <td>{{ domain.domainId }}</td>
+                        <td>{{ domain.domainName }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+            <div class="container">
+            <h3>Add domain</h3>
+            <div class="form-container">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="domain">Domain Name <span class="required">*</span></label>
+                        <input id="domain" pInputText required placeholder="John"  [(ngModel)]="newDomain"/>
+                    </div>
+                </div>
+            </div>
+            <button pButton label="Save domain" icon="pi pi-save" class="p-button-primary" (click)="saveDomain()"></button>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="2">
+            <div class="container">
+                <h3>Delete domain</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">The domain you want to edit <span class="required">*</span></label>
+                            <p-dropdown [options]="IDdomains"
+                             placeholder="Select ID" fluid  (onChange)="onDomainselected($event)"></p-dropdown>  
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="flex items-center">
+                          <p-checkbox [(ngModel)]="deleteConfirmed" inputId="deleteConfirm" name="deleteConfirm" binary="true"></p-checkbox>
+                          <label for="deleteConfirm" class="ml-2"> Please check if you confirm domain delete </label>
+                        </div>
+                      </div>
+                </div>
+                <button pButton label="Delete domain" icon="pi pi-check" class="p-button-danger" (click)="deleteDomain()"></button>
+                </div>
+        </p-tabpanel>
+    </p-tabpanels>
+</p-tabs>

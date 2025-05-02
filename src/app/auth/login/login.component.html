@@ -1,0 +1,21 @@
+<div class="auth-container">
+  <p-image src="assets/images/logo.png" alt="Image" width="200" />
+    <h1><strong>Welcome back..</strong></h1>
+    <p>Please enter all the informations to get full access</p>
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <input pInputText type="text" formControlName="email" placeholder="exemple@gmail.com"/>
+      </div>
+      <div class="form-group password-container">
+        <p-password formControlName="password" autocomplete="off" fluid placeholder="Password" [feedback]="false">
+      </p-password>
+        <a (click)="goToForgotPassword()" class="forgot-password">Forget password ?</a>
+      </div>
+      <button type="submit" class="black-button">
+        {{ loading ? '🔄 Loading...' : 'Log in' }}
+      </button>
+      <small class="margin-small-top">Don't have account ? <strong (click)="goToSignUp()">Sign up</strong></small>
+    </form>
+</div>
+<p-toast />
+  

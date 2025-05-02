@@ -1,0 +1,369 @@
+@use  "mixins/spacingMixins.scss" as *;
+
+// Margins
+
+.no-margin {
+    @include margin-spacing('no')
+}
+
+.no-margin-left {
+    @include margin-spacing('no', 'left')
+}
+
+.no-margin-right {
+    @include margin-spacing('no', 'right')
+}
+
+.no-margin-top {
+    @include margin-spacing('no', 'top')
+}
+
+.no-margin-bottom {
+    @include margin-spacing('no', 'bottom')
+}
+
+.no-margin-vertical {
+    @include margin-spacing('no', 'vertical')
+}
+
+.no-margin-horizontal {
+    @include margin-spacing('no', 'horizontal')
+}
+
+.margin-base {
+    @include margin-spacing('base')
+}
+
+.margin-base-top {
+    @include margin-spacing('base', 'top')
+}
+
+.margin-base-right {
+    @include margin-spacing('base', 'right')
+}
+
+.margin-base-left {
+    @include margin-spacing('base', 'left')
+}
+
+.margin-base-bottom {
+    @include margin-spacing('base', 'bottom')
+}
+
+.margin-base-vertical {
+    @include margin-spacing('base', 'vertical')
+}
+
+.margin-base-horizontal {
+    @include margin-spacing('base', 'horizontal')
+}
+
+.margin-small {
+    @include margin-spacing('small')
+}
+
+.margin-small-top {
+    @include margin-spacing('small', 'top')
+}
+
+.margin-small-right {
+    @include margin-spacing('small', 'right')
+}
+
+.margin-small-left {
+    @include margin-spacing('small', 'left')
+}
+
+.margin-small-bottom {
+    @include margin-spacing('small', 'bottom')
+}
+
+.margin-small-vertical {
+    @include margin-spacing('small', 'vertical')
+}
+
+.margin-small-horizontal {
+    @include margin-spacing('small', 'horizontal')
+}
+
+.margin-medium {
+    @include margin-spacing('medium')
+}
+
+.margin-medium-top {
+    @include margin-spacing('medium', 'top')
+}
+
+.margin-medium-right {
+    @include margin-spacing('medium', 'right')
+}
+
+.margin-medium-left {
+    @include margin-spacing('medium', 'left')
+}
+
+.margin-medium-bottom {
+    @include margin-spacing('medium', 'bottom')
+}
+
+.margin-medium-vertical {
+    @include margin-spacing('medium', 'vertical')
+}
+
+.margin-medium-horizontal {
+    @include margin-spacing('medium', 'horizontal')
+}
+
+.margin-auto {
+    @include margin-spacing('auto')
+}
+
+.margin-auto-left {
+    @include margin-spacing('auto', 'left')
+}
+
+.margin-auto-right {
+    @include margin-spacing('auto', 'right')
+}
+
+.margin-auto-top {
+    @include margin-spacing('auto', 'top')
+}
+
+.margin-auto-bottom {
+    @include margin-spacing('auto', 'bottom')
+}
+
+.margin-auto-horizontal {
+    @include margin-spacing('auto', 'horizontal')
+}
+
+.margin-auto-vertical {
+    @include margin-spacing('auto', 'vertical')
+}
+
+.margin-large {
+    @include margin-spacing('large')
+}
+
+.margin-large-top {
+    @include margin-spacing('large', 'top')
+}
+
+.margin-large-left {
+    @include margin-spacing('large', 'left')
+}
+
+.margin-large-right {
+    @include margin-spacing('large', 'right')
+}
+
+.margin-large-vertical {
+    @include margin-spacing('large', 'vertical')
+}
+
+.margin-large-horizontal {
+    @include margin-spacing('large', 'horizontal')
+}
+
+.margin-large-bottom {
+    @include margin-spacing('large', 'bottom')
+}
+
+// Padding
+
+.no-padding {
+    @include padding-spacing('no')
+}
+
+.no-padding-right {
+    @include padding-spacing('no', 'right')
+}
+.no-padding-left {
+    @include padding-spacing('no', 'left')
+}
+
+.no-padding-vertical {
+    @include padding-spacing('no', 'vertical')
+}
+
+.no-padding-horizontal {
+    @include padding-spacing('no', 'horizontal')
+}
+
+.padding-base {
+    @include padding-spacing('base')
+}
+
+.padding-base-top {
+    @include padding-spacing('base', 'top')
+}
+
+.padding-base-right {
+    @include padding-spacing('base', 'right')
+}
+
+.padding-base-left {
+    @include padding-spacing('base', 'left')
+}
+
+.padding-base-bottom {
+    @include padding-spacing('base', 'bottom')
+}
+
+.padding-base-vertical {
+    @include padding-spacing('base', 'vertical')
+}
+
+.padding-base-horizontal {
+    @include padding-spacing('base', 'horizontal')
+}
+
+.padding-small {
+    @include padding-spacing('small')
+}
+
+.padding-small-top {
+    @include padding-spacing('small', 'top')
+}
+
+.padding-small-right {
+    @include padding-spacing('small', 'right')
+}
+
+.padding-small-left {
+    @include padding-spacing('small', 'left')
+}
+
+.padding-small-bottom {
+    @include padding-spacing('small', 'bottom')
+}
+
+.padding-small-vertical {
+    @include padding-spacing('small', 'vertical')
+}
+
+.padding-small-horizontal {
+    @include padding-spacing('small', 'horizontal')
+}
+
+.padding-medium {
+    @include padding-spacing('medium')
+}
+
+.padding-medium-top {
+    @include padding-spacing('medium', 'top')
+}
+
+.padding-medium-right {
+    @include padding-spacing('medium', 'right')
+}
+
+.padding-medium-left {
+    @include padding-spacing('medium', 'left')
+}
+
+.padding-medium-bottom {
+    @include padding-spacing('medium', 'bottom')
+}
+
+.padding-medium-vertical {
+    @include padding-spacing('medium', 'vertical')
+}
+
+.padding-medium-horizontal {
+    @include padding-spacing('medium', 'horizontal')
+}
+
+.padding-large {
+    @include padding-spacing('large')
+}
+
+.padding-large-top {
+    @include padding-spacing('large', 'top')
+}
+
+.padding-large-left {
+    @include padding-spacing('large', 'left')
+}
+
+.padding-large-right {
+    @include padding-spacing('large', 'right')
+}
+
+.padding-large-vertical {
+    @include padding-spacing('large', 'vertical')
+}
+
+.padding-large-horizontal {
+    @include padding-spacing('large', 'horizontal')
+}
+
+.padding-large-bottom {
+    @include padding-spacing('large', 'bottom')
+}
+
+// Flex
+.flex-row-no-gap {
+    @include flex-spacing(row, 'no')
+}
+.flex-row-base {
+    @include flex-spacing(row, 'base')
+}
+.flex-row-small {
+    @include flex-spacing(row, 'small')
+}
+.flex-row-medium {
+    @include flex-spacing(row, 'medium')
+}
+.flex-row-large {
+    @include flex-spacing(row, 'large')
+}
+
+.flex-row-no-gap-wrap {
+    @include flex-spacing(row, 'no', wrap)
+}
+.flex-row-base-wrap {
+    @include flex-spacing(row, 'base', wrap)
+}
+.flex-row-small-wrap {
+    @include flex-spacing(row, 'small', wrap)
+}
+.flex-row-medium-wrap {
+    @include flex-spacing(row, 'medium', wrap)
+}
+.flex-row-large-wrap {
+    @include flex-spacing(row, 'large', wrap)
+}
+
+.flex-column-no-gap {
+    @include flex-spacing(column, 'no')
+}
+.flex-column-base {
+    @include flex-spacing(column, 'base')
+}
+.flex-column-small {
+    @include flex-spacing(column, 'small')
+}
+.flex-column-medium {
+    @include flex-spacing(column, 'medium')
+}
+.flex-column-large {
+    @include flex-spacing(column, 'large')
+}
+
+.flex-column-no-gap-wrap {
+    @include flex-spacing(column, 'no', wrap)
+}
+.flex-column-base-wrap {
+    @include flex-spacing(column, 'base', wrap)
+}
+.flex-column-small-wrap {
+    @include flex-spacing(column, 'small', wrap)
+}
+.flex-column-medium-wrap {
+    @include flex-spacing(column, 'medium', wrap)
+}
+.flex-column-large-wrap {
+    @include flex-spacing(column, 'large', wrap)
+}

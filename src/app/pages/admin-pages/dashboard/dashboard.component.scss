@@ -1,0 +1,116 @@
+// Enhanced Dashboard Styling with Icons and Colors
+:host {
+  display: block;
+  padding: 20px;
+
+}
+
+// Custom Chart Color Scheme
+::ng-deep {
+  // Override default chart colors with a custom palette
+  .ngx-charts {
+    .pie-arc, .bar-filled, .heat-map-cell {
+      &.chart-color-0 { fill: #4361ee !important; }
+      &.chart-color-1 { fill: #3a0ca3 !important; }
+      &.chart-color-2 { fill: #8a5da9 !important; }
+      &.chart-color-3 { fill: #f72585 !important; }
+      &.chart-color-4 { fill: #4cc9f0 !important; }
+      &.chart-color-5 { fill: #4895ef !important; }
+      &.chart-color-6 { fill: #560bad !important; }
+    }
+    
+    // Enhance legend colors to match
+    .legend-labels {
+      .legend-label-color {
+        &[style*="background-color: rgb(168, 255, 68)"] { background-color: #4361ee !important; }
+        &[style*="background-color: rgb(0, 255, 77)"] { background-color: #3a0ca3 !important; }
+        &[style*="background-color: rgb(0, 234, 255)"] { background-color: #7209b7 !important; }
+        &[style*="background-color: rgb(0, 179, 255)"] { background-color: #f72585 !important; }
+        &[style*="background-color: rgb(0, 98, 255)"] { background-color: #4cc9f0 !important; }
+      }
+    }
+  }
+}
+
+// Metric Cards with Icons
+.simple-metrics {
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  
+  > div {
+    position: relative;
+    padding-top: 2.5rem;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    // Add color strip at top of each card
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+    }
+    
+    // Add icon placeholder for each metric card
+    &::after {
+      font-family: 'Font Awesome 5 Free'; // Requires Font Awesome
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.5rem;
+      opacity: 0.2;
+      font-weight: 900;
+    }
+    
+    // First card - Participants
+    &:nth-child(1) {
+      &::before { background: linear-gradient(90deg, #4361ee, #3a0ca3); }
+      &::after { content: '\f007'; } // User icon
+      h2 { color: #4361ee; }
+    }
+    
+    // Second card - Sessions
+    &:nth-child(2) {
+      &::before { background: linear-gradient(90deg, #06d6a0, #118ab2); }
+      &::after { content: '\f51c'; } // Calendar icon
+      h2 { color: #06d6a0; }
+    }
+    
+    // Third card - Trainers
+    &:nth-child(3) {
+      &::before { background: linear-gradient(90deg, #7209b7, #560bad); }
+      &::after { content: '\f51e'; } // Chalkboard teacher icon
+      h2 { color: #7209b7; }
+    }
+    
+    // Fourth card - Budget
+    &:nth-child(4) {
+      &::before { background: linear-gradient(90deg, #f72585, #b5179e); }
+      &::after { content: '\f3d1'; } // Money bill icon
+      h2 { color: #f72585; }
+    }
+    
+    h2 {
+      margin-bottom: 0.5rem;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    p {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      color: #64748b;
+    }
+  }
+}

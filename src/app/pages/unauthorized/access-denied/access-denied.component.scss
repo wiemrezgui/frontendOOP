@@ -1,0 +1,88 @@
+/* access-denied.component.scss */
+.access-denied-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    padding: 2rem;
+  }
+  
+  .access-denied-card {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .logo-container {
+    margin-bottom: 2rem;
+  }
+  
+  .green-building-logo {
+    max-width: 180px;
+    height: auto;
+  }
+  
+  .message-container {
+    margin-bottom: 2.5rem;
+    
+    h1 {
+      color: #e63946;
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    p {
+      color: #566573;
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    button {
+      min-width: 180px;
+    }
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .access-denied-card {
+      padding: 2rem 1.5rem;
+    }
+    
+    .message-container h1 {
+      font-size: 1.8rem;
+    }
+    
+    .button-container {
+      flex-direction: column;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }

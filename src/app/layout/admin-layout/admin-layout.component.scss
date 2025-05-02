@@ -1,0 +1,26 @@
+/* admin-layout.component.scss */
+.admin-layout {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  margin-left: 150px; /* Default sidebar width */
+  transition: margin-left 0.3s ease;
+  
+  &.collapsed {
+    margin-left: 70px; /* Collapsed sidebar width */
+  }
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 70px; /* Always collapsed on mobile */
+    
+    &:not(.collapsed) {
+      margin-left: 250px;
+    }
+  }
+}

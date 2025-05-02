@@ -1,0 +1,64 @@
+<div class="exit">
+    <p class="exit" (click)="closeDialog()"> X </p>
+</div>
+<p-tabs value="0">
+    <p-tablist>
+        <p-tab value="0">All profiles</p-tab>
+        <p-tab value="1">Add profile</p-tab>
+        <p-tab value="2">Delete profile</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+            <div class="container">
+                <p-table [value]="profiles" [tableStyle]="{ 'width': '35rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th>Profile ID</th>
+                            <th>Profile Type</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-profile>
+                        <tr>
+                            <td>{{ profile.profileId }}</td>
+                            <td>{{ profile.profileType }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+            <div class="container">
+                <h3>Add profile</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profile">Profile type <span class="required">*</span></label>
+                            <input id="profile" pInputText required placeholder="Admin" [(ngModel)]="newProfile"/>
+                        </div>
+                    </div>
+                </div>
+                <button pButton label="Save profile" icon="pi pi-save" class="p-button-primary" (click)="saveProfile()"></button>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="2">
+            <div class="container">
+                <h3>Delete profile</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="profile">The profile you want to delete <span class="required">*</span></label>
+                            <p-dropdown [options]="IDProfiles" placeholder="Select ID" fluid (onChange)="onProfileSelected($event)"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="flex items-center">
+                          <p-checkbox [(ngModel)]="deleteConfirmed" inputId="deleteConfirm" name="deleteConfirm" binary="true"></p-checkbox>
+                          <label for="deleteConfirm" class="ml-2"> Please check if you confirm profile delete </label>
+                        </div>
+                      </div>
+                </div>
+                <button pButton label="Delete profile" icon="pi pi-check" class="p-button-danger" (click)="deleteProfile()"></button>
+            </div>
+        </p-tabpanel>
+    </p-tabpanels>
+</p-tabs>

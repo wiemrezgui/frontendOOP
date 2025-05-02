@@ -1,0 +1,5 @@
+@mixin icon-size($size) {
+    display: flex;
+    align-items: center;
+    font-size: $size !important;
+}

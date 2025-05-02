@@ -1,0 +1,125 @@
+<div class="exit">
+    <p class="exit" (click)="closeDialog()"> X </p>
+</div>
+<p-tabs value="0">
+    <p-tablist>
+        <p-tab value="0">All Managers</p-tab>
+        <p-tab value="1">Add Manager</p-tab>
+        <p-tab value="2">Delete Manager</p-tab>
+    </p-tablist>
+    <p-tabpanels>
+        <p-tabpanel value="0">
+            <div class="container">
+                <p-table [value]="managers" [tableStyle]="{ 'min-width': '60rem' }">
+                    <ng-template #header>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Phone</th>
+                            <th>Gender</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template #body let-manager>
+                        <tr>
+                            <td>{{ manager.username }}</td>
+                            <td>{{ manager.email }}</td>
+                            <td>{{ manager.role }}</td>
+                            <td>{{ manager.phoneNumber }}</td>
+                            <td>{{ manager.gender }}</td>
+                        </tr>
+                    </ng-template>
+                     <!-- Empty Message -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" style="text-align: center;">No managers found</td>
+                </tr>
+            </ng-template>
+                </p-table>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="1">
+            <div class="container">
+                <h3>Add Manager</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username <span class="required">*</span></label>
+                            <input id="username" pInputText required placeholder="Username" [(ngModel)]="newManager.username"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email <span class="required">*</span></label>
+                            <input id="email" pInputText required placeholder="you@example.com" type="email" [(ngModel)]="newManager.email"/>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input id="phone" pInputText placeholder="Phone Number" [(ngModel)]="newManager.phoneNumber"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth</label>
+                            <p-calendar id="dob" [(ngModel)]="newManager.dateOfBirth" dateFormat="yy-mm-dd" fluid [showIcon]="true"></p-calendar>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <p-dropdown [options]="genders" [(ngModel)]="newManager.gender" placeholder="Select Gender" optionLabel="label" optionValue="value"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" pInputTextarea [(ngModel)]="newManager.description" fluid></textarea>
+                        </div>
+                    </div>
+                        <div class="image-upload-container">
+                          <!-- Image preview -->
+                          <img *ngIf="imagePreview" [src]="imagePreview" class="preview-image" width="100" height="100">
+                          
+                          <!-- Upload controls -->
+                          <div class="upload-controls">
+                            <p-fileUpload #fu 
+                              mode="basic" 
+                              chooseLabel="Choose image" 
+                              chooseIcon="pi pi-upload" 
+                              name="profileImage"
+                              accept="image/*" 
+                              maxFileSize="1000000" 
+                              (onSelect)="onFileSelect($event)"
+                              auto="true"
+                              customUpload="true" />
+                            
+                            <div *ngIf="selectedFileName" class="file-info">
+                              <span>{{ selectedFileName }}</span>
+                              <button pButton pRipple type="button" icon="pi pi-times" class="p-button-text p-button-sm" 
+                                      (click)="clearImage()"></button>
+                            </div>
+                          </div>
+                        </div>
+                </div>
+                <button pButton label="Save Manager" icon="pi pi-save" class="p-button-primary" (click)="saveManager()"></button>
+            </div>
+        </p-tabpanel>
+        <p-tabpanel value="2">
+            <div class="container">
+                <h3>Delete Manager</h3>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="delete-manager">Select Manager <span class="required">*</span></label>
+                            <p-dropdown [options]="managerOptions" [(ngModel)]="selectedManager" optionLabel="label" optionValue="value"
+                                       placeholder="Select Manager"></p-dropdown>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="flex items-center">
+                      <p-checkbox [(ngModel)]="deleteConfirmed" inputId="deleteConfirm" name="deleteConfirm" binary="true"></p-checkbox>
+                      <label for="deleteConfirm" class="ml-2"> Please check if you confirm manager delete </label>
+                    </div>
+                  </div>
+                <button pButton label="Delete Manager" icon="pi pi-trash" class="p-button-danger" (click)="deleteManager()"></button>
+            </div>
+        </p-tabpanel>
+    </p-tabpanels>
+</p-tabs>
